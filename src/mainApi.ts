@@ -1,4 +1,4 @@
-import {CenterApi, User} from 'tonva-tools';
+import {CenterApi, User, meInFrame} from 'tonva-tools';
 
 class MainApi extends CenterApi {
     async stickies():Promise<any[]> {
@@ -15,6 +15,22 @@ class MainApi extends CenterApi {
 
     async appApi(unit:number, app:number, apiName:string) {
         return await this.get('tie/app-api', {unit:unit, app:app, apiName:apiName});
+    }
+
+    async sendMessage(to:string, type:string, message:any, norepeat?:boolean) {
+        let {unit, app} = meInFrame;
+        return await this.post('tie/send-message', {
+            to:to, 
+            unit:unit, 
+            app:app,
+            type:type, 
+            message:message, 
+            norepeat:norepeat
+        });
+    }
+
+    async unit(unit:number):Promise<any> {
+        return await this.get('unit/', {unit:unit});
     }
 
     async unitAdmins(unit:number) {

@@ -17,9 +17,10 @@ export interface App {
     apis?: {[name:string]: Api};
 }
 
-export interface UnitApps {
+export interface Unit {
     id: number;
     name: string;
+    nick: string;
     discription: string;
     icon: string;
     isOwner: number;
@@ -28,6 +29,9 @@ export interface UnitApps {
     ownerName: string;
     ownerNick: string;
     ownerIcon: string;
+}
+
+export interface UnitApps extends Unit {
     apps: App[];
 }
 

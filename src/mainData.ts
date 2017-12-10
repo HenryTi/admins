@@ -1,28 +1,28 @@
 import {observable} from 'mobx';
 //import consts from './consts';
+import {meInFrame} from 'tonva-tools';
 import mainApi from './mainApi';
-import {UnitApps, App, Api, UnitAdmin} from './model';
+import {Unit, UnitApps, App, Api, UnitAdmin} from './model';
 
 class MainData {
-    private unitId: number;
-    @observable unitApp: UnitApps;
+    @observable unit: Unit;
     @observable unitAdmins: UnitAdmin[] = undefined;
 
-    setUnitId(unitId:number) {
-        this.unitId = unitId;
-    }
+    private get unitId():number {return meInFrame.unit;};
 
     logout() {
-        this.unitApp = undefined;
+        this.unit = undefined;
         this.unitAdmins = undefined;
     }
 
     async loadApps(): Promise<UnitApps> {
-        return this.unitApp = await mainApi.apps(this.unitId);
+        return this.unit = await mainApi.apps(this.unitId);
     }
 
     async getAppApi(appId: number, apiName): Promise<Api> {
-        let apps = this.unitApp.apps;
+        return;
+        /*
+        let apps = this.unit.apps;
         if (apps === undefined) return;
         let app = apps.find(v => v.id === appId);
         if (app === undefined) return;
@@ -40,7 +40,12 @@ class MainData {
                 return;
             }
         }
-        return api;
+        return api;*/
+    }
+
+    async loadUnit(): Promise<void> {
+        let ret = await mainApi.unit(this.unitId);
+        this.unit = ret;
     }
 
     async loadUnitAdmins(): Promise<void> {
