@@ -33,27 +33,18 @@ class MainApi extends CenterApi {
         return await this.get('unit/', {unit:unit});
     }
 
-    async unitAdmins(unit:number) {
+    async unitAdmins(unit:number):Promise<any[]> {
         return await this.get('unit/admins', {unit:unit});
     }
+
+    async unitSetAdmin(fellow:number, unit:number, isOwner:number, isAdmin:number):Promise<any> {
+        return await this.post('unit/set-admin', {fellow:fellow, unit:unit, isOwner:isOwner, isAdmin:isAdmin});
+    }
+
 
     async postMessage(toUser:number, msg:any) {
         return await this.post('test/post', {to: toUser, message: msg});
     }
-
-    loadFollows(pageSize:number, minName:string) {
-        return this.get('follows', {pageSize:pageSize, minName: minName});
-    }
-    tieHao(tie:number) {
-        return this.get('tie-hao', {tie: tie});
-    }
-    toHome(tie:number) {
-        return this.post('to-home', {tie: tie});
-    }
-    dbInit() {
-        return this.get('dbInit', undefined).then(res => res);
-    }
 }
 
-const mainApi = new MainApi('tv/');
-export default mainApi;
+export const mainApi = new MainApi('tv/');

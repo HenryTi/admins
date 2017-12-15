@@ -4,13 +4,14 @@ import {Card, CardHeader, CardBody, CardText, CardTitle, Button} from 'reactstra
 import {nav, Page, ListView, ListItem} from 'tonva-tools';
 import consts from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
-import {mainData} from '../mainData';
-import NewFellowPage from './NewFellowPage';
+import {store} from '../store';
+import NewFellow from './NewFellow';
+import EditAdmin from './EditAdmin';
 
 @observer
 export default class AdministorsPage extends React.Component<{}, null> {
     async componentDidMount() {
-        await mainData.loadUnitAdmins();
+        await store.admins.load();
     }
 
     converter(admin: UnitAdmin):ListItem {
@@ -20,33 +21,61 @@ export default class AdministorsPage extends React.Component<{}, null> {
             main: admin.name,
             vice: admin.nick,
             icon : admin.icon || consts.appItemIcon,
-            right: <aside>ddd</aside>
+            //right: <aside>ddd</aside>
             //unread: 0,
         };
     }
     onNewFellow() {
-        
+        nav.push(<NewFellow />);
+    }
+    onItemClick(ua:UnitAdmin) {
+        store.admins.cur = ua;
+        nav.push(<EditAdmin />);
     }
     render() {
         let me = nav.local.user.get().id;
-        let list = mainData.unitAdmins && mainData.unitAdmins.sort((a, b) => {
-            if (a.isOwner === 1)
-                if (b.isOwner === 1) return a.id < b.id? -1:1;
-                else return -1;
-            if (b.isOwner === 1) return -1;
-            return a.id < b.id? -1:1;
-        });
-        let right = <Button color="success" size="sm" onClick={()=>nav.push(<NewFellowPage />)}>新增成员</Button>;
+        let {unit} = store;
+        let {owners, admins, fellows} = store.admins;
+        let right = <Button color="success" size="sm" onClick={this.onNewFellow}>新增成员</Button>;
+
+        let showOwners = false, showAdmins = false;
+        let ownersView, adminsView, fellowsView;
+        if (unit.isRoot === 1) {
+            showOwners = true;
+            showAdmins = true;
+        }
+        if (unit.isOwner === 1) showAdmins = true;
+        if (showOwners === true) ownersView = <ListView 
+            className='my-4' 
+            header='高管' items={owners}
+            none='[ 无高管 ]'
+            itemClick={this.onItemClick}
+            converter={this.converter} />;
+        if (showAdmins === true) adminsView = <ListView 
+            className='my-4' 
+            header='管理员' items={admins} 
+            none='[ 无管理员 ]'
+            itemClick={this.onItemClick}
+            converter={this.converter} />;
+        fellowsView = <ListView 
+            className='my-4' 
+            header='成员' items={fellows} 
+            none='[ 无普通成员 ]'
+            itemClick={this.onItemClick}
+            converter={this.converter} />;
+
         return <Page header={"管理员"} right={right}>
-            <ListView items={list} converter={this.converter} />
-            <Card>
+            {ownersView}
+            {adminsView}
+            {fellowsView}
+            <Card className='mx-1 my-4'>
                 <CardHeader>说明</CardHeader>
                 <CardBody>
                     <ul>
-                    <li><CardText>管理组包括主人，高管，管理员和成员</CardText></li>
-                    <li><CardText>主人可以增减高管和管理员</CardText></li>
-                    <li><CardText>高管可以增减管理员</CardText></li>
-                    <li><CardText>管理员可以增减管理用户以及机构的开发等</CardText></li>
+                    <li><CardText>管理组包括创始人、高管、管理员和成员</CardText></li>
+                    <li><CardText>小号创始人可以增减高管</CardText></li>
+                    <li><CardText>高管可以增减管理员和普通成员</CardText></li>
+                    <li><CardText>管理员可以小号，程序的开发，以及用户</CardText></li>
                     </ul>
                 </CardBody>
             </Card>

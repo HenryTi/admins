@@ -1,0 +1,137 @@
+import * as React from 'react';
+import {observer} from 'mobx-react';
+import {Button} from 'reactstrap';
+import {nav, Page, ValidForm, Field, FormFields, FormSchema, ListView, ListItem, rowIcon} from 'tonva-tools';
+import consts from '../consts';
+import {store} from '../store';
+import {DevModel} from '../model';
+import {List} from '../store/dev';
+
+export interface DevObjsProps<T extends DevModel.DevBase> {
+    title: string;
+    fields: Field[];
+    converter: (item:T)=>ListItem;
+    items: List<T>;
+}
+
+interface NewProps<T extends DevModel.DevBase> {
+    title: string;
+    repeated: {name:string; err:string};
+    items: List<T>;
+}
+
+interface EditProps<T extends DevModel.DevBase> {
+    title: string;
+    repeated: {name:string; err:string};
+    items: List<T>;
+}
+
+@observer
+export default class DevObjs<T extends DevModel.DevBase> extends React.Component<DevObjsProps<T>> {
+    async componentWillMount() {
+        await store.dev.apps.load();
+    }
+    converter(item:DevModel.App):ListItem {
+        return {
+            icon: item.icon || consts.appItemIcon,
+            main: item.name,
+            vice: item.discription,
+        };
+    }
+    newItem() {
+        store.dev.apps.cur = undefined;
+        nav.push(<New />);
+    }
+    itemClick(item:DevModel.App) {
+        store.dev.apps.cur = item;
+        nav.push(<Edit />);
+    }
+    render() {
+        let apps = store.dev.apps;
+        let right = <Button color='success' size='sm' onClick={()=>this.newItem()}>新增APP</Button>;
+        return <Page header='APP' right={right}>
+            <ListView items={store.dev.apps.items} 
+                converter={this.converter} 
+                itemClick={this.itemClick} />
+        </Page>;
+    }
+}
+
+const appFields: Field[] = [
+    {
+        type: 'string',
+        name: 'name',
+        label: '名称',
+        rules: ['required','maxlength:100'],
+    },
+    {
+        type: 'text',
+        name: 'discription',
+        label: '描述',
+        rules: ['maxlength:250'],
+    },
+    {
+        type: 'string',
+        name: 'icon',
+        label: '图标',
+        rules: ['maxlength:250'],
+    },
+    {
+        type: 'checkbox',
+        name: 'public',
+        label: '公开',
+        defaultValue: 0,
+    },
+];
+
+class New<T extends DevModel.DevBase> extends React.Component<NewProps<T>> {
+    private schema:FormSchema;
+    componentWillMount() {
+        this.schema = new FormSchema({
+            fields: appFields,
+            onSumit: this.onSubmit.bind(this),
+            submitText: '提交'
+        })
+    }
+    async onSubmit(values:any) {
+        let ret = await store.dev.apps.save(values);
+        if (ret === true) {
+            nav.pop();
+        }
+        else {
+            this.schema.setInputError('name', '跟已有的名称重复');
+        }
+    }
+    render() {
+        return <Page header='新增APP'>
+            <ValidForm className='mt-4' formSchema={this.schema} />
+        </Page>
+    }
+}
+
+class Edit<T extends DevModel.DevBase> extends React.Component<EditProps<T>> {
+    private schema:FormSchema;
+    componentWillMount() {
+        this.schema = new FormSchema({
+            fields: appFields,
+            onSumit: this.onSubmit.bind(this),
+            submitText: '提交'
+        }, store.dev.apps.cur);
+    }
+    async onSubmit(values:any) {
+        await store.dev.apps.save(values);
+        nav.pop();
+    }
+    async deleteItem() {
+        if (confirm('真的要删除吗？系统删除时并不会检查相关引用，请谨慎') === true) {
+            await store.dev.apps.del();
+            nav.pop();
+        }
+    }
+    render() {
+        let right = <Button color='danger' size='sm' onClick={()=>this.deleteItem()}>删除</Button>;
+        return <Page header='编辑APP' right={right}>
+            <ValidForm className='mt-4' formSchema={this.schema} />
+        </Page>
+    }
+}

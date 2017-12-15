@@ -1,51 +1,72 @@
 import * as React from 'react';
 import {Container, Row, Col, Card, CardBody, CardTitle, CardSubtitle, CardText} from 'reactstrap';
 import {observer} from 'mobx-react';
-import {nav, Page, ListView, ListItem} from 'tonva-tools';
+import {nav, Page, ListView, ListItem, rowIcon} from 'tonva-tools';
 import consts from './consts';
 import {Unit, UnitApps, UnitAdmin} from './model';
-import {mainData} from './mainData';
-import AdministorsPage from './Administors';
-
-const iconStyle={color:'#7f7fff', margin:'6px 0'};
-const iconFont=(name) => <i style={iconStyle} className={'fa fa-lg fa-' + name} />;
+import {store} from './store';
+import Administors from './Administors';
+import Dev from './Dev';
 
 @observer
-export default class AdminPage extends React.Component<{}, null> {
-    private items: ListItem[] = [
-        {
-            main: '用户',
-            right: '增删用户',
-            icon: iconFont('users'),
-            onClick: () => nav.push(<AdministorsPage />)
-        },
-        {
-            main: '开发',
-            right: 'api, app, server 等资源',
-            icon: iconFont('laptop'),
-            onClick: () => nav.push(<AdministorsPage />)
-        },
-        {
-            main: '管理员',
-            right: '增删管理员',
-            icon: iconFont('universal-access'),
-            onClick: () => nav.push(<AdministorsPage />)
-        },
-    ];
+export default class AdminPage extends React.Component {
+    private appsAction:ListItem = {
+        main: 'App设置',
+        right: '小号增减App',
+        icon: rowIcon('mobile-phone'),
+        onClick: () => nav.push(<Administors />),
+    };
+    private usersAction:ListItem = {
+        main: '会员管理',
+        right: '会员权限',
+        icon: rowIcon('users'),
+        onClick: () => nav.push(<Administors />),
+    };
+    private devAction:ListItem = {
+        main: '应用开发',
+        right: '程序开发相关管理',
+        icon: rowIcon('laptop'),
+        onClick: () => nav.push(<Dev />),
+    };
+    private adminsAction:ListItem = {
+        main: '系统管理员',
+        right: '增删管理员',
+        icon: rowIcon('universal-access'),
+        onClick: () => nav.push(<Administors />),
+    };
+    private noneAction:ListItem = {
+        main: '请耐心等待分配任务',
+        // right: '增删管理员',
+        icon: rowIcon('hourglass-start'),
+        // onClick: () => nav.push(<AdministorsPage />),
+    };
     constructor(props) {
         super(props);
         //if (this.props.isOwner === 0) this.items.shift();
+        this.state = {items: undefined};
     }
-    async componentDidMount() {
-        await mainData.loadUnit();
-    }
-
-    converter(item: ListItem):ListItem {
-        item.key = item.main;
-        return item;
+    private getItems():ListItem[] {
+        // store.init();
+        // await store.loadUnit();
+        let unit = store.unit;
+        if (unit === undefined) return;
+        let {isAdmin, isOwner} = unit;
+        let items:ListItem[];
+        if (isOwner === 1) {
+            items = [this.appsAction, this.usersAction, this.adminsAction, this.devAction];
+        }
+        else if (isAdmin === 1) {
+            items = [this.appsAction, this.usersAction, this.devAction];
+        }
+        else {
+            items = [this.noneAction];
+        }
+        return items;
     }
     render() {
-        let unit:Unit = mainData.unit;
+        let items = this.getItems();
+        if (items === undefined) return null;
+        let unit:Unit = store.unit;
         let title = '管理小号';
         let header = title, top;
         if (unit !== undefined) {
@@ -66,7 +87,7 @@ export default class AdminPage extends React.Component<{}, null> {
         }
         return <Page header={header} debugLogout={true}>
             {top}
-            <ListView items={this.items} converter={this.converter} />
+            <ListView items={items} />
         </Page>;
     }
 }

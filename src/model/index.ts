@@ -1,3 +1,4 @@
+export * from './dev';
 
 export interface Api {
     name: string;
@@ -23,6 +24,7 @@ export interface Unit {
     nick: string;
     discription: string;
     icon: string;
+    isRoot: number;
     isOwner: number;
     isAdmin: number;
     owner: number;
@@ -43,6 +45,7 @@ export interface UnitAdmin {
     country: string;
     mobile: string;
     email: string;
+    isRoot: number;
     isOwner: number;
     isAdmin: number;
 }

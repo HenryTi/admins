@@ -5,8 +5,8 @@ import {Card, CardHeader, CardBody, CardText, CardTitle, Button,
 import {nav, Page, ListView, ListItem, FormSchema, SubmitReturn, ValidForm, InputSchema} from 'tonva-tools';
 import consts from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
-import {mainData} from '../mainData';
-import mainApi from '../mainApi';
+import {store} from '../store';
+import {mainApi} from '../api';
 
 @observer
 export default class NewFellowPage extends React.Component<{}, null> {
@@ -56,19 +56,11 @@ export default class NewFellowPage extends React.Component<{}, null> {
         };
     }
     render() {
-        let me = nav.local.user.get().id;
-        let list = mainData.unitAdmins && mainData.unitAdmins.sort((a, b) => {
-            if (a.isOwner === 1)
-                if (b.isOwner === 1) return a.id < b.id? -1:1;
-                else return -1;
-            if (b.isOwner === 1) return -1;
-            return a.id < b.id? -1:1;
-        });
         return <Page header={"新增管理成员"}>
             <Container>
                 <Row>
                     <Col className='my-4 text-info'>
-                        请输入用户名，发送邀请。等待对方同意。
+                        请输入用户名，发送邀请。
                     </Col>
                 </Row>
             </Container>
