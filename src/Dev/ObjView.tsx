@@ -2,6 +2,7 @@ import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
 import {nav, Page, ValidForm, Field, FormFields, FormSchema, ListView, ListItem, rowIcon} from 'tonva-tools';
+import {FormRow, FormView, TonvaForm} from 'tonva-react-form';
 import consts from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
@@ -13,6 +14,8 @@ export interface ObjViewProps<T extends DevModel.ObjBase> {
     converter: (item:T)=>ListItem;
     items: List<T>;
     repeated: {name:string; err:string};
+
+    formRows?: FormRow[];
 }
 /*
 interface NewProps<T extends DevModel.DevBase> {
@@ -90,12 +93,17 @@ const appFields: Field[] = [
 */
 class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
     private schema:FormSchema;
+    private formView: FormView;
     componentWillMount() {
         this.schema = new FormSchema({
             fields: this.props.fields,
             onSumit: this.onSubmit.bind(this),
             submitText: '提交'
-        })
+        });
+        this.formView = new FormView({
+            formRows: this.props.formRows,
+            onSumit: this.onSubmit.bind(this),
+        }, this.props.items.cur);
     }
     async onSubmit(values:any) {
         let ret = await this.props.items.save(values);
@@ -110,21 +118,30 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
     render() {
         return <Page header={'新增'+this.props.title}>
             <ValidForm className='mt-4' formSchema={this.schema} />
+            <TonvaForm formView={this.formView} />
         </Page>
     }
 }
 
 class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
-    private schema:FormSchema;
+    //private schema:FormSchema;
+    private formView: FormView;
     componentWillMount() {
+        /*
         this.schema = new FormSchema({
             fields: this.props.fields,
             onSumit: this.onSubmit.bind(this),
             submitText: '提交'
         }, this.props.items.cur);
+        */
+        this.formView = new FormView({
+            formRows: this.props.formRows,
+            onSumit: this.onSubmit.bind(this),
+        }, this.props.items.cur);
     }
     async onSubmit(values:any) {
         await this.props.items.save(values);
+        //alert(JSON.stringify(values));
         nav.pop();
     }
     async deleteItem() {
@@ -134,9 +151,10 @@ class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
         }
     }
     render() {
-        let right = <Button color='danger' size='sm' onClick={()=>this.deleteItem()}>删除</Button>;
-        return <Page header={'编辑'+this.props.title} right={right}>
-            <ValidForm className='mt-4' formSchema={this.schema} />
-        </Page>
+        let right = <Button color='warning' size='sm' onClick={()=>this.deleteItem()}>删除</Button>;
+        return <Page header={'编辑'+this.props.title} right={right} close={true}>
+            <TonvaForm formView={this.formView} />
+        </Page>;
+        // <ValidForm className='mt-4' formSchema={this.schema} />
     }
 }
