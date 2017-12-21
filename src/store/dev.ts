@@ -62,6 +62,8 @@ export abstract class List<T extends DevModel.ObjBase> {
 }
 
 class Apps extends List<DevModel.App> {
+    @observable apis: DevModel.Api[] = undefined;
+    @observable searchedApis: DevModel.Api[] = undefined;
     protected async _load() {
         return await devApi.apps(this.store.unit.id);
     }
@@ -73,6 +75,29 @@ class Apps extends List<DevModel.App> {
     }
     protected _inc() { this.dev.counts.app++; }
     protected _dec() { this.dev.counts.app--; }
+
+    public async loadCurApis() {
+        let ret = await devApi.loadAppApis(this.store.unit.id, this.cur.id);
+        this.apis = ret;
+    }
+    public async searchApi(key:string) {
+        this.searchedApis = await devApi.searchApi(this.store.unit.id, key);
+    }
+    public async appBindApi(apiIds:number[], bind:boolean) {
+        await devApi.appBindApi(this.store.unit.id, this.cur.id, apiIds, bind? 1:0);
+        for (let api of apiIds) {
+            if (bind) {
+                if (this.searchedApis !== undefined) {
+                    let find = this.searchedApis.find(a => a.id === api);
+                    if (find !== undefined) this.apis.unshift(find);
+                }
+            }
+            else {
+                let index = this.apis.findIndex(a => a.id === api);
+                if (index>=0) this.apis.splice(index, 1);
+            }
+        }
+    }
 }
 
 class Apis extends List<DevModel.Api> {

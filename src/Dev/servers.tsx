@@ -1,10 +1,37 @@
+import * as React from 'react';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
 
+class Info extends React.Component {
+    constructor(props:any) {
+        super(props);
+    }
+    render() {
+        return <div>
+            Info
+        </div>;
+    }
+}
+
 const serversProps:ObjViewProps<DevModel.Server> = {
     title: 'Server',
+    info: Info,
+    formRows: [
+        {
+            label: '描述', 
+            field: {name: 'discription', type: 'string', maxLength: 50, required: true},
+        },
+        {
+            label: '云服务商', 
+            field: {name: 'cloud', type: 'string', maxLength: 20, required: true},
+        },
+        {
+            label: 'IP地址', 
+            field: {name: 'ip', type: 'string', maxLength: 20},
+        },
+    ],
     fields: [
         {
             type: 'string',

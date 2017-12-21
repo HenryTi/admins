@@ -1,10 +1,45 @@
+import * as React from 'react';
+import {ListView, ListItem} from 'tonva-tools';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
 
+class Info extends React.Component {
+    constructor(props:any) {
+        super(props);
+    }
+    render() {
+        return <div>
+            Info
+        </div>;
+    }
+}
+
+const serviceTypeNames = ['中心', '交换', 'APP', 'API'];
 const servicesProps:ObjViewProps<DevModel.Service> = {
     title: '',
+    info: Info,
+    formRows: [
+        {
+            label: 'URL',
+            field: {name: 'url', type: 'string', required:true, maxLength:200}
+        },
+        {
+            label: '描述',
+            field: {name: 'discription', type: 'string', maxLength:100}
+        },
+        {
+            label: '服务器',
+            field: {name: 'server', type: 'id'},
+            face:{
+                type: 'pick-id', 
+                initCaption: '请选择商品', 
+                pick: undefined, //this.idPick,
+                fromItem: (item:any)=>{return {id: item.id, caption: item.main+' ' + item.vice}},
+            }
+        },
+    ],
     fields: [
         {
             type: 'string',
@@ -30,11 +65,12 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
             defaultValue: 0,
         },
     ],
-    converter: (item)=> {
+    converter: (item:DevModel.Service):ListItem=> {
         return {
+            key: item.id,
             icon: consts.appItemIcon,
             main: item.url,
-            vice: item.discription,
+            vice: serviceTypeNames[item.type] + ': ' + item.discription,
         };
     },
     items: undefined, //store.dev.apps,

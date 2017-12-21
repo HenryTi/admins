@@ -1,18 +1,17 @@
 import * as React from 'react';
 import {nav, Page, ListView, ListItem} from 'tonva-tools';
-import {IdPick, IdPickFace, IdPickResult} from 'tonva-react-form';
+import {IdPick, IdPickFace} from 'tonva-react-form';
 
 export interface IdPickProps {
-    title: string;
+    caption: string;
     items: (() => Promise<any[]>) | any[];
     itemRender?: (item:any, index:number, ex?:any) => JSX.Element;
     itemConverter?: (item:any) => ListItem;
-    result?: (item:any) => IdPickResult;
 }
 
 export function createIdPick(props: IdPickProps):IdPick {
-    return function(face: IdPickFace):Promise<IdPickResult> {
-        return new Promise<IdPickResult>((resolve, reject) => {
+    return function(face: IdPickFace):Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             nav.push(<IdPickPage resolve={resolve} face={face} {...props} />);
         });
     }
@@ -20,7 +19,7 @@ export function createIdPick(props: IdPickProps):IdPick {
 
 interface IdPickPageProps extends IdPickProps {
     face: IdPickFace;
-    resolve: (value?: IdPickResult) => void;
+    resolve: (item?: any) => void;
 }
 interface IdPickPageState {
     items?: any[];
@@ -41,17 +40,13 @@ class IdPickPage extends React.Component<IdPickPageProps, IdPickPageState> {
         });
     }
     itemClick(item:any) {
-        let {resolve, result} = this.props;
-        resolve(
-            result === undefined?
-                {id: 3, element: '3号商品'} :
-                result(item)
-        );
+        let {resolve} = this.props;
+        resolve(item);
         nav.pop();
     }
     render() {
-        let {title, itemRender, itemConverter} = this.props;
-        return <Page header={title}>
+        let {caption, itemRender, itemConverter} = this.props;
+        return <Page header={caption}>
             <ListView items={this.state.items} itemClick={this.itemClick} renderRow={itemRender} converter={itemConverter} />
         </Page>
     }

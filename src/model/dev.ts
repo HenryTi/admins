@@ -1,6 +1,7 @@
 export namespace DevModel {
     export interface ObjBase {
         id: number;
+        unit: number;
         date_init: Date;
         date_update: Date;
     }

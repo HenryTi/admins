@@ -1,10 +1,34 @@
+import * as React from 'react';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
 
+class Info extends React.Component {
+    constructor(props:any) {
+        super(props);
+    }
+    render() {
+        return <div>
+            Info
+        </div>;
+    }
+}
+
 const apisProps:ObjViewProps<DevModel.Api> = {
     title: 'API',
+    info: Info,
+    formRows: [
+        {
+            label: '名称', 
+            field: {name: 'name', type: 'string', maxLength: 100, required: true},
+        },
+        {
+            label: '描述',
+            field: {name: 'discription', type: 'string', maxLength: 250},
+            face: {type: 'textarea'}
+        },
+    ],
     fields: [
         {
             type: 'string',

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
-import {nav, Page, ValidForm, Field, FormFields, FormSchema, ListView, ListItem, rowIcon} from 'tonva-tools';
-import {FormRow, FormView, TonvaForm} from 'tonva-react-form';
+import {nav, Page, ValidForm, Field, FormFields, FormSchema, 
+    rowIcon, ListView, ListItem} from 'tonva-tools';
+import {FormRow, FormView, TonvaForm, DropdownActions, Action} from 'tonva-react-form';
 import consts from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
@@ -14,24 +15,10 @@ export interface ObjViewProps<T extends DevModel.ObjBase> {
     converter: (item:T)=>ListItem;
     items: List<T>;
     repeated: {name:string; err:string};
-
+    info: new (props:any) => React.Component;
+    extraMenuActions?: Action[];
     formRows?: FormRow[];
 }
-/*
-interface NewProps<T extends DevModel.DevBase> {
-    title: string;
-    fields: Field[];
-    repeated: {name:string; err:string};
-    items: List<T>;
-}
-
-interface EditProps<T extends DevModel.DevBase> {
-    title: string;
-    fields: Field[];
-    repeated: {name:string; err:string};
-    items: List<T>;
-}
-*/
 
 @observer
 export default class DevObjs<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
@@ -39,7 +26,7 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
         super(props);
         this.itemClick = this.itemClick.bind(this);
     }
-    async componentWillMount() {
+    async componentDidMount() {
         await this.props.items.load();
     }
     //converter(item:T):ListItem {
@@ -51,7 +38,7 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
     }
     itemClick(item:T) {
         this.props.items.cur = item;
-        nav.push(<Edit {...this.props} />);
+        nav.push(<Info {...this.props} />);
     }
     render() {
         let {title, items} = this.props;
@@ -63,34 +50,7 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
         </Page>;
     }
 }
-/*
-const appFields: Field[] = [
-    {
-        type: 'string',
-        name: 'name',
-        label: '名称',
-        rules: ['required','maxlength:100'],
-    },
-    {
-        type: 'text',
-        name: 'discription',
-        label: '描述',
-        rules: ['maxlength:250'],
-    },
-    {
-        type: 'string',
-        name: 'icon',
-        label: '图标',
-        rules: ['maxlength:250'],
-    },
-    {
-        type: 'checkbox',
-        name: 'public',
-        label: '公开',
-        defaultValue: 0,
-    },
-];
-*/
+
 class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
     private schema:FormSchema;
     private formView: FormView;
@@ -102,7 +62,7 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
         });
         this.formView = new FormView({
             formRows: this.props.formRows,
-            onSumit: this.onSubmit.bind(this),
+            onSubmit: this.onSubmit.bind(this),
         }, this.props.items.cur);
     }
     async onSubmit(values:any) {
@@ -117,13 +77,41 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
     }
     render() {
         return <Page header={'新增'+this.props.title}>
-            <ValidForm className='mt-4' formSchema={this.schema} />
             <TonvaForm formView={this.formView} />
         </Page>
     }
 }
 
+class Info<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
+    private menuItems = [
+        {caption:'修改' + this.props.title, action:this.editItem.bind(this), icon:'edit' },
+        {caption:'删除', action:this.deleteItem.bind(this), icon:'trash-o' }
+    ];
+    async deleteItem() {
+        if (confirm('真的要删除吗？系统删除时并不会检查相关引用，请谨慎') === true) {
+            await this.props.items.del();
+            nav.pop();
+        }
+    }
+    editItem() {
+        nav.push(<Edit {...this.props} />);
+    }
+    render() {
+        let actions = [];
+        let ex = this.props.extraMenuActions;
+        if (ex !== undefined) actions.push(...ex);
+        actions.push(...this.menuItems);
+        let right = <DropdownActions actions={actions} />
+        return <Page header={'详细资料'} right={right}>
+            <this.props.info {...this.props.items.cur} />
+        </Page>;
+    }
+}
+
 class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
+    private actions = [
+        {caption:'删除', action:this.deleteItem.bind(this), icon:'trash-o' }
+    ];
     //private schema:FormSchema;
     private formView: FormView;
     componentWillMount() {
@@ -136,7 +124,7 @@ class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
         */
         this.formView = new FormView({
             formRows: this.props.formRows,
-            onSumit: this.onSubmit.bind(this),
+            onSubmit: this.onSubmit.bind(this),
         }, this.props.items.cur);
     }
     async onSubmit(values:any) {
@@ -151,7 +139,8 @@ class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
         }
     }
     render() {
-        let right = <Button color='warning' size='sm' onClick={()=>this.deleteItem()}>删除</Button>;
+        let right = <DropdownActions actions={this.actions} />
+        //<Button color='warning' size='sm' onClick={()=>this.deleteItem()}>删除</Button>;
         return <Page header={'编辑'+this.props.title} right={right} close={true}>
             <TonvaForm formView={this.formView} />
         </Page>;
