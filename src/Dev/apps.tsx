@@ -4,10 +4,11 @@ import {observer} from 'mobx-react';
 import * as _ from 'lodash';
 import {Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
-import {FormRow, EasyDate, Media, Prop, PropGrid, ListProp, ListView, SearchBox} from 'tonva-react-form';
+import {FormRow, EasyDate, Media, Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge} from 'tonva-react-form';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
+import {Row} from './row';
 import {ObjViewProps} from './ObjView';
 
 @observer
@@ -104,12 +105,8 @@ const appsProps:ObjViewProps<DevModel.App> = {
             defaultValue: 0,
         },
     ],
-    converter: (item)=> {
-        return {
-            icon: item.icon || consts.appItemIcon,
-            main: item.name,
-            vice: item.discription,
-        };
+    row: (item:DevModel.App):JSX.Element => {
+        return <Row icon={item.icon || consts.appItemIcon} main={item.name} vice={item.discription} />;
     },
     items: undefined, //store.dev.apps,
     repeated: {
@@ -140,7 +137,7 @@ class AppApis extends React.Component {
 
     constructor(props) {
         super(props);
-        this.onSelected = this.onSelected.bind(this);
+        this.onSelect = this.onSelect.bind(this);
         this.row = this.row.bind(this);
         this.removeBind = this.removeBind.bind(this);
     }
@@ -148,24 +145,32 @@ class AppApis extends React.Component {
         let apiIds:number[] = this.items.filter(si => si.selected === true).map(v => v.api.id);
         await store.dev.apps.appBindApi(apiIds, false);
         this.calcSomeSelected();
-    }
+    }    
     private calcSomeSelected() {
         this.someSelected = (this.items.some(v => v.selected === true));
     }
-    onSelected(selectedApi: SelectedApi, selected:boolean) {
+    //onSelect(selectedApi: SelectedApi, selected:boolean) {
+    onSelect(item: DevModel.App, isSelected:boolean, anySelected:boolean) {
         //{selectedApi.selected = e.target.checked}
-        selectedApi.selected = selected;
-        if (selected === true) this.someSelected = true;
-        else this.calcSomeSelected();
+        //selectedApi.selected = selected;
+        //if (selected === true) this.someSelected = true;
+        //else this.calcSomeSelected();
+        this.someSelected = anySelected;
     }
-    row(selectedApi: SelectedApi) {
+    //row(selectedApi: SelectedApi) {
+    row(item: DevModel.App) {
+        return <div>
+            <div>{item.name}</div>
+            <small className="ml-auto text-muted">{item.discription}</small>
+        </div>;
+        /*
         let {selected, api} = selectedApi;
         return <li key={api.id} className="va-row p-0">
             <label className="w-100 mb-0 px-3 py-2">
                 <label className="custom-control custom-checkbox mb-0 mr-0">
                     <input type='checkbox' className="custom-control-input"
                         //checked={selected}
-                        onChange={(e)=>this.onSelected(selectedApi, e.target.checked)} />
+                        onChange={(e)=>this.onSelect(selectedApi, e.target.checked)} />
                     <span className="custom-control-indicator" />
                     <div className="custom-control-description  d-flex justify-content-end">
                         <div>{api.name}</div>
@@ -175,6 +180,7 @@ class AppApis extends React.Component {
                 </label>
             </label>
         </li>
+        */
     }
     render() {
         let btnProps = this.someSelected?
@@ -185,10 +191,10 @@ class AppApis extends React.Component {
         </Button>;
         let listHeader = <li className="va-row py-1 justify-content-center">{btn(btnProps)}</li>;
         return <Page header="关联API">
-            <ListView
+            <List
                 header={listHeader}
                 items={this.items}
-                renderRow={this.row} />
+                item={{render: this.row, onSelect: this.onSelect}} />
         </Page>;
     }
 }
@@ -220,10 +226,10 @@ class Apis extends React.Component {
             _.assign(btnProps, {onClick:()=>this.onBind(api, true), color:'primary'});
             btnContent = <span><i className="fa fa-check"/> 关联</span>;
         }
-        return <li key={api.id} className="va-row">
+        return <div>
             <div>{api.name + ' - ' + api.discription}</div>
             <footer><Button {...btnProps}>{btnContent}</Button></footer>
-        </li>
+        </div>
     }
     render() {
         let header = <SearchBox className="w-100 mx-1" 
@@ -231,7 +237,7 @@ class Apis extends React.Component {
             placeholder="搜索API名字" 
             maxLength={100} />;
         return <Page close={true} header={header}>
-            <ListView items={store.dev.apps.searchedApis} renderRow={this.row} beforeLoad={null} />
+            <List items={store.dev.apps.searchedApis} item={{render: this.row}} loading={null} />
         </Page>;
     }
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
@@ -52,12 +53,8 @@ const serversProps:ObjViewProps<DevModel.Server> = {
             rules: ['maxlength:20'],
         },
     ],
-    converter: (item)=> {
-        return {
-            icon: consts.appItemIcon,
-            main: item.discription,
-            vice: item.cloud + ' ' + item.ip,
-        };
+    row: (item: DevModel.Server):JSX.Element => {
+        return <Row icon={consts.appItemIcon} main={item.discription} vice={item.cloud + ' ' + item.ip} />;
     },
     items: undefined, //store.dev.apps,
     repeated: {

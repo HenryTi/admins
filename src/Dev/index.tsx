@@ -1,31 +1,25 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Card, CardHeader, CardBody, CardText, CardTitle, Button} from 'reactstrap';
-import {nav, Page, ListView, ListItem, rowIcon} from 'tonva-tools';
+import {nav, Page} from 'tonva-tools';
+import {List, LMR, FA} from 'tonva-react-form';
 import consts from '../consts';
 import {UnitApps, UnitAdmin, DevModel} from '../model';
 import {store} from '../store';
-import {List} from '../store/dev';
+import {ObjItems} from '../store/dev';
 import ObjView, {ObjViewProps} from './ObjView';
 import appsProps from './apps';
 import apisProps from './apis';
 import serversProps from './servers';
 import servicesProps from './services';
 
-const iconColor = 'green';
-
-function rowItem<T extends DevModel.ObjBase>(title:string, count:number, 
-    icon:string, 
-    items: List<T>,
-    props:ObjViewProps<T>):ListItem 
-{
-    props.items = items;
-    return {
-        main: title,
-        right: count>0? String(count):'',
-        icon: rowIcon(icon, iconColor),
-        onClick: () => nav.push(<ObjView {...props} />),
-    };
+interface Item<T extends DevModel.ObjBase> {
+    title: string;
+    count: number;
+    icon: string;
+    items: ObjItems<T>;
+    //page: JSX.Element;
+    objProps: ObjViewProps<T>
 }
 
 @observer
@@ -33,7 +27,7 @@ export default class AdministorsPage extends React.Component {
     async componentDidMount() {
         await store.dev.loadCounts();
     }
-
+/*
     converter(admin: UnitAdmin):ListItem {
         return {
             key: admin.id,
@@ -45,6 +39,7 @@ export default class AdministorsPage extends React.Component {
             //unread: 0,
         };
     }
+*/
     onNewFellow() {
         //nav.push(<NewFellow />);
     }
@@ -52,20 +47,62 @@ export default class AdministorsPage extends React.Component {
         store.admins.cur = ua;
         //nav.push(<EditAdmin />);
     }
+    row(item: Item<DevModel.ObjBase>, index: number):JSX.Element {
+        let {icon, title, count} = item;
+        return <LMR className="px-3 py-2 align-items-center"
+            left={<FA className="text-primary" name={icon} fixWidth={true} />}
+            right={count && <small className="text-muted">{count}</small>}>
+            <b>{title}</b>
+        </LMR>;
+    }
+    onClick(item:Item<DevModel.ObjBase>) {
+        return nav.push(<ObjView {...item.objProps} items={item.items} />)
+    }
     render() {
         let {unit, dev} = store;
         let {counts} = dev;
         if (counts === undefined) return null;
 
-        let items:ListItem[] = [
-            rowItem<DevModel.App>('APP', counts.app, 'tablet', store.dev.apps, appsProps),
-            rowItem<DevModel.Api>('API', counts.api, 'cogs', store.dev.apis, apisProps),
-            rowItem<DevModel.Server>('Server', counts.server, 'server', store.dev.servers, serversProps),
-            rowItem<DevModel.Service>('Service', counts.service, 'microchip', store.dev.services, servicesProps),
+        let items:Item<DevModel.ObjBase>[] = [
+            {
+                title: 'APP', 
+                count: counts.app, 
+                icon: 'tablet', 
+                items: store.dev.apps,
+                //page: <ObjView {...appsProps} items={store.dev.apps} />
+                objProps: appsProps
+            },
+            {
+                title: 'API', 
+                count: counts.api, 
+                icon: 'cogs', 
+                items: store.dev.apis, 
+                objProps: apisProps,
+                //page: <ObjView {...apisProps} items={store.dev.apis} />
+            },
+            {
+                title: 'Server', 
+                count: counts.server, 
+                icon: 'server', 
+                items: store.dev.servers, 
+                //page: <ObjView {...serversProps} items={store.dev.servers} />
+                objProps: serversProps,
+            },
+            {
+                title: 'Service', 
+                count: counts.service, 
+                icon: 'microchip', 
+                items: store.dev.services, 
+                //page: <ObjView {...servicesProps} items={store.dev.services} />
+                objProps: servicesProps,
+            },
         ];
-
+        /*
+        function rowClick(item: Item<DevModel.ObjBase>) {
+            nav.push(<ObjView {...item.objProps} items={item.items} />);
+        }*/   
         return <Page header={"应用开发"}>
-            <ListView items={items} />
+            <List items={items} item={{render: this.row, onClick: this.onClick}} />
         </Page>;
     }
 }

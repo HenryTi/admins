@@ -12,7 +12,7 @@ interface Counts {
     service: number;
 }
 
-export abstract class List<T extends DevModel.ObjBase> {
+export abstract class ObjItems<T extends DevModel.ObjBase> {
     protected store:Store;
     protected dev:Dev;
     constructor(store:Store, dev:Dev) {
@@ -61,7 +61,7 @@ export abstract class List<T extends DevModel.ObjBase> {
     protected abstract _dec();
 }
 
-class Apps extends List<DevModel.App> {
+class Apps extends ObjItems<DevModel.App> {
     @observable apis: DevModel.Api[] = undefined;
     @observable searchedApis: DevModel.Api[] = undefined;
     protected async _load() {
@@ -100,7 +100,7 @@ class Apps extends List<DevModel.App> {
     }
 }
 
-class Apis extends List<DevModel.Api> {
+class Apis extends ObjItems<DevModel.Api> {
     protected async _load() {
         let ret = await devApi.apis(this.store.unit.id);
         return ret;
@@ -115,7 +115,7 @@ class Apis extends List<DevModel.Api> {
     protected _dec() { this.dev.counts.api--; }
 }
 
-class Servers extends List<DevModel.Server> {
+class Servers extends ObjItems<DevModel.Server> {
     protected async _load() {
         return await devApi.servers(this.store.unit.id);
     }
@@ -129,7 +129,7 @@ class Servers extends List<DevModel.Server> {
     protected _dec() { this.dev.counts.server--; }
 }
 
-class Services extends List<DevModel.Service> {
+class Services extends ObjItems<DevModel.Service> {
     protected async _load() {
         return await devApi.services(this.store.unit.id);
     }

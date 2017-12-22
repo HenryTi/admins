@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Card, CardHeader, CardBody, CardText, CardTitle, Button,
     Container, Row, Col} from 'reactstrap';
-import {nav, Page, ListView, ListItem, FormSchema, SubmitReturn, ValidForm, InputSchema} from 'tonva-tools';
+import {nav, Page, FormSchema, SubmitReturn, ValidForm, InputSchema} from 'tonva-tools';
 import consts from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
@@ -43,17 +43,6 @@ export default class NewFellowPage extends React.Component<{}, null> {
                 </Card>
             </Page>);
         }
-    }
-    converter(admin: UnitAdmin):ListItem {
-        return {
-            key: admin.id,
-            date: undefined,
-            main: admin.name,
-            vice: admin.nick,
-            icon : admin.icon || consts.appItemIcon,
-            right: <aside>ddd</aside>
-            //unread: 0,
-        };
     }
     render() {
         return <Page header={"新增管理成员"}>

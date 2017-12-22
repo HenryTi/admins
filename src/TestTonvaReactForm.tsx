@@ -13,6 +13,7 @@ export default class  TestTonvaForm extends React.Component {
             {id:2, main: 'dddd2', vice: 'bbb2'},
             {id:3, main: 'dddd3', vice: 'bbb3'},
         ],
+        row: (item:any, index:number) => <div>{item.main + ' ' + item.vice}</div>,
     });
     private fields:Fields = {
         decA: {name:'decA', type:'dec', max:100, required:true },

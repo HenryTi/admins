@@ -1,12 +1,30 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Card, CardHeader, CardBody, CardText, CardTitle, Button} from 'reactstrap';
-import {nav, Page, ListView, ListItem} from 'tonva-tools';
+import {nav, Page} from 'tonva-tools';
 import consts from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
 import NewFellow from './NewFellow';
 import EditAdmin from './EditAdmin';
+import {LMR, Badge, List} from 'tonva-react-form';
+
+export interface RowProps {
+    icon: string;
+    main: string;
+    vice: string;
+}
+
+export class Row extends React.Component<RowProps> {
+    render() {
+        let {icon, main, vice} = this.props;
+        return <LMR className="py-1 px-2 align-items-stretch"
+            left={<Badge size="sm"><img src={icon} /></Badge>}>
+            <b>{main}</b>
+            <small>{vice}</small>
+        </LMR>;
+    }
+}
 
 @observer
 export default class AdministorsPage extends React.Component<{}, null> {
@@ -14,23 +32,15 @@ export default class AdministorsPage extends React.Component<{}, null> {
         await store.admins.load();
     }
 
-    converter(admin: UnitAdmin):ListItem {
-        return {
-            key: admin.id,
-            date: undefined,
-            main: admin.name,
-            vice: admin.nick,
-            icon : admin.icon || consts.appItemIcon,
-            //right: <aside>ddd</aside>
-            //unread: 0,
-        };
-    }
     onNewFellow() {
         nav.push(<NewFellow />);
     }
     onItemClick(ua:UnitAdmin) {
         store.admins.cur = ua;
         nav.push(<EditAdmin />);
+    }
+    row(item:UnitAdmin) {
+        return <Row icon={item.icon|| consts.appItemIcon} main={item.name} vice={item.nick} />
     }
     render() {
         let me = nav.local.user.get().id;
@@ -45,25 +55,24 @@ export default class AdministorsPage extends React.Component<{}, null> {
             showAdmins = true;
         }
         if (unit.isOwner === 1) showAdmins = true;
-        if (showOwners === true) ownersView = <ListView 
+        if (showOwners === true) ownersView = <List 
             className='my-4' 
             header='高管' items={owners}
             none='[ 无高管 ]'
-            itemClick={this.onItemClick}
-            converter={this.converter} />;
-        if (showAdmins === true) adminsView = <ListView 
+            item={{onClick: this.onItemClick, render: this.row}}
+        />;
+        if (showAdmins === true) adminsView = <List 
             className='my-4' 
             header='管理员' items={admins} 
             none='[ 无管理员 ]'
-            itemClick={this.onItemClick}
-            converter={this.converter} />;
-        fellowsView = <ListView 
+            item={{onClick: this.onItemClick, render: this.row}}
+        />;
+        fellowsView = <List
             className='my-4' 
             header='成员' items={fellows} 
             none='[ 无普通成员 ]'
-            itemClick={this.onItemClick}
-            converter={this.converter} />;
-
+            item={{onClick: this.onItemClick, render: this.row}}
+        />
         return <Page header={"管理员"} right={right}>
             {ownersView}
             {adminsView}

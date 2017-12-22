@@ -1,43 +1,61 @@
 import * as React from 'react';
 import {Container, Row, Col, Card, CardBody, CardTitle, CardSubtitle, CardText} from 'reactstrap';
 import {observer} from 'mobx-react';
-import {nav, Page, ListView, ListItem, rowIcon} from 'tonva-tools';
+import {nav, Page} from 'tonva-tools';
+import {List, LMR, FA, StackedFA} from 'tonva-react-form';
 import consts from './consts';
 import {Unit, UnitApps, UnitAdmin} from './model';
 import {store} from './store';
 import Administors from './Administors';
 import Dev from './Dev';
 
+interface Item {
+    main: string;
+    right?: string;
+    icon: string|JSX.Element;
+    page?: new (props:any) => React.Component;
+    //onClick: () => nav.push(<Administors />),
+}
+
 @observer
 export default class AdminPage extends React.Component {
-    private appsAction:ListItem = {
+    private appsAction:Item = {
         main: 'App设置',
         right: '小号增减App',
-        icon: rowIcon('mobile-phone'),
-        onClick: () => nav.push(<Administors />),
+        // 'mobile-phone'
+        icon: 'cog',
+        /*<StackedFA>
+            <FA name="square-o" className="fa-stack-2x text-secondary" />
+            <FA name="cog" className="fa-stack-1x text-primary"  />
+        </StackedFA>*/
+        page: Administors,
+        //onClick: () => nav.push(<Administors />),
     };
-    private usersAction:ListItem = {
+    private usersAction:Item = {
         main: '会员管理',
         right: '会员权限',
-        icon: rowIcon('users'),
-        onClick: () => nav.push(<Administors />),
+        icon: 'users',
+        page: Administors,
+        //onClick: () => nav.push(<Administors />),
     };
-    private devAction:ListItem = {
+    private devAction:Item = {
         main: '应用开发',
         right: '程序开发相关管理',
-        icon: rowIcon('laptop'),
-        onClick: () => nav.push(<Dev />),
+        icon: 'laptop',
+        page: Dev,
+        //onClick: () => nav.push(<Dev />),
     };
-    private adminsAction:ListItem = {
+    private adminsAction:Item = {
         main: '系统管理员',
         right: '增删管理员',
-        icon: rowIcon('universal-access'),
-        onClick: () => nav.push(<Administors />),
+        icon: 'universal-access',
+        page: Administors,
+        //onClick: () => nav.push(<Administors />),
     };
-    private noneAction:ListItem = {
+    private noneAction:Item = {
         main: '请耐心等待分配任务',
         // right: '增删管理员',
-        icon: rowIcon('hourglass-start'),
+        icon: 'hourglass-start',
         // onClick: () => nav.push(<AdministorsPage />),
     };
     constructor(props) {
@@ -45,13 +63,13 @@ export default class AdminPage extends React.Component {
         //if (this.props.isOwner === 0) this.items.shift();
         this.state = {items: undefined};
     }
-    private getItems():ListItem[] {
+    private getItems():Item[] {
         // store.init();
         // await store.loadUnit();
         let unit = store.unit;
         if (unit === undefined) return;
         let {isAdmin, isOwner} = unit;
-        let items:ListItem[];
+        let items:Item[];
         if (isOwner === 1) {
             items = [this.appsAction, this.usersAction, this.adminsAction, this.devAction];
         }
@@ -59,9 +77,22 @@ export default class AdminPage extends React.Component {
             items = [this.appsAction, this.usersAction, this.devAction];
         }
         else {
-            items = [this.noneAction];
+            items = [];
         }
         return items;
+    }
+    row(item:Item, index:number):JSX.Element {
+        return <LMR className="py-2 px-3 align-items-center"
+            left={typeof item.icon === 'string'? 
+                <FA className="text-primary" name={item.icon} fixWidth={true} size="lg" /> :
+                item.icon
+            }
+            right={<small className="text-muted">{item.right}</small>}>
+            <b>{item.main}</b>
+        </LMR>
+    }
+    rowClick(item:Item) {
+        nav.push(<item.page />);
     }
     render() {
         let items = this.getItems();
@@ -87,7 +118,7 @@ export default class AdminPage extends React.Component {
         }
         return <Page header={header} debugLogout={true}>
             {top}
-            <ListView items={items} />
+            <List items={items} item={{render:this.row, onClick:this.rowClick}} />
         </Page>;
     }
 }

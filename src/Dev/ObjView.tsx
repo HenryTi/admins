@@ -1,19 +1,19 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
-import {nav, Page, ValidForm, Field, FormFields, FormSchema, 
-    rowIcon, ListView, ListItem} from 'tonva-tools';
-import {FormRow, FormView, TonvaForm, DropdownActions, Action} from 'tonva-react-form';
+import {nav, Page, ValidForm, Field, FormFields, FormSchema} from 'tonva-tools';
+import {FormRow, FormView, TonvaForm, DropdownActions, Action, List} from 'tonva-react-form';
 import consts from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
-import {List} from '../store/dev';
+import {ObjItems} from '../store/dev';
 
 export interface ObjViewProps<T extends DevModel.ObjBase> {
     title: string;
     fields: Field[];
-    converter: (item:T)=>ListItem;
-    items: List<T>;
+    //converter: (item:T)=>ListItem;
+    row: (item:T)=>JSX.Element;
+    items: ObjItems<T>;
     repeated: {name:string; err:string};
     info: new (props:any) => React.Component;
     extraMenuActions?: Action[];
@@ -44,9 +44,11 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
         let {title, items} = this.props;
         let right = <Button color='success' size='sm' onClick={()=>this.newItem()}>新增{title}</Button>;
         return <Page header={title} right={right}>
-            <ListView items={items.items} 
-                converter={this.props.converter} 
-                itemClick={this.itemClick} />
+            <List items={items.items}
+                item={{render: this.props.row, onClick: this.itemClick}}
+                // converter={this.props.converter} 
+                //itemClick={this.itemClick} 
+                />
         </Page>;
     }
 }

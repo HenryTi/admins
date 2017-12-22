@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ListView, ListItem} from 'tonva-tools';
+import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
@@ -65,13 +65,11 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
             defaultValue: 0,
         },
     ],
-    converter: (item:DevModel.Service):ListItem=> {
-        return {
-            key: item.id,
-            icon: consts.appItemIcon,
-            main: item.url,
-            vice: serviceTypeNames[item.type] + ': ' + item.discription,
-        };
+    row: (item:DevModel.Service):JSX.Element => {
+        return <Row
+            icon={consts.appItemIcon}
+            main={item.url}
+            vice={serviceTypeNames[item.type] + ': ' + item.discription} />;
     },
     items: undefined, //store.dev.apps,
     repeated: {

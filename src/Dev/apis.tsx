@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
@@ -43,12 +44,8 @@ const apisProps:ObjViewProps<DevModel.Api> = {
             rules: ['maxlength:250'],
         },
     ],
-    converter: (item)=> {
-        return {
-            icon: consts.appItemIcon,
-            main: item.name,
-            vice: item.discription,
-        };
+    row: (item:DevModel.Api):JSX.Element => {
+        return <Row icon={consts.appItemIcon} main={item.name} vice={item.discription} />;
     },
     items: undefined, //store.dev.apps,
     repeated: {
