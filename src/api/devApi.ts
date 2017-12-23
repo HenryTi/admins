@@ -43,11 +43,17 @@ class DevApi extends CenterApi {
     async loadAppApis(unit:number,app:number):Promise<any[]> {
         return await this.get('app-apis', {unit:unit, app: app});
     }
-    async searchApi(unit:number,key:string):Promise<any[]> {
-        return await this.get('api-search', {unit:unit, key:key});
-    }
     async appBindApi(unit:number,app:number,apiIds:number[], bind:0|1):Promise<void> {
         await this.post('app-bind-api', {unit:unit, app:app, apiIds:apiIds, bind:bind});
+    }
+    async searchApi(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
+        return await this.get('api-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
+    }
+    async searchApp(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
+        return await this.get('app-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
+    }
+    async searchServer(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
+        return await this.get('server-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
 }
 

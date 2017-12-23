@@ -79,6 +79,7 @@ const appsProps:ObjViewProps<DevModel.App> = {
             field: {name: 'public', type: 'bool', defaultValue: 0}
         },
     ],
+    /*
     fields: [
         {
             type: 'string',
@@ -104,7 +105,7 @@ const appsProps:ObjViewProps<DevModel.App> = {
             label: '公开',
             defaultValue: 0,
         },
-    ],
+    ],*/
     row: (item:DevModel.App):JSX.Element => {
         return <Row icon={item.icon || consts.appItemIcon} main={item.name} vice={item.discription} />;
     },

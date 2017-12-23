@@ -81,7 +81,7 @@ class Apps extends ObjItems<DevModel.App> {
         this.apis = ret;
     }
     public async searchApi(key:string) {
-        this.searchedApis = await devApi.searchApi(this.store.unit.id, key);
+        this.searchedApis = await devApi.searchApi(this.store.unit.id, key, 0, searchPageSize);
     }
     public async appBindApi(apiIds:number[], bind:boolean) {
         await devApi.appBindApi(this.store.unit.id, this.cur.id, apiIds, bind? 1:0);
@@ -143,6 +143,54 @@ class Services extends ObjItems<DevModel.Service> {
     protected _dec() { this.dev.counts.service--; }
 }
 
+const searchPageSize = 50;
+type Search = (unit:number,key:string,pageStart:number,pageSize:number)=>Promise<any[]>;
+class SearchItems<T extends DevModel.ObjBase> {
+    private store:Store;
+    private dev:Dev;
+    private search:(unit:number,key:string,pageStart:number,pageSize:number)=>Promise<any[]>;
+
+    constructor(store:Store, dev:Dev, search:Search) {
+        this.store = store;
+        this.dev = dev;
+        this.search = search;
+    }
+
+    @observable items: T[] = undefined;
+    allLoaded: boolean = false;
+    private key: string;
+    private pageStart = 0;
+
+    async first(key:string) {
+        this.key = key;
+        this.items = undefined;
+        this.allLoaded = false;
+        this.pageStart = 0;
+        await this.more();
+    }
+
+    async more():Promise<void> {
+        if (this.allLoaded === true) return;
+        let ret = await this.search(this.store.unit.id, this.key, this.pageStart, searchPageSize);
+        let len = ret.length;
+        if (len > searchPageSize) {
+            this.allLoaded = false;
+            --len;
+            ret.splice(len, 1);
+        }
+        else {
+            this.allLoaded = true;
+        }
+        if (len > 0) {
+            this.pageStart = ret[len-1].id;
+            if (this.items === undefined)
+                this.items = ret;
+            else
+                this.items.push(...ret);
+        }
+    }
+}
+
 export class Dev {
     private store:Store;
     constructor(store:Store) {
@@ -151,6 +199,9 @@ export class Dev {
         this.apis = new Apis(store, this);
         this.servers = new Servers(store, this);
         this.services = new Services(store, this);
+        this.searchApp = new SearchItems<DevModel.App>(store, this, devApi.searchApp.bind(devApi));
+        this.searchApi = new SearchItems<DevModel.Api>(store, this, devApi.searchApi.bind(devApi));
+        this.searchServer = new SearchItems<DevModel.Server>(store, this, devApi.searchServer.bind(devApi));
     }
 
     @observable counts:Counts = undefined;
@@ -158,6 +209,10 @@ export class Dev {
     apis:Apis = undefined;
     servers:Servers = undefined;
     services:Services = undefined;
+
+    searchApp:SearchItems<DevModel.App> = undefined;
+    searchApi:SearchItems<DevModel.Api> = undefined;
+    searchServer:SearchItems<DevModel.Server> = undefined;
     
     async loadCounts(): Promise<void> {
         let unit = this.store.unit;

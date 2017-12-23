@@ -32,7 +32,7 @@ export default class  TestTonvaMultiForm extends React.Component {
             ex: '完成'
         }
     };
-    stepHeader(step:Step, num:number):JSX.Element {
+    private stepHeader(step:Step, num:number):JSX.Element {
         return <div className="d-flex justify-content-center align-items-center">
             <h4><small className="text-muted">第{num}步</small> {step.ex}</h4>
         </div>;

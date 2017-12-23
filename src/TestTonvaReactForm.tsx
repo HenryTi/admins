@@ -8,11 +8,12 @@ import {createIdPick} from './createIdPick';
 export default class  TestTonvaForm extends React.Component {
     private idPick = createIdPick({
         caption: '选择商品',
-        items: [
+        candidateItems: [
             {id:1, main: 'dddd1', vice: 'bbb1'},
             {id:2, main: 'dddd2', vice: 'bbb2'},
             {id:3, main: 'dddd3', vice: 'bbb3'},
         ],
+        moreCandidates: ():Promise<void> => {return},
         row: (item:any, index:number) => <div>{item.main + ' ' + item.vice}</div>,
     });
     private fields:Fields = {

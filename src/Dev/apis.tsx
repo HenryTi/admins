@@ -30,6 +30,7 @@ const apisProps:ObjViewProps<DevModel.Api> = {
             face: {type: 'textarea'}
         },
     ],
+    /*
     fields: [
         {
             type: 'string',
@@ -43,7 +44,7 @@ const apisProps:ObjViewProps<DevModel.Api> = {
             label: '描述',
             rules: ['maxlength:250'],
         },
-    ],
+    ],*/
     row: (item:DevModel.Api):JSX.Element => {
         return <Row icon={consts.appItemIcon} main={item.name} vice={item.discription} />;
     },

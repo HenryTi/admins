@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
 import {nav, Page, ValidForm, Field, FormFields, FormSchema} from 'tonva-tools';
-import {FormRow, FormView, TonvaForm, DropdownActions, Action, List} from 'tonva-react-form';
+import {FormRow, FormView, TonvaForm, Step, MultiStep, DropdownActions, Action, List, FA, SubmitResult} from 'tonva-react-form';
 import consts from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
@@ -10,14 +10,14 @@ import {ObjItems} from '../store/dev';
 
 export interface ObjViewProps<T extends DevModel.ObjBase> {
     title: string;
-    fields: Field[];
-    //converter: (item:T)=>ListItem;
     row: (item:T)=>JSX.Element;
     items: ObjItems<T>;
     repeated: {name:string; err:string};
     info: new (props:any) => React.Component;
     extraMenuActions?: Action[];
     formRows?: FormRow[];
+    steps?: {[step:string]: Step};
+    stepHeader?: (step:Step, num:number)=>JSX.Element;
 }
 
 @observer
@@ -42,7 +42,7 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
     }
     render() {
         let {title, items} = this.props;
-        let right = <Button color='success' size='sm' onClick={()=>this.newItem()}>新增{title}</Button>;
+        let right = <Button color='secondary' size='sm' onClick={()=>this.newItem()}><FA name="plus" /></Button>;
         return <Page header={title} right={right}>
             <List items={items.items}
                 item={{render: this.props.row, onClick: this.itemClick}}
@@ -54,32 +54,41 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
 }
 
 class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
-    private schema:FormSchema;
+    constructor(props) {
+        super(props);
+        this.onSubmit = this.onSubmit.bind(this);
+    }
     private formView: FormView;
     componentWillMount() {
-        this.schema = new FormSchema({
-            fields: this.props.fields,
-            onSumit: this.onSubmit.bind(this),
-            submitText: '提交'
-        });
+        let {formRows, items} = this.props;
+        if (formRows === undefined) return;
         this.formView = new FormView({
-            formRows: this.props.formRows,
-            onSubmit: this.onSubmit.bind(this),
-        }, this.props.items.cur);
+            formRows: formRows,
+            onSubmit: this.onSubmit,
+        }, items.cur);
     }
-    async onSubmit(values:any) {
+    async onSubmit(values:any):Promise<SubmitResult> {
         let ret = await this.props.items.save(values);
         if (ret === true) {
             nav.pop();
         }
         else {
             let repeated = this.props.repeated;
-            this.schema.setInputError(repeated.name, repeated.err);
+            this.formView.setError(repeated.name, repeated.err);
         }
+        return;
     }
     render() {
-        return <Page header={'新增'+this.props.title}>
-            <TonvaForm formView={this.formView} />
+        let content;
+        let {title, steps, stepHeader} = this.props;
+        if (this.formView !== undefined) {
+            content = <TonvaForm formView={this.formView} />;
+        }
+        else {
+            content = <MultiStep className="mt-4" header={stepHeader} steps={steps} first="step1" onSubmit={this.onSubmit} />;
+        }
+        return <Page header={'新增'+title}>
+            {content}
         </Page>
     }
 }

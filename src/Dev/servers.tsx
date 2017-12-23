@@ -33,6 +33,7 @@ const serversProps:ObjViewProps<DevModel.Server> = {
             field: {name: 'ip', type: 'string', maxLength: 20},
         },
     ],
+    /*
     fields: [
         {
             type: 'string',
@@ -52,7 +53,7 @@ const serversProps:ObjViewProps<DevModel.Server> = {
             label: 'IP地址',
             rules: ['maxlength:20'],
         },
-    ],
+    ],*/
     row: (item: DevModel.Server):JSX.Element => {
         return <Row icon={consts.appItemIcon} main={item.discription} vice={item.cloud + ' ' + item.ip} />;
     },
