@@ -1,17 +1,31 @@
 import * as React from 'react';
+import {EasyDate, Media, Prop, PropGrid} from 'tonva-react-form';
+import {UnitLink, IdDates} from '../tools';
 import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
 
-class Info extends React.Component {
+class Info extends React.Component<DevModel.Api> {
+    private rows:Prop[];
     constructor(props:any) {
         super(props);
+        let {name, discription, unit, date_init, date_update} = this.props;
+        let disp = <div>
+            <div>{discription}</div>
+            <IdDates date_update={date_update} date_init={date_init} />
+        </div>;
+        this.rows = [
+            '',
+            {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
+            '',
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
+        ];
     }
     render() {
         return <div>
-            Info
+            <PropGrid rows={this.rows} values={this.props} />
         </div>;
     }
 }

@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import {Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
 import {FormRow, EasyDate, Media, Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge} from 'tonva-react-form';
+import {UnitLink, IdDates} from '../tools';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
@@ -17,21 +18,16 @@ class Info extends React.Component<DevModel.App> {
     @observable private apis:ListProp = {label: '关联API', type: 'list', list: undefined, row: ApiRow};
     constructor(props:any) {
         super(props);
-    }
-    async componentWillMount() {
-        let {name, discription, icon, date_init, date_update} = this.props;
+        let {unit, name, discription, icon, date_init, date_update} = this.props;
         let disp = <div>
             <div>{discription}</div>
-            <small className="text-muted">
-                上次修改: <EasyDate date={date_update}/>
-                <i className="fa fa-fw" />
-                创建: <EasyDate date={date_init}/>
-            </small>
+            <IdDates date_update={date_update} date_init={date_init} />
         </div>;
         this.rows = [
             '',
             {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />},
             '',
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
             this.apis,
         ];
     }
@@ -79,33 +75,6 @@ const appsProps:ObjViewProps<DevModel.App> = {
             field: {name: 'public', type: 'bool', defaultValue: 0}
         },
     ],
-    /*
-    fields: [
-        {
-            type: 'string',
-            name: 'name',
-            label: '名称',
-            rules: ['required','maxlength:100'],
-        },
-        {
-            type: 'text',
-            name: 'discription',
-            label: '描述',
-            rules: ['maxlength:250'],
-        },
-        {
-            type: 'string',
-            name: 'icon',
-            label: '图标',
-            rules: ['maxlength:250'],
-        },
-        {
-            type: 'checkbox',
-            name: 'public',
-            label: '公开',
-            defaultValue: 0,
-        },
-    ],*/
     row: (item:DevModel.App):JSX.Element => {
         return <Row icon={item.icon || consts.appItemIcon} main={item.name} vice={item.discription} />;
     },
@@ -120,81 +89,50 @@ const appsProps:ObjViewProps<DevModel.App> = {
     ],
 };
 
-interface SelectedApi {
-    selected:boolean;
-    api: DevModel.Api;
-}
 @observer
 class AppApis extends React.Component {
-    @observable someSelected: boolean = false;
-    @computed private get items():SelectedApi[] {
-        return store.dev.apps.apis.map(a => {return {selected:false, api:a}});
-    };
-
-    private menuItems = [
-        //{caption:'新增API关联' + this.props.title, action:this.editItem.bind(this), icon:'edit' },
-        //{caption:'取消API关联', action:this.deleteItem.bind(this), icon:'trash-o' }
-    ];
+    @observable anySelected: boolean = false;
+    private _list: List;
 
     constructor(props) {
         super(props);
-        this.onSelect = this.onSelect.bind(this);
         this.row = this.row.bind(this);
+        this.ref = this.ref.bind(this);
         this.removeBind = this.removeBind.bind(this);
+        this.onSelect = this.onSelect.bind(this);
+    }
+    ref(list:List) {
+        this._list = list;
     }
     async removeBind() {
-        let apiIds:number[] = this.items.filter(si => si.selected === true).map(v => v.api.id);
+        let apiIds:number[] = this._list.selectedItems.map(v => v.id);
         await store.dev.apps.appBindApi(apiIds, false);
-        this.calcSomeSelected();
-    }    
-    private calcSomeSelected() {
-        this.someSelected = (this.items.some(v => v.selected === true));
     }
-    //onSelect(selectedApi: SelectedApi, selected:boolean) {
     onSelect(item: DevModel.App, isSelected:boolean, anySelected:boolean) {
-        //{selectedApi.selected = e.target.checked}
-        //selectedApi.selected = selected;
-        //if (selected === true) this.someSelected = true;
-        //else this.calcSomeSelected();
-        this.someSelected = anySelected;
+        this.anySelected = anySelected;
     }
-    //row(selectedApi: SelectedApi) {
     row(item: DevModel.App) {
-        return <div>
+        return <LMR className="p-2" right={<small className="text-muted">{item.discription}</small>}>
+            {item.name}
+        </LMR>;
+        /*
+        return <div className="p-2">
             <div>{item.name}</div>
             <small className="ml-auto text-muted">{item.discription}</small>
-        </div>;
-        /*
-        let {selected, api} = selectedApi;
-        return <li key={api.id} className="va-row p-0">
-            <label className="w-100 mb-0 px-3 py-2">
-                <label className="custom-control custom-checkbox mb-0 mr-0">
-                    <input type='checkbox' className="custom-control-input"
-                        //checked={selected}
-                        onChange={(e)=>this.onSelect(selectedApi, e.target.checked)} />
-                    <span className="custom-control-indicator" />
-                    <div className="custom-control-description  d-flex justify-content-end">
-                        <div>{api.name}</div>
-                        <small className="ml-auto text-muted">{api.discription}</small>
-                    </div>
-                    
-                </label>
-            </label>
-        </li>
-        */
+        </div>;*/
     }
     render() {
-        let btnProps = this.someSelected?
+        let btnProps = this.anySelected?
             {color:'danger', onClick:this.removeBind, icon:'trash', text:'取消'}:
             {color:'primary', onClick:()=>nav.push(<Apis/>), icon:'plus', text:'新增'};
         let btn = (p)=><Button outline={true} color={p.color} size="sm" onClick={p.onClick}>
             <i className={"fa fa-" + p.icon} /> {p.text}关联
         </Button>;
-        let listHeader = <li className="va-row py-1 justify-content-center">{btn(btnProps)}</li>;
+        let listHeader = <div className="va-row py-1 justify-content-center">{btn(btnProps)}</div>;
         return <Page header="关联API">
-            <List
+            <List ref={this.ref}
                 header={listHeader}
-                items={this.items}
+                items={store.dev.apps.apis}
                 item={{render: this.row, onSelect: this.onSelect}} />
         </Page>;
     }
@@ -227,9 +165,9 @@ class Apis extends React.Component {
             _.assign(btnProps, {onClick:()=>this.onBind(api, true), color:'primary'});
             btnContent = <span><i className="fa fa-check"/> 关联</span>;
         }
-        return <div>
-            <div>{api.name + ' - ' + api.discription}</div>
-            <footer><Button {...btnProps}>{btnContent}</Button></footer>
+        return <div className="d-flex justify-content-start py-1 px-2">
+            <div className="align-self-center">{api.name + ' - ' + api.discription}</div>
+            <footer className="ml-auto"><Button {...btnProps}>{btnContent}</Button></footer>
         </div>
     }
     render() {

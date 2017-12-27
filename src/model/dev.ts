@@ -1,6 +1,7 @@
+import {Id} from './id';
+
 export namespace DevModel {
-    export interface ObjBase {
-        id: number;
+    export interface ObjBase extends Id {
         unit: number;
         date_init: Date;
         date_update: Date;
@@ -28,6 +29,8 @@ export namespace DevModel {
         url: string;
         type: number;
         discription: string;
-        server: string;
+        server: number;
+        app: number;
+        api: number;
     }
 }

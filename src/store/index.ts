@@ -5,11 +5,16 @@ import {mainApi} from '../api';
 import {Unit, UnitApps, App, Api, UnitAdmin} from '../model';
 import {Admins} from './admins';
 import {Dev} from './dev';
+import {CacheUnits, CacheApis, CacheApps, CacheServers} from './cacheIds';
 
 export class Store {
     private get unitId():number {return meInFrame.unit;};
     admins:Admins;
     dev:Dev;
+    cacheUnits: CacheUnits;
+    cacheApis: CacheApis;
+    cacheApps: CacheApps;
+    cacheServers: CacheServers;
 
     @observable unit: Unit;
 
@@ -17,6 +22,10 @@ export class Store {
         this.unit = undefined;
         this.admins = new Admins(this);
         this.dev = new Dev(this);
+        this.cacheUnits = new CacheUnits();
+        this.cacheApis = new CacheApis();
+        this.cacheApps = new CacheApps();
+        this.cacheServers = new CacheServers();
     }
 
     /*

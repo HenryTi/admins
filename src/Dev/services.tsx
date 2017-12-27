@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {Step, Field} from 'tonva-react-form';
+import {Step, Field, Prop, PropGrid, Media} from 'tonva-react-form';
+import {UnitLink, IdDates, ServerLink, ApiLink, AppLink} from '../tools';
 import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
@@ -7,13 +8,33 @@ import {store} from '../store';
 import {ObjViewProps} from './ObjView';
 import {createIdPick, IdPickProps} from '../createIdPick';
 
-class Info extends React.Component {
+class Info extends React.Component<DevModel.Service> {
+    private rows:Prop[];
     constructor(props:any) {
         super(props);
+        let {url, type, discription, server, app, api, unit, date_init, date_update} = this.props;
+        let disp = <div>
+            <div>{discription}</div>
+            <IdDates date_update={date_update} date_init={date_init} />
+        </div>;
+        let obj:Prop;
+        if (app !== undefined)
+            obj = {type: 'component', label: 'APP', component: <div className="py-2"><AppLink id={app} /></div> };
+        else
+            obj = {type: 'component', label: 'API', component: <div className="py-2"><ApiLink id={api} /></div> };
+
+        this.rows = [
+            '',
+            {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={url} />},
+            '',
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
+            {type: 'component', label: '服务器', component: <div className="py-2"><ServerLink id={server} /></div> },
+            obj,
+        ];
     }
     render() {
         return <div>
-            Info
+            <PropGrid rows={this.rows} values={this.props} />
         </div>;
     }
 }

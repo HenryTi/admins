@@ -1,7 +1,7 @@
 import {observable, autorun} from 'mobx';
 import * as _ from 'lodash';
 import {devApi} from '../api';
-import {DevModel} from '../model';
+import {DevModel, Unit} from '../model';
 import {Store} from './index';
 import { observer } from 'mobx-react';
 

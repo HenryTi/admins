@@ -50,7 +50,7 @@ export default class AdministorsPage extends React.Component {
     row(item: Item<DevModel.ObjBase>, index: number):JSX.Element {
         let {icon, title, count} = item;
         return <LMR className="px-3 py-2 align-items-center"
-            left={<FA className="text-primary" name={icon} fixWidth={true} />}
+            left={<FA className="text-primary" name={icon} fixWidth={true} size="lg" />}
             right={count && <small className="text-muted">{count}</small>}>
             <b>{title}</b>
         </LMR>;

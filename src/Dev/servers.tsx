@@ -1,17 +1,32 @@
 import * as React from 'react';
+import {EasyDate, Media, Prop, PropGrid} from 'tonva-react-form';
+import {UnitLink, IdDates} from '../tools';
 import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
 
-class Info extends React.Component {
+class Info extends React.Component<DevModel.Server> {
+    private rows:Prop[];
     constructor(props:any) {
         super(props);
+        let {discription, cloud, ip, unit, date_init, date_update} = this.props;
+        let disp = <div>
+            <div>{discription}</div>
+            <IdDates date_update={date_update} date_init={date_init} />
+        </div>;
+        this.rows = [
+            '',
+            {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={ip} />},
+            '',
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
+            {type: 'string', label: '云服务', name: 'cloud'},
+        ];
     }
     render() {
         return <div>
-            Info
+            <PropGrid rows={this.rows} values={this.props} />
         </div>;
     }
 }
@@ -33,27 +48,6 @@ const serversProps:ObjViewProps<DevModel.Server> = {
             field: {name: 'ip', type: 'string', maxLength: 20},
         },
     ],
-    /*
-    fields: [
-        {
-            type: 'string',
-            name: 'discription',
-            label: '描述',
-            rules: ['required', 'maxlength:50'],
-        },
-        {
-            type: 'string',
-            name: 'cloud',
-            label: '云服务商',
-            rules: ['required', 'maxlength:20'],
-        },
-        {
-            type: 'string',
-            name: 'ip',
-            label: 'IP地址',
-            rules: ['maxlength:20'],
-        },
-    ],*/
     row: (item: DevModel.Server):JSX.Element => {
         return <Row icon={consts.appItemIcon} main={item.discription} vice={item.cloud + ' ' + item.ip} />;
     },

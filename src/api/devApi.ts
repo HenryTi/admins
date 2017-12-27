@@ -4,6 +4,15 @@ class DevApi extends CenterApi {
     async counts(unit:number):Promise<any> {
         return await this.get('counts', {unit:unit});
     }
+    async app(id:number):Promise<any> {
+        return await this.get('app', {id:id});
+    }
+    async api(id:number):Promise<any> {
+        return await this.get('api', {id:id});
+    }
+    async server(id:number):Promise<any> {
+        return await this.get('server', {id:id});
+    }
     async apps(unit:number):Promise<any[]> {
         return await this.get('apps', {unit:unit});
     }
