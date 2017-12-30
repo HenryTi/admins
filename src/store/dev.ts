@@ -29,8 +29,14 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
     }
     protected abstract _load():Promise<T[]>;
     async save(item:T):Promise<boolean> {
-        let values = _.clone(item) as any;
-        if (this.cur !== undefined) values.id = this.cur.id;
+        let values:any = {};
+        if (this.cur !== undefined) {
+            _.assign(values, this.cur, item);
+        }
+        else {
+            _.assign(values, item);
+        }
+
         values.unit = this.store.unit.id;
         let id = await this._save(values);
         if (this.cur === undefined) {
@@ -40,7 +46,7 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
             this._inc();
         }
         else {
-            _.assign(this.cur, item);
+            _.assign(this.cur, values);
         }
         return true;
     }
@@ -77,7 +83,7 @@ class Apps extends ObjItems<DevModel.App> {
     protected _dec() { this.dev.counts.app--; }
 
     public async loadCurApis() {
-        let ret = await devApi.loadAppApis(this.store.unit.id, this.cur.id);
+        let ret = await devApi.loadAppApis(this.cur.id);
         this.apis = ret;
     }
     public async searchApi(key:string) {

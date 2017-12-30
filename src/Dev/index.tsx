@@ -17,7 +17,7 @@ interface Item<T extends DevModel.ObjBase> {
     title: string;
     count: number;
     icon: string;
-    items: ObjItems<T>;
+    //items: ObjItems<T>;
     //page: JSX.Element;
     objProps: ObjViewProps<T>
 }
@@ -27,19 +27,7 @@ export default class AdministorsPage extends React.Component {
     async componentDidMount() {
         await store.dev.loadCounts();
     }
-/*
-    converter(admin: UnitAdmin):ListItem {
-        return {
-            key: admin.id,
-            date: undefined,
-            main: admin.name,
-            vice: admin.nick,
-            icon : admin.icon || consts.appItemIcon,
-            //right: <aside>ddd</aside>
-            //unread: 0,
-        };
-    }
-*/
+
     onNewFellow() {
         //nav.push(<NewFellow />);
     }
@@ -56,7 +44,8 @@ export default class AdministorsPage extends React.Component {
         </LMR>;
     }
     onClick(item:Item<DevModel.ObjBase>) {
-        return nav.push(<ObjView {...item.objProps} items={item.items} />)
+        //items={item.items}
+        return nav.push(<ObjView {...item.objProps} />)
     }
     render() {
         let {unit, dev} = store;
@@ -68,7 +57,7 @@ export default class AdministorsPage extends React.Component {
                 title: 'APP', 
                 count: counts.app, 
                 icon: 'tablet', 
-                items: store.dev.apps,
+                //items: store.dev.apps,
                 //page: <ObjView {...appsProps} items={store.dev.apps} />
                 objProps: appsProps
             },
@@ -76,7 +65,7 @@ export default class AdministorsPage extends React.Component {
                 title: 'API', 
                 count: counts.api, 
                 icon: 'cogs', 
-                items: store.dev.apis, 
+                //items: store.dev.apis, 
                 objProps: apisProps,
                 //page: <ObjView {...apisProps} items={store.dev.apis} />
             },
@@ -84,7 +73,7 @@ export default class AdministorsPage extends React.Component {
                 title: 'Server', 
                 count: counts.server, 
                 icon: 'server', 
-                items: store.dev.servers, 
+                //items: store.dev.servers, 
                 //page: <ObjView {...serversProps} items={store.dev.servers} />
                 objProps: serversProps,
             },
@@ -92,7 +81,7 @@ export default class AdministorsPage extends React.Component {
                 title: 'Service', 
                 count: counts.service, 
                 icon: 'microchip', 
-                items: store.dev.services, 
+                //items: store.dev.services, 
                 //page: <ObjView {...servicesProps} items={store.dev.services} />
                 objProps: servicesProps,
             },

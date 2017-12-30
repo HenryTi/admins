@@ -60,24 +60,18 @@ export default class AdminPage extends React.Component {
     };
     constructor(props) {
         super(props);
-        //if (this.props.isOwner === 0) this.items.shift();
         this.state = {items: undefined};
     }
     private getItems():Item[] {
-        // store.init();
-        // await store.loadUnit();
         let unit = store.unit;
         if (unit === undefined) return;
         let {isAdmin, isOwner} = unit;
-        let items:Item[];
+        let items:Item[] = [];
         if (isOwner === 1) {
-            items = [this.appsAction, this.usersAction, this.adminsAction, this.devAction];
+            items.push(this.adminsAction);
         }
-        else if (isAdmin === 1) {
-            items = [this.appsAction, this.usersAction, this.devAction];
-        }
-        else {
-            items = [];
+        if (isAdmin === 1) {
+            items.push(this.appsAction, this.usersAction, this.devAction);
         }
         return items;
     }
@@ -96,7 +90,9 @@ export default class AdminPage extends React.Component {
     }
     render() {
         let items = this.getItems();
-        if (items === undefined) return null;
+        if (items === undefined) return <Page header="startup error">
+            {'unit: ' + JSON.stringify(store.unit)};
+        </Page>;
         let unit:Unit = store.unit;
         let title = '管理小号';
         let header = title, top;

@@ -68,13 +68,12 @@ export const store = new Store();
 
 autorun(async () => {
     let user = nav.user;
-    let userId = user.id;
-    if (userId === undefined) {
-        console.log('autorun log out');
+    if (user === undefined) {
+        console.log('autorun: user has logged out');
+        return;
     }
-    else {
-        console.log('autorun login');
-        store.init();
-        await store.loadUnit();
-    }
+
+    console.log('autorun login');
+    store.init();
+    await store.loadUnit();
 });

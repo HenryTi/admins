@@ -1,4 +1,6 @@
 import * as React from 'react';
+import {observable} from 'mobx';
+import {observer} from 'mobx-react';
 import {Step, Field, Prop, PropGrid, Media} from 'tonva-react-form';
 import {UnitLink, IdDates, ServerLink, ApiLink, AppLink} from '../tools';
 import {Row} from './row';
@@ -9,9 +11,7 @@ import {ObjViewProps} from './ObjView';
 import {createIdPick, IdPickProps} from '../createIdPick';
 
 class Info extends React.Component<DevModel.Service> {
-    private rows:Prop[];
-    constructor(props:any) {
-        super(props);
+    render() {
         let {url, type, discription, server, app, api, unit, date_init, date_update} = this.props;
         let disp = <div>
             <div>{discription}</div>
@@ -23,7 +23,7 @@ class Info extends React.Component<DevModel.Service> {
         else
             obj = {type: 'component', label: 'API', component: <div className="py-2"><ApiLink id={api} /></div> };
 
-        this.rows = [
+        let rows:Prop[] = [
             '',
             {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={url} />},
             '',
@@ -31,10 +31,8 @@ class Info extends React.Component<DevModel.Service> {
             {type: 'component', label: '服务器', component: <div className="py-2"><ServerLink id={server} /></div> },
             obj,
         ];
-    }
-    render() {
         return <div>
-            <PropGrid rows={this.rows} values={this.props} />
+            <PropGrid rows={rows} values={this.props} />
         </div>;
     }
 }
@@ -100,22 +98,32 @@ const discriptionRow = {
     label: '描述',
     field: discriptionField,
 };
+
 const serverRow = {
     label: '服务器', 
     field: serverField,
-    face:{
+    face: {
         type: 'pick-id', 
         initCaption: '请选择服务器', 
         pick: createIdPick(idPickServerProps), //this.idPick,
-        fromPickedItem: (item:DevModel.Server)=>{
-            return {id: item.id, caption: item.discription + ' ' + item.ip}
+        fromPicked: (item:DevModel.Server)=>{
+            return {
+                id: item.id, 
+                caption: item.discription + ' ' + item.ip,
+            };
         },
+        itemFromId: (id:number)=>store.cacheServers.get(id),
     },
 };
 
 const servicesProps:ObjViewProps<DevModel.Service> = {
     title: 'Service',
     info: Info,
+    formRows: [
+        urlRow,
+        discriptionRow,
+        serverRow,
+    ],
     steps: {
         step1: {
             formRows: [
@@ -188,7 +196,7 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
             main={item.url}
             vice={serviceTypeNames[item.type] + ': ' + item.discription} />;
     },
-    items: undefined, //store.dev.apps,
+    items: ()=>store.dev.services,
     repeated: {
         name: 'url',
         err: 'url重复',

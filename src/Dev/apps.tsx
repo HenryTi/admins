@@ -78,7 +78,7 @@ const appsProps:ObjViewProps<DevModel.App> = {
     row: (item:DevModel.App):JSX.Element => {
         return <Row icon={item.icon || consts.appItemIcon} main={item.name} vice={item.discription} />;
     },
-    items: undefined, //store.dev.apps,
+    items: ()=>store.dev.apps,
     repeated: {
         name: 'name',
         err: '跟已有的名称重复',

@@ -51,7 +51,7 @@ const serversProps:ObjViewProps<DevModel.Server> = {
     row: (item: DevModel.Server):JSX.Element => {
         return <Row icon={consts.appItemIcon} main={item.discription} vice={item.cloud + ' ' + item.ip} />;
     },
-    items: undefined, //store.dev.apps,
+    items: ()=>store.dev.servers,
     repeated: {
         name: 'discription',
         err: '重复的描述',

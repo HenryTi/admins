@@ -44,25 +44,10 @@ const apisProps:ObjViewProps<DevModel.Api> = {
             face: {type: 'textarea'}
         },
     ],
-    /*
-    fields: [
-        {
-            type: 'string',
-            name: 'name',
-            label: '名称',
-            rules: ['required','maxlength:100'],
-        },
-        {
-            type: 'text',
-            name: 'discription',
-            label: '描述',
-            rules: ['maxlength:250'],
-        },
-    ],*/
     row: (item:DevModel.Api):JSX.Element => {
         return <Row icon={consts.appItemIcon} main={item.name} vice={item.discription} />;
     },
-    items: undefined, //store.dev.apps,
+    items: ()=>store.dev.apis,
     repeated: {
         name: 'name',
         err: '跟已有的名称重复',

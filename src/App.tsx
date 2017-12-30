@@ -16,7 +16,7 @@ class App extends React.Component {
       // <NavView view={<TestTonvaForm />} />
       // <NavView view={<TestTonvaMultiStep />} />
       // <NavView view={<TestTonvaList />} />
-    );
+    )
   }
 }
 

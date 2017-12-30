@@ -11,7 +11,7 @@ import {ObjItems} from '../store/dev';
 export interface ObjViewProps<T extends DevModel.ObjBase> {
     title: string;
     row: (item:T)=>JSX.Element;
-    items: ObjItems<T>;
+    items: ()=>ObjItems<T>;
     repeated: {name:string; err:string};
     info: new (props:any) => React.Component;
     extraMenuActions?: Action[];
@@ -27,24 +27,24 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
         this.itemClick = this.itemClick.bind(this);
     }
     async componentDidMount() {
-        await this.props.items.load();
+        await this.props.items().load();
     }
     //converter(item:T):ListItem {
     //    return this.props.converter(item);
     //}
     newItem() {
-        this.props.items.cur = undefined;
+        this.props.items().cur = undefined;
         nav.push(<New {...this.props} />);
     }
     itemClick(item:T) {
-        this.props.items.cur = item;
+        this.props.items().cur = item;
         nav.push(<Info {...this.props} />);
     }
     render() {
         let {title, items} = this.props;
         let right = <Button color='secondary' size='sm' onClick={()=>this.newItem()}><FA name="plus" /></Button>;
         return <Page header={title} right={right}>
-            <List items={items.items}
+            <List items={items().items}
                 item={{render: this.props.row, onClick: this.itemClick}}
                 // converter={this.props.converter} 
                 //itemClick={this.itemClick} 
@@ -58,19 +58,8 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
     }
-    //private formView: FormView;
-    componentWillMount() {
-        /*
-        let {formRows, items} = this.props;
-        if (formRows === undefined) return;
-        this.formView = new FormView({
-            formRows: formRows,
-            onSubmit: this.onSubmit,
-        }, items.cur);
-        */
-    }
     async onSubmit(values:any):Promise<SubmitResult> {
-        let ret = await this.props.items.save(values);
+        let ret = await this.props.items().save(values);
         if (ret === true) {
             nav.pop();
         }
@@ -84,12 +73,14 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
         let content;
         let {title, steps, stepHeader} = this.props;
         let {formRows, items} = this.props;
-        if (formRows !== undefined) { //formView
-            content = <TonvaForm formRows={formRows} onSubmit={this.onSubmit} initValues={items.cur} />;
-            //formView={this.formView} 
+        if (steps !== undefined) {
+            content = <MultiStep className="mt-4" header={stepHeader} steps={steps} first="step1" onSubmit={this.onSubmit} />;
+        }
+        else if (formRows !== undefined) {
+            content = <TonvaForm formRows={formRows} onSubmit={this.onSubmit} initValues={items().cur} />;
         }
         else {
-            content = <MultiStep className="mt-4" header={stepHeader} steps={steps} first="step1" onSubmit={this.onSubmit} />;
+            content = "ObjViewProps: no steps and no formRows";
         }
         return <Page header={'新增'+title}>
             {content}
@@ -97,6 +88,7 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
     }
 }
 
+@observer
 class Info<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
     private menuItems = [
         {caption:'修改' + this.props.title, action:this.editItem.bind(this), icon:'edit' },
@@ -104,7 +96,7 @@ class Info<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
     ];
     async deleteItem() {
         if (confirm('真的要删除吗？系统删除时并不会检查相关引用，请谨慎') === true) {
-            await this.props.items.del();
+            await this.props.items().del();
             nav.pop();
         }
     }
@@ -115,10 +107,11 @@ class Info<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
         let actions = [];
         let ex = this.props.extraMenuActions;
         if (ex !== undefined) actions.push(...ex);
-        actions.push(...this.menuItems);
+        actions.push(...this.menuItems);        
         let right = <DropdownActions actions={actions} />
+        let item = this.props.items().cur;
         return <Page header={this.props.title + ' - 详细资料'} right={right}>
-            <this.props.info {...this.props.items.cur} />
+            <this.props.info {...item} />
         </Page>;
     }
 }
@@ -127,38 +120,27 @@ class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
     private actions = [
         {caption:'删除', action:this.deleteItem.bind(this), icon:'trash-o' }
     ];
-    //private schema:FormSchema;
-    //private formView: FormView;
     constructor(props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
     }
     componentWillMount() {
-        /*
-        this.formView = new FormView({
-            formRows: this.props.formRows,
-            onSubmit: this.onSubmit.bind(this),
-        }, this.props.items.cur);
-        */
     }
     async onSubmit(values:any):Promise<SubmitResult> {
-        await this.props.items.save(values);
-        //alert(JSON.stringify(values));
+        await this.props.items().save(values);
         nav.pop();
         return;
     }
     async deleteItem() {
         if (confirm('真的要删除吗？系统删除时并不会检查相关引用，请谨慎') === true) {
-            await this.props.items.del();
+            await this.props.items().del();
             nav.pop();
         }
     }
     render() {
         let right = <DropdownActions actions={this.actions} />
-        // formView={this.formView} 
-        return <Page header={'编辑'+this.props.title} right={right} close={true}>
-            <TonvaForm formRows={this.props.formRows} onSubmit={this.onSubmit} initValues={this.props.items.cur} />
+        return <Page header={'修改 '+this.props.title} right={right} close={true}>
+            <TonvaForm formRows={this.props.formRows} onSubmit={this.onSubmit} initValues={this.props.items().cur} />
         </Page>;
-        // <ValidForm className='mt-4' formSchema={this.schema} />
     }
 }
