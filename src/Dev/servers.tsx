@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {EasyDate, Media, Prop, PropGrid} from 'tonva-react-form';
-import {UnitLink, IdDates} from '../tools';
+import {UnitSpan, IdDates} from '../tools';
 import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
@@ -20,7 +20,7 @@ class Info extends React.Component<DevModel.Server> {
             '',
             {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={ip} />},
             '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'string', label: '云服务', name: 'cloud'},
         ];
     }

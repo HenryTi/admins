@@ -1,21 +1,23 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import * as className from 'classnames';
+import * as classNames from 'classnames';
 import {Prop, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
 import consts from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
 import {IdDates} from './idDates';
-import {UnitLink} from './unitLink';
+import {span} from './span';
+import {UnitSpan} from './unitSpan';
 
 export interface ApiLinkProps {
     className?: string;
     id: number;
+    isLink?: boolean;
 }
 
 @observer
-export class ApiLink extends React.Component<ApiLinkProps> {
+export class ApiSpan extends React.Component<ApiLinkProps> {
     constructor(props) {
         super(props);
         this.onClick = this.onClick.bind(this);
@@ -30,7 +32,7 @@ export class ApiLink extends React.Component<ApiLinkProps> {
         return false;
     }
     render() {
-        let {id} = this.props;
+        let {id, className, isLink} = this.props;
         let api = store.cacheApis.get(id);
         let content;
         if (api === null) {
@@ -46,9 +48,7 @@ export class ApiLink extends React.Component<ApiLinkProps> {
                 content = id;
             }
         }
-        return <a className={className(this.props.className)} href="#" onClick={this.onClick}>
-            {content}
-        </a>;
+        return span(isLink, className, this.onClick, content);
     }
 }
 
@@ -69,7 +69,7 @@ class ApiInfo extends React.Component<ApiLinkProps> {
             '',
             {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
             '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
         ];
         return <Page header={'API - 详细资料'}>
             <PropGrid rows={this.rows} values={this.props} />

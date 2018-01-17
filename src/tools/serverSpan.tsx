@@ -1,22 +1,24 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import * as className from 'classnames';
+import * as classNames from 'classnames';
 import {Prop, ListProp, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
 import consts from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
 import {devApi} from '../api';
+import {span} from './span';
 import {IdDates} from './idDates';
-import {UnitLink} from './unitLink';
+import {UnitSpan} from './unitSpan';
 
-export interface ServerLinkProps {
+export interface ServerSpanProps {
     className?: string;
     id: number;
+    isLink?: boolean;
 }
 
 @observer
-export class ServerLink extends React.Component<ServerLinkProps> {
+export class ServerSpan extends React.Component<ServerSpanProps> {
     constructor(props:any) {
         super(props);
         this.onClick = this.onClick.bind(this);
@@ -31,7 +33,7 @@ export class ServerLink extends React.Component<ServerLinkProps> {
         return false;
     }
     render() {
-        let {id} = this.props;
+        let {id, isLink, className} = this.props;
         let server = store.cacheServers.get(id);
         let content;
         if (server === null) {
@@ -46,13 +48,11 @@ export class ServerLink extends React.Component<ServerLinkProps> {
                 content = id;
             }
         }
-        return <a className={className(this.props.className)} href="#" onClick={this.onClick}>
-            {content}
-        </a>;
+        return span(isLink, className, this.onClick, content);
     }
 }
 
-class ServerInfo extends React.Component<ServerLinkProps> {
+class ServerInfo extends React.Component<ServerSpanProps> {
     private rows:Prop[];
     constructor(props:any) {
         super(props);
@@ -68,7 +68,7 @@ class ServerInfo extends React.Component<ServerLinkProps> {
             '',
             {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={ip} />},
             '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'string', label: '云服务', name: 'cloud'},
         ];
         return <Page header={'服务器 - 详细资料'}>

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import {Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
 import {FormRow, EasyDate, Media, Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge} from 'tonva-react-form';
-import {UnitLink, IdDates} from '../tools';
+import {UnitSpan, IdDates} from '../tools';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
@@ -27,7 +27,7 @@ class Info extends React.Component<DevModel.App> {
             '',
             {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />},
             '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             this.apis,
         ];
     }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Step, Field, Prop, PropGrid, Media} from 'tonva-react-form';
-import {UnitLink, IdDates, ServerLink, ApiLink, AppLink} from '../tools';
+import {UnitSpan, IdDates, ServerSpan, ApiSpan, AppSpan} from '../tools';
 import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
@@ -19,16 +19,16 @@ class Info extends React.Component<DevModel.Service> {
         </div>;
         let obj:Prop;
         if (app !== undefined)
-            obj = {type: 'component', label: 'APP', component: <div className="py-2"><AppLink id={app} /></div> };
+            obj = {type: 'component', label: 'APP', component: <div className="py-2"><AppSpan id={app} isLink={true} /></div> };
         else
-            obj = {type: 'component', label: 'API', component: <div className="py-2"><ApiLink id={api} /></div> };
+            obj = {type: 'component', label: 'API', component: <div className="py-2"><ApiSpan id={api} isLink={true} /></div> };
 
         let rows:Prop[] = [
             '',
             {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={url} />},
             '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
-            {type: 'component', label: '服务器', component: <div className="py-2"><ServerLink id={server} /></div> },
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
+            {type: 'component', label: '服务器', component: <div className="py-2"><ServerSpan id={server} isLink={true} /></div> },
             obj,
         ];
         return <div>

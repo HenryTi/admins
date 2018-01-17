@@ -1,21 +1,23 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import * as className from 'classnames';
+import * as classNames from 'classnames';
 import {Prop, ListProp, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
 import consts from '../consts';
 import {store} from '../store';
 import {Unit, DevModel} from '../model';
 import {devApi} from '../api';
+import {span} from './span';
 import {IdDates} from './idDates';
 
 export interface UnitLinkProps {
     className?: string;
     id: number;
+    isLink?: boolean;
 }
 
 @observer
-export class UnitLink extends React.Component<UnitLinkProps> {
+export class UnitSpan extends React.Component<UnitLinkProps> {
     constructor(props:any) {
         super(props);
         this.onClick = this.onClick.bind(this);
@@ -30,7 +32,8 @@ export class UnitLink extends React.Component<UnitLinkProps> {
         return false;
     }
     render() {
-        let {id} = this.props;
+        let {id, isLink, className} = this.props;
+        if (id === undefined) return null;
         let unit = store.cacheUnits.get(id);
         let content;
         let {name, nick, discription} = unit;
@@ -44,9 +47,7 @@ export class UnitLink extends React.Component<UnitLinkProps> {
         else {
             content = id;
         }
-        return <a className={className(this.props.className)} href="#" onClick={this.onClick}>
-            {content}
-        </a>;
+        return span(isLink, className, this.onClick, content);
     }
 }
 

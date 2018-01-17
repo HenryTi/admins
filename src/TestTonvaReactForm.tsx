@@ -65,7 +65,7 @@ export default class  TestTonvaForm extends React.Component {
         formRows: this.formRows,
         onSubmit: this.onSubmit.bind(this),
         submitButton: <span><i className='fa fa-send' /> 提交</span>
-    }, {decA: 22});
+    });
 
     private onSubmit(values:any) {
         alert(JSON.stringify(values));

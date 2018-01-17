@@ -17,6 +17,7 @@ export class Store {
     cacheServers: CacheServers;
 
     @observable unit: Unit;
+    @observable apps: {app:number, deleted:boolean}[];
 
     init() {
         this.unit = undefined;
@@ -28,10 +29,18 @@ export class Store {
         this.cacheServers = new CacheServers();
     }
 
-    /*
-    async loadApps(): Promise<UnitApps> {
-        return this.unit = await mainApi.apps(this.unitId);
-    }*/
+    async unitChangeProp(prop:string, value:any):Promise<void> {
+        await mainApi.unitChangeProp(this.unit.id, prop, value);
+        this.unit[prop] = value;
+    }
+
+    async loadApps(): Promise<void> {
+        if (this.apps !== undefined) return;
+        let ret = await mainApi.unitApps(this.unitId);
+        this.apps = ret.map(v => {
+            return {app:v.app, deleted:v.deleted===1}
+        });
+    }
 
     async getAppApi(appId: number, apiName): Promise<Api> {
         return;

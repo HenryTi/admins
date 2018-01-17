@@ -20,6 +20,7 @@ export interface App extends Id {
 }
 
 export interface Unit extends Id {
+    type: number;
     name: string;
     nick: string;
     discription: string;

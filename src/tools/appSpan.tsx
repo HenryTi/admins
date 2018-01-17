@@ -1,23 +1,25 @@
 import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-import * as className from 'classnames';
+import * as classNames from 'classnames';
 import {Prop, ListProp, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
 import consts from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
 import {devApi} from '../api';
+import {span} from './span';
 import {IdDates} from './idDates';
-import {UnitLink} from './unitLink';
+import {UnitSpan} from './unitSpan';
 
-export interface AppLinkProps {
+export interface AppSpanProps {
     className?: string;
     id: number;
+    isLink?: boolean;
 }
 
 @observer
-export class AppLink extends React.Component<AppLinkProps> {
+export class AppSpan extends React.Component<AppSpanProps> {
     constructor(props:any) {
         super(props);
         this.onClick = this.onClick.bind(this);
@@ -32,7 +34,7 @@ export class AppLink extends React.Component<AppLinkProps> {
         return false;
     }
     render() {
-        let {id} = this.props;
+        let {id, isLink, className} = this.props;
         let app = store.cacheApps.get(id);
         let content;
         if (app === null) {
@@ -49,15 +51,13 @@ export class AppLink extends React.Component<AppLinkProps> {
                 content = id;
             }
         }
-        return <a className={className(this.props.className)} href="#" onClick={this.onClick}>
-            {content}
-        </a>;
+        return span(isLink, className, this.onClick, content);
     }
 }
 
 
 @observer
-class AppInfo extends React.Component<AppLinkProps> {
+class AppInfo extends React.Component<AppSpanProps> {
     private rows:Prop[];
     @observable private apis:ListProp = {label: '关联API', type: 'list', list: undefined, row: AppRow};
     constructor(props:any) {
@@ -77,7 +77,7 @@ class AppInfo extends React.Component<AppLinkProps> {
             '',
             {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />},
             '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitLink id={unit} /></div> },
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             this.apis,
         ];
         return <Page header={'APP - 详细资料'}>

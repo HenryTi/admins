@@ -37,7 +37,7 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
             _.assign(values, item);
         }
 
-        values.unit = this.store.unit.id;
+        values.unit = item.unit = this.store.unit.id;
         let id = await this._save(values);
         if (this.cur === undefined) {
             if (id === 0) return false;
