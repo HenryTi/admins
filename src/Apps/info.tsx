@@ -1,23 +1,46 @@
 import * as React from 'react';
+import * as _ from 'lodash';
+import * as classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid, FA} from 'tonva-react-form';
 import {nav, Page, PagedItems} from 'tonva-tools';
 import consts from '../consts';
 import {IdDates, UnitSpan} from '../tools';
-import {App} from './model';
+import {UnitApp} from '../model';
+import {store} from '../store';
 
-export class Info extends React.Component<App> {
+export class Info extends React.Component<{app:UnitApp, appActed?:(appId:number, inUnit:number)=>void}> {
     private rows: Prop[];
     constructor(props:any) {
         super(props);
-        let {unit, name, discription, icon, date_init, date_update} = this.props;
+        this.act = this.act.bind(this);
+        let {unit, name, discription, icon, inUnit, date_init, date_update} = this.props.app;
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
         </div>;
+        let faName:string, text:string, color:string;
+        if (inUnit === 1) {
+            faName = 'ban';
+            text = '停用APP';
+            color = 'btn-danger';
+        }
+        else if (inUnit === 0) {
+            faName = 'refresh';
+            text = '恢复APP';
+            color = 'btn-success';
+        }
+        else {
+            faName = 'plus';
+            text = '启用APP';
+            color = 'btn-primary';
+        }
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />},
+            {
+                type: 'component', 
+                component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />
+            },
             '',
             {
                 type: 'component', 
@@ -28,8 +51,8 @@ export class Info extends React.Component<App> {
             {
                 type: 'component', 
                 bk: '', 
-                component: <button className="btn btn-primary w-100" onClick={this.act}>
-                    <FA name="plus" size="lg" /> 添加APP
+                component: <button className={classNames('btn', 'w-100', color)} onClick={this.act}>
+                    <FA name={faName} size="lg" /> {text}
                 </button>
             },
         ];
@@ -38,8 +61,27 @@ export class Info extends React.Component<App> {
         //await store.dev.apps.loadCurApis();
         //this.apis.list = store.dev.apps.apis;
     }
-    private act() {
-
+    private async act() {
+        let {app, appActed} = this.props;
+        let {id, unit, inUnit} = app;
+        let newInUnit:number = 1;
+        if (inUnit === 0) {
+            await store.restoreUnitApp(id);
+        }
+        else if (inUnit === 1) {
+            await store.stopUnitApp(id);
+            newInUnit = 0;
+        }
+        else {
+            let newApp:UnitApp = _.clone(app);
+            newApp.id = id;
+            newApp.inUnit = 1;
+            await store.addUnitApp(newApp);
+        }
+        if (appActed !== undefined) {
+            appActed(id, newInUnit);
+        }
+        nav.pop();
     }
     render() {
         return <div>

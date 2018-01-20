@@ -50,7 +50,7 @@ class MainApi extends CenterApi {
     }
 
     async unitDeleteApp(unit:number, app:number, deleted:number):Promise<void> {
-        await this.post('unit/delete-app', {unit:unit, app:app, delete:deleted});
+        await this.post('unit/delete-app', {unit:unit, app:app, deleted:deleted});
     }
 
     async unitChangeProp(unit:number, prop:string, value:any):Promise<void> {
@@ -59,6 +59,26 @@ class MainApi extends CenterApi {
 
     async searchApp(unit:number, key:string, pageStart:any, pageSize:number):Promise<any[]> {
         return await this.get('unit/search-app', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
+    }
+
+    async unitRoles(unit:number):Promise<any[]> {
+        return await this.get('unit/roles', {unit:unit});
+    }
+
+    async unitAddRole(unit:number, name:string, discription:string):Promise<number> {
+        return await this.post('unit/add-role', {unit:unit, name:name, discription:discription});
+    }
+
+    async unitRoleChangeProp(unit:number, role:number, prop:string, value:any):Promise<void> {
+        await this.post('unit/change-role-prop', {unit:unit, role:role, prop:prop, value:value});
+    }
+
+    async unitRoleApps(unit:number, role:number):Promise<any[]> {
+        return await this.get('unit/role-apps', {unit:unit, role:role});
+    }
+
+    async unitRoleSetApps(unit:number, role:number, apps:number[]):Promise<any[]> {
+        return await this.post('unit/role-set-apps', {unit:unit, role:role, apps:apps});
     }
 
     async postMessage(toUser:number, msg:any) {

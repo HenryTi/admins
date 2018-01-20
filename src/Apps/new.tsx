@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {IObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
 import {Container, ButtonGroup,
     ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
@@ -10,19 +11,19 @@ import consts from '../consts';
 import {IdDates, UnitSpan} from '../tools';
 import {mainApi} from '../api';
 import {store} from '../store';
-import {App} from './model';
+import {UnitApp} from '../model';
 import {Info} from './info';
 
-class PagedApps extends PagedItems<App> {
+class PagedApps extends PagedItems<UnitApp> {
     private unitId:number;
     constructor(unitId:number) {
         super();
         this.unitId = unitId;
     }
-    protected async load():Promise<App[]> {
+    protected async load():Promise<UnitApp[]> {
         return await mainApi.searchApp(this.unitId, this.param, this.pageStart, this.pageSize);
     }
-    protected setPageStart(item:App) {
+    protected setPageStart(item:UnitApp) {
         if (item === undefined)
             this.pageStart = 0;
         else
@@ -36,20 +37,34 @@ export class NewApp extends React.Component {
     constructor(props) {
         super(props);
         this.onSearch = this.onSearch.bind(this);
+        this.appClick = this.appClick.bind(this);
+        this.appActed = this.appActed.bind(this);
         this.apps = new PagedApps(store.unit.id);
     }
     private onSearch(key:string) {
         this.apps.first(key);
     }
-    private appClick(app:App) {
+    private appClick(app:UnitApp) {
         nav.push(<Page header="App详细信息">
-            <Info {...app} />
+            <Info app={app} appActed={this.appActed}/>
         </Page>);
     }
-    private renderApp(app:App):JSX.Element {
-        let {name, discription, icon} = app;
+    private appActed(appId:number, inUnit:number) {
+        let apps = this.apps.items as IObservableArray<UnitApp>; //.replace .find(v => v.id === appId);
+        let app = apps.find(v => v.id === appId);
+        app.inUnit = inUnit;
+        apps.replace([app]);
+    }
+    private renderApp(app:UnitApp):JSX.Element {
+        let {name, discription, icon, inUnit} = app;
+        let right;
+        if (inUnit === 1)
+            right = <small>已启用</small>;
+        else if (inUnit === 0)
+            right = <small>已停用</small>;
         return <LMR className="px-3 py-2"
-            left={<Badge><img src={icon || consts.appIcon} /></Badge>}>
+            left={<Badge><img src={icon || consts.appIcon} /></Badge>}
+            right={right}>
             <div>{name}</div>
             <small className="text-muted">{discription}</small>
         </LMR>;

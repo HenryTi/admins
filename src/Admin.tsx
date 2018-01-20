@@ -4,12 +4,14 @@ import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
 import {List, LMR, FA, StackedFA, PropGrid, Prop} from 'tonva-react-form';
+import {StringValueEdit} from './tools';
 import consts from './consts';
 import {Unit, UnitApps, UnitAdmin} from './model';
 import {store} from './store';
 import Administors from './Administors';
 import Dev from './Dev';
 import AppsPage from './Apps';
+import {Members} from './Members';
 
 interface Item {
     main: string;
@@ -33,10 +35,10 @@ export default class AdminPage extends React.Component {
         page: AppsPage,
     };
     private usersAction:Item = {
-        main: '会员管理',
-        right: '会员权限',
+        main: '用户角色',
+        right: '用户权限',
         icon: 'users',
-        page: Administors,
+        page: Members,
     };
     private devAction:Item = {
         main: '应用开发',
@@ -157,69 +159,6 @@ class UnitProps extends React.Component {
     render() {
         return <Page header="小号信息">
             <PropGrid rows={this.rows} values={store.unit} alignValue="right" />
-        </Page>;
-    }
-}
-
-interface StringValueEditProps {
-    title: string;
-    onChanged:(value:any, orgValue:any)=>Promise<void>;
-    value?: any;
-    buttonText?: string;
-    info?: string;
-}
-interface StringValueEditState {
-    disabled: boolean;
-}
-class StringValueEdit extends React.Component<StringValueEditProps, StringValueEditState> {
-    private input:HTMLInputElement;
-    constructor(props) {
-        super(props);
-        this.state = {
-            disabled: true,
-        };
-        this.ref = this.ref.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-    private ref(input:HTMLInputElement) {
-        if (!input) return;
-        input.value = this.props.value;
-        this.input = input;
-    }
-    private onChange(evt:React.FormEvent<HTMLInputElement>) {
-        let org = this.props.value.trim();
-        let v = evt.currentTarget.value.trim();
-        this.setState({
-            disabled: org === v
-        })
-    }
-    private async onSubmit() {
-        let org = this.props.value.trim();
-        let v = this.input.value.trim();
-        let onChanged = this.props.onChanged;
-        if (onChanged !== undefined) {
-            await onChanged(v, org);
-            nav.pop();
-        }
-    }
-    render() {
-        let {title, onChanged, buttonText, info, value} = this.props;
-        let right = <Button
-            color="success"
-            size="sm"
-            disabled={this.state.disabled}
-            onClick={this.onSubmit}
-        >
-            {buttonText||'保存'}
-        </Button>;
-        return <Page header={title} right={right}>
-            <div className="m-4">
-                <input className="form-control w-100" type="text"
-                    ref={this.ref}
-                    onChange={this.onChange} />
-                <small className="d-block mt-2 text-muted">{info}</small>
-            </div>
         </Page>;
     }
 }
