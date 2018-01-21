@@ -1,8 +1,9 @@
 import {observable, autorun} from 'mobx';
+import * as _ from 'lodash';
 //import consts from './consts';
 import {nav, meInFrame} from 'tonva-tools';
 import {mainApi} from '../api';
-import {Unit, UnitApps, App, Api, UnitAdmin, UnitApp, Role} from '../model';
+import {Unit, UnitApps, App, Api, UnitAdmin, UnitApp, Role, RoleMember} from '../model';
 import {Admins} from './admins';
 import {Dev} from './dev';
 import {CacheUnits, CacheApis, CacheApps, CacheServers} from './cacheIds';
@@ -17,10 +18,14 @@ export class Store {
     cacheServers: CacheServers;
 
     @observable unit: Unit;
+    @observable memberCount: number;
     @observable apps: UnitApp[];
     @observable role:Role;
     @observable roles: Role[];
     @observable roleApps: UnitApp[];
+    @observable roleMember: RoleMember;
+    @observable roleMembers: RoleMember[];
+    @observable memberRoles: Role[];
 
     init() {
         this.unit = undefined;
@@ -30,6 +35,21 @@ export class Store {
         this.cacheApis = new CacheApis();
         this.cacheApps = new CacheApps();
         this.cacheServers = new CacheServers();
+    }
+
+    setRole(role:Role) {
+        if (this.role === role) return;
+        this.role = role;
+        this.roleApps = undefined;
+        this.roleMember = undefined;
+        this.roleMembers = undefined;
+        this.memberRoles = undefined;
+    }
+
+    setRoleUser(user:RoleMember) {
+        if (this.roleMember === user) return;
+        this.roleMember = user;
+        this.memberRoles = undefined;
     }
 
     async unitChangeProp(prop:string, value:any):Promise<void> {
@@ -42,34 +62,11 @@ export class Store {
         this.apps = await mainApi.unitApps(this.unitId);
     }
 
-    async getAppApi(appId: number, apiName): Promise<Api> {
-        return;
-        /*
-        let apps = this.unit.apps;
-        if (apps === undefined) return;
-        let app = apps.find(v => v.id === appId);
-        if (app === undefined) return;
-        let apis = app.apis;
-        if (apis === undefined) {
-            apis = app.apis = {};
-        }
-        let api:Api = apis[apiName];
-        if (api === null) return;
-        if (api === undefined) {
-            api = await mainApi.appApi(this.unitId, appId, apiName);
-            if (api === undefined) {
-                api = null;
-                apis[apiName] = api;
-                return;
-            }
-        }
-        return api;*/
-    }
-
     async loadUnit(): Promise<void> {
         console.log('loadUnit()');
         let ret = await mainApi.unit(this.unitId);
         this.unit = ret;
+        this.memberCount = await mainApi.unitMemberCount(this.unitId);
     }
 
     async stopUnitApp(appId:number): Promise<void> {
@@ -135,6 +132,43 @@ export class Store {
     async setRoleApps(apps:UnitApp[]) {
         await mainApi.unitRoleSetApps(this.unit.id, this.role.id, apps.map(v=>v.id));
         this.roleApps = apps;
+    }
+
+    async loadRoleUsers():Promise<void> {
+        let ret = await mainApi.unitRoleUsers(this.unit.id, this.role.id);
+        this.roleMembers = ret;
+    }
+
+    async unitAssignMember(assigned:string):Promise<void> {
+        await mainApi.unitAssignMember(this.unit.id, this.roleMember.id, assigned);
+        this.roleMember.assigned = assigned;
+    }
+
+    async loadMemberRoles():Promise<void> {
+        let ret = await mainApi.unitMemberRoles(this.unit.id, this.roleMember.id);
+        let roles:Role[] = ret.map(v => {
+            let rId = v.id;
+            let role = this.roles.find(r => r.id === rId);
+            return _.clone(role);
+        });
+        this.memberRoles = roles;
+    }
+
+    async setMemberRoles(memberRoles:Role[]) {
+        await mainApi.unitSetMemberRoles(this.unit.id, this.roleMember.id, memberRoles.map(v=>v.id));
+        this.roles.forEach(role => {
+            let rId = role.id;
+            let org = this.memberRoles.find(v => v.id === rId);
+            let cur = memberRoles.find(v => v.id === rId);
+            if (org !== undefined) {
+                if (cur !== undefined) return;
+                role.count--;
+                return;
+            }
+            if (cur === undefined) return;
+            role.count++;
+        });
+        this.memberRoles = memberRoles;
     }
 };
 

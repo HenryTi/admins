@@ -33,6 +33,10 @@ class MainApi extends CenterApi {
         return await this.get('unit/', {unit:unit});
     }
 
+    async unitMemberCount(unit:number):Promise<number> {
+        return await this.get('unit/member-count', {unit:unit});
+    }
+
     async unitAdmins(unit:number):Promise<any[]> {
         return await this.get('unit/admins', {unit:unit});
     }
@@ -77,12 +81,24 @@ class MainApi extends CenterApi {
         return await this.get('unit/role-apps', {unit:unit, role:role});
     }
 
-    async unitRoleSetApps(unit:number, role:number, apps:number[]):Promise<any[]> {
-        return await this.post('unit/role-set-apps', {unit:unit, role:role, apps:apps});
+    async unitRoleSetApps(unit:number, role:number, apps:number[]):Promise<void> {
+        await this.post('unit/role-set-apps', {unit:unit, role:role, apps:apps});
     }
 
-    async postMessage(toUser:number, msg:any) {
-        return await this.post('test/post', {to: toUser, message: msg});
+    async unitRoleUsers(unit:number, role:number):Promise<any[]> {
+        return await this.get('unit/role-users', {unit:unit, role:role});
+    }
+
+    async unitAssignMember(unit:number, member:number, assigned:string):Promise<void> {
+        await this.post('unit/assign-member', {unit:unit, member:member, assigned:assigned});
+    }
+
+    async unitMemberRoles(unit:number, member:number):Promise<any[]> {
+        return await this.get('unit/member-roles', {unit:unit, member:member});
+    }
+
+    async unitSetMemberRoles(unit:number, member:number, roles:number[]):Promise<void> {
+        await this.post('unit/member-set-roles', {unit:unit, member:member, roles:roles});
     }
 }
 

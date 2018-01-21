@@ -26,18 +26,20 @@ export class StringValueEdit extends React.Component<StringValueEditProps, Strin
     }
     private ref(input:HTMLInputElement) {
         if (!input) return;
-        input.value = this.props.value;
+        input.value = this.props.value || '';
         this.input = input;
     }
     private onChange(evt:React.FormEvent<HTMLInputElement>) {
-        let org = this.props.value.trim();
+        let val = this.props.value;
+        let org = val && val.trim();
         let v = evt.currentTarget.value.trim();
         this.setState({
             disabled: org === v
         })
     }
     private async onSubmit() {
-        let org = this.props.value.trim();
+        let val = this.props.value;
+        let org = val && val.trim();
         let v = this.input.value.trim();
         let onChanged = this.props.onChanged;
         if (onChanged !== undefined) {

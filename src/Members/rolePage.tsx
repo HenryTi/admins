@@ -7,6 +7,7 @@ import {nav, Page} from 'tonva-tools';
 import {StringValueEdit} from '../tools';
 import {Role, UnitApp} from '../model';
 import {store} from '../store';
+import {MembersPage} from './membersPage';
 
 @observer
 export class RolePage extends React.Component {
@@ -28,6 +29,9 @@ export class RolePage extends React.Component {
     private addRoleApp() {
         nav.push(<RoleApps />);        
     }
+    private users() {
+        nav.push(<MembersPage />);
+    }
     render() {
         let {name, discription, count} = store.role;
         let rows:Prop[] = [
@@ -47,7 +51,7 @@ export class RolePage extends React.Component {
                             '共有 ' + count + ' 用户'
                     }
                     right={<div><FA name="chevron-right" /></div>} />,
-                onClick: this.editRole,
+                onClick: this.users,
             },
             '=',
         ];
