@@ -28,6 +28,7 @@ export namespace DevModel {
     export interface Service extends ObjBase {
         url: string;
         type: number;
+        name: string;
         discription: string;
         server: number;
         app: number;

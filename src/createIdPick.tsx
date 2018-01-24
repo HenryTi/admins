@@ -32,9 +32,10 @@ class IdPickPage extends React.Component<IdPickPageProps, IdPickPageState> {
     constructor(props) {
         super(props);
         this.state = {
-            items: undefined,
+            items: null,
         }
         this.itemClick = this.itemClick.bind(this);
+        this.onSearch = this.onSearch.bind(this);
     }
     async componentDidMount() {
         let {face, candidateItems, params} = this.props;
@@ -47,8 +48,14 @@ class IdPickPage extends React.Component<IdPickPageProps, IdPickPageState> {
         resolve(item);
         nav.pop();
     }
-    onSearch(key: string) {
-        alert('search ' + key);
+    async onSearch(key: string) {
+        //alert('search ' + key);
+        //await store.dev.searchServer.first(key)
+        let {candidateItems, params} = this.props;
+        if (typeof candidateItems === 'function') {
+            let ret = await candidateItems(params, key);
+            this.setState({items: ret});
+        }
     }
     render() {
         let {caption, row, searchPlaceHolder} = this.props;

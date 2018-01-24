@@ -64,6 +64,15 @@ class DevApi extends CenterApi {
     async searchServer(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('server-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
+    async loadAppServices(unit:number, app:number):Promise<any[]> {
+        return await this.get('app-services', {unit:unit, app:app});
+    }
+    async loadApiServices(unit:number, api:number):Promise<any[]> {
+        return await this.get('api-services', {unit:unit, api:api});
+    }
+    async changeServiceProp(unit:number, service:number, prop:string, value:any):Promise<void> {
+        await this.post('service-change-prop', {unit:unit, service:service, prop:prop, value:value});
+    }
 }
 
 export const devApi = new DevApi('tv/dev/');

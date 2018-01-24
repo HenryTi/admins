@@ -29,7 +29,7 @@ export class RolePage extends React.Component {
     private addRoleApp() {
         nav.push(<RoleApps />);        
     }
-    private users() {
+    private members() {
         nav.push(<MembersPage />);
     }
     render() {
@@ -51,7 +51,7 @@ export class RolePage extends React.Component {
                             '共有 ' + count + ' 用户'
                     }
                     right={<div><FA name="chevron-right" /></div>} />,
-                onClick: this.users,
+                onClick: this.members,
             },
             '=',
         ];

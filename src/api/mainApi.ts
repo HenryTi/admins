@@ -85,8 +85,8 @@ class MainApi extends CenterApi {
         await this.post('unit/role-set-apps', {unit:unit, role:role, apps:apps});
     }
 
-    async unitRoleUsers(unit:number, role:number):Promise<any[]> {
-        return await this.get('unit/role-users', {unit:unit, role:role});
+    async unitMembers(unit:number, role:number, key:string, pageStart:number, pageSize:number):Promise<any[]> {
+        return await this.get('unit/members', {unit:unit, role:role, key, pageStart, pageSize});
     }
 
     async unitAssignMember(unit:number, member:number, assigned:string):Promise<void> {

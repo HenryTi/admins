@@ -49,7 +49,7 @@ const serversProps:ObjViewProps<DevModel.Server> = {
         },
     ],
     row: (item: DevModel.Server):JSX.Element => {
-        return <Row icon={consts.appItemIcon} main={item.discription} vice={item.cloud + ' ' + item.ip} />;
+        return <Row icon={consts.appItemIcon} main={item.discription} vice={<>{item.cloud}  {item.ip}</>} />;
     },
     items: ()=>store.dev.servers,
     repeated: {

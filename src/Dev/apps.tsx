@@ -4,13 +4,15 @@ import {observer} from 'mobx-react';
 import * as _ from 'lodash';
 import {Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
-import {FormRow, EasyDate, Media, Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge} from 'tonva-react-form';
-import {UnitSpan, IdDates} from '../tools';
+import {FormRow, EasyDate, Media, 
+    Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva-react-form';
+import {UnitSpan, IdDates, ServerSpan} from '../tools';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {Row} from './row';
 import {ObjViewProps} from './ObjView';
+import {NewService, ServiceInfo} from './servicePage';
 
 @observer
 class Info extends React.Component<DevModel.App> {
@@ -29,16 +31,62 @@ class Info extends React.Component<DevModel.App> {
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             this.apis,
+            '',
+            {
+                type: 'component', 
+                label: 'Service',
+                vAlign: 'stretch',
+                component: <ServiceRow />,
+            },
         ];
     }
     async componentDidMount() {
         await store.dev.apps.loadCurApis();
+        await store.dev.services.loadAppServices(this.props.id);
         this.apis.list = store.dev.apps.apis;
     }
     render() {
         return <div>
             <PropGrid rows={this.rows} values={this.props} />
         </div>
+    }
+}
+
+@observer
+export class ServiceRow extends React.Component {
+    private newClick() {
+        nav.push(<NewService type={2} id={store.dev.apps.cur.id} />);
+    }
+    private infoClick() {
+        nav.push(<ServiceInfo />);
+    }
+    private setProp(prop:string, value:any) {
+        let service = store.dev.services.cur;
+        switch (prop) {
+            case 'url': service.url = value; break;
+            case 'server': service.server = value; break;
+        }
+    }
+    render() {
+        let service = store.dev.services.cur;
+        if (service === null) return '...';
+        let content, click;
+        if (service === undefined) {
+            click = this.newClick;
+            content = <Muted>无，点击设置</Muted>;
+        }
+        else {
+            let {url, server} = service;
+            click = this.infoClick;
+            content = <div>
+                <div>{url}</div>
+                <ServerSpan id={server} />
+            </div>;
+        }
+        return <div className="d-flex w-100 align-items-center cursor-pointer" style={{flex:1}} onClick={click}>
+            {content}
+        </div>;
+
     }
 }
 

@@ -7,6 +7,7 @@ import {Role} from '../model';
 import {store} from '../store';
 import {NewRole} from './newRole';
 import {RolePage} from './rolePage';
+import {MembersPage} from './membersPage';
 
 @observer
 export class Members extends React.Component {
@@ -32,7 +33,8 @@ export class Members extends React.Component {
         nav.push(<NewRole />);
     }
     private allUsersClick() {
-        
+        store.setRole(undefined);
+        nav.push(<MembersPage />);
     }
     render() {
         let right = <Button color='secondary' size='sm' onClick={()=>this.newRole()}><FA name="plus" /></Button>;

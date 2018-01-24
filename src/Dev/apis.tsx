@@ -1,12 +1,17 @@
 import * as React from 'react';
-import {EasyDate, Media, Prop, PropGrid} from 'tonva-react-form';
-import {UnitSpan, IdDates} from '../tools';
+import {observer} from 'mobx-react';
+import {Button} from 'reactstrap';
+import {EasyDate, Media, Prop, PropGrid, Muted, List} from 'tonva-react-form';
+import {nav, Page} from 'tonva-tools';
+import {UnitSpan, IdDates, ServerSpan} from '../tools';
 import {Row} from './row';
 import consts from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
+import {NewService, ServiceInfo} from './servicePage';
 
+@observer
 class Info extends React.Component<DevModel.Api> {
     private rows:Prop[];
     constructor(props:any) {
@@ -23,9 +28,33 @@ class Info extends React.Component<DevModel.Api> {
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
         ];
     }
+    async componentDidMount() {
+        await store.dev.services.loadApiServices(this.props.id);
+    }
+    private renderService(service:DevModel.Service, index:number):JSX.Element {
+        let {url, server} = service;
+        return <div className="d-flex w-100 align-items-center cursor-pointer" style={{flex:1}}>
+            <div>
+                <div>{url}</div>
+                <ServerSpan id={server} />
+            </div>
+        </div>;
+    }
     render() {
+        let services = store.dev.services.items;
         return <div>
             <PropGrid rows={this.rows} values={this.props} />
+            <div className="d-flex mx-3 mt-3 mb-1 align-items-end">
+                <Muted style={{display:'block', flex:1}}>Service列表</Muted>
+                <Button
+                    color="primary"
+                    size="sm"
+                    outline={true}
+                    onClick={()=>nav.push(<NewService type={3} id={this.props.id} />)}>
+                    增加Service
+                </Button>
+            </div>
+            <List items={services} item={{render:this.renderService}} />
         </div>;
     }
 }

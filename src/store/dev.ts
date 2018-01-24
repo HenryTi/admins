@@ -28,7 +28,7 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
          this.items = ret;
     }
     protected abstract _load():Promise<T[]>;
-    async save(item:T):Promise<boolean> {
+    async saveCur(item:T):Promise<boolean> {
         let values:any = {};
         if (this.cur !== undefined) {
             _.assign(values, this.cur, item);
@@ -42,7 +42,7 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
         if (this.cur === undefined) {
             if (id === 0) return false;
             item.id = id;
-            this.items.unshift(item);
+            if (this.items !== undefined) this.items.unshift(item);
             this._inc();
         }
         else {
@@ -50,12 +50,23 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
         }
         return true;
     }
+    async save(item:T):Promise<T> {
+        let values:any = {};
+        _.assign(values, item);
+
+        values.unit = item.unit = this.store.unit.id;
+        let id = await this._save(values);
+        if (id === 0) return;
+        values.id = id;
+        return values;
+    }
     protected abstract _save(item:T):Promise<number>;
     async del():Promise<void> {
         let c = this.cur;
         if (c === undefined) return;
         let id = c.id;
         await this._del(c);
+        if (this.items === undefined) return;
         let index = this.items.findIndex(v => v.id === id);
         if (index>=0) {
             this.items.splice(index, 1);
@@ -70,6 +81,7 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
 class Apps extends ObjItems<DevModel.App> {
     @observable apis: DevModel.Api[] = undefined;
     @observable searchedApis: DevModel.Api[] = undefined;
+    //@observable service: DevModel.Service = null;
     protected async _load() {
         return await devApi.apps(this.store.unit.id);
     }
@@ -86,6 +98,10 @@ class Apps extends ObjItems<DevModel.App> {
         let ret = await devApi.loadAppApis(this.cur.id);
         this.apis = ret;
     }
+    /*
+    public async loadService() {
+        this.service = await devApi.loadAppServices(this.store.unit.id, this.cur.id);
+    }*/
     public async searchApi(key:string) {
         this.searchedApis = await devApi.searchApi(this.store.unit.id, key, 0, searchPageSize);
     }
@@ -107,6 +123,7 @@ class Apps extends ObjItems<DevModel.App> {
 }
 
 class Apis extends ObjItems<DevModel.Api> {
+    //@observable services: DevModel.Service[];
     protected async _load() {
         let ret = await devApi.apis(this.store.unit.id);
         return ret;
@@ -119,6 +136,10 @@ class Apis extends ObjItems<DevModel.Api> {
     }
     protected _inc() { this.dev.counts.api++; }
     protected _dec() { this.dev.counts.api--; }
+    /*
+    public async loadServices() {
+        this.services = await devApi.loadAppIdServices(this.store.unit.id, this.cur.id);
+    }*/
 }
 
 class Servers extends ObjItems<DevModel.Server> {
@@ -147,6 +168,20 @@ class Services extends ObjItems<DevModel.Service> {
     }
     protected _inc() { this.dev.counts.service++; }
     protected _dec() { this.dev.counts.service--; }
+    async changeProp(prop:string, value:any):Promise<void> {
+        await devApi.changeServiceProp(this.store.unit.id, this.cur.id, prop, value);
+        switch (prop) {
+            case 'url': this.cur.url = value; break;
+            case 'server': this.cur.server = value; break;
+        }
+    }
+    async loadApiServices(api:number):Promise<void> {
+        this.items = await devApi.loadApiServices(this.store.unit.id, api);
+    }
+    async loadAppServices(app:number) {
+        this.items = await devApi.loadAppServices(this.store.unit.id, app);
+        if (this.items.length > 0) this.cur = this.items[0];
+    }
 }
 
 const searchPageSize = 50;
@@ -193,6 +228,9 @@ class SearchItems<T extends DevModel.ObjBase> {
                 this.items = ret;
             else
                 this.items.push(...ret);
+        }
+        else {
+            this.items = [];
         }
     }
 }

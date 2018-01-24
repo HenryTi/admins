@@ -134,8 +134,8 @@ export class Store {
         this.roleApps = apps;
     }
 
-    async loadRoleUsers():Promise<void> {
-        let ret = await mainApi.unitRoleUsers(this.unit.id, this.role.id);
+    async loadMembers():Promise<void> {
+        let ret = await mainApi.unitMembers(this.unit.id, this.role === undefined? 0:this.role.id, undefined, 0, 100);
         this.roleMembers = ret;
     }
 

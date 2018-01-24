@@ -3,8 +3,8 @@ import {LMR, Badge} from 'tonva-react-form';
 
 export interface RowProps {
     icon: string;
-    main: string;
-    vice: string;
+    main: string|JSX.Element;
+    vice: string|JSX.Element;
 }
 
 export class Row extends React.Component<RowProps> {
