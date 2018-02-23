@@ -59,7 +59,7 @@ class IdPickPage extends React.Component<IdPickPageProps, IdPickPageState> {
     }
     render() {
         let {caption, row, searchPlaceHolder} = this.props;
-        return <Page header={caption} close={true}>
+        return <Page header={caption} back="close">
             <div className="container">
                 <SearchBox className="my-2" 
                     onSearch={this.onSearch} 

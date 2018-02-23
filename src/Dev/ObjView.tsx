@@ -77,7 +77,10 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
             content = <MultiStep className="mt-4" header={stepHeader} steps={steps} first="step1" onSubmit={this.onSubmit} />;
         }
         else if (formRows !== undefined) {
-            content = <TonvaForm formRows={formRows} onSubmit={this.onSubmit} initValues={items().cur} />;
+            content = <TonvaForm 
+                className="m-3"
+                formRows={formRows} 
+                onSubmit={this.onSubmit} initValues={items().cur} />;
         }
         else {
             content = "ObjViewProps: no steps and no formRows";
@@ -139,8 +142,11 @@ class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
     }
     render() {
         let right = <DropdownActions actions={this.actions} />
-        return <Page header={'修改 '+this.props.title} right={right} close={true}>
-            <TonvaForm formRows={this.props.formRows} onSubmit={this.onSubmit} initValues={this.props.items().cur} />
+        return <Page header={'修改 '+this.props.title} right={right} back="close">
+            <TonvaForm 
+                className="m-3"
+                formRows={this.props.formRows} 
+                onSubmit={this.onSubmit} initValues={this.props.items().cur} />
         </Page>;
     }
 }

@@ -10,6 +10,7 @@ import {ObjItems} from '../store/dev';
 import ObjView, {ObjViewProps} from './ObjView';
 import appsProps from './apps';
 import apisProps from './apis';
+import busesProps from './buses';
 import serversProps from './servers';
 import servicesProps from './services';
 
@@ -17,8 +18,6 @@ interface Item<T extends DevModel.ObjBase> {
     title: string;
     count: number;
     icon: string;
-    //items: ObjItems<T>;
-    //page: JSX.Element;
     objProps: ObjViewProps<T>
 }
 
@@ -68,6 +67,12 @@ export default class AdministorsPage extends React.Component {
                 //items: store.dev.apis, 
                 objProps: apisProps,
                 //page: <ObjView {...apisProps} items={store.dev.apis} />
+            },
+            {
+                title: 'BUS', 
+                count: counts.bus, 
+                icon: 'cogs', 
+                objProps: busesProps,
             },
             {
                 title: 'Server', 

@@ -33,7 +33,7 @@ export default class NewFellowPage extends React.Component<{}, null> {
             this.schema.setInputError('user', toName + ' not exists');
         }
         else {
-            nav.replace(<Page header='完成' close={true}>
+            nav.replace(<Page header='完成' back="close">
                 <Card>
                     <CardBody>
                         <CardTitle>邀请成员</CardTitle>

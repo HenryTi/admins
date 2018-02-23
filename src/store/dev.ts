@@ -8,6 +8,7 @@ import { observer } from 'mobx-react';
 interface Counts {
     api: number;
     app: number;
+    bus: number;
     server: number;
     service: number;
 }
@@ -142,6 +143,21 @@ class Apis extends ObjItems<DevModel.Api> {
     }*/
 }
 
+class Buses extends ObjItems<DevModel.Bus> {
+    protected async _load() {
+        let ret = await devApi.buses(this.store.unit.id);
+        return ret;
+    }
+    protected async _save(item:DevModel.Bus):Promise<number> {
+        return await devApi.saveBus(item);
+    }
+    protected async _del(item:DevModel.Bus):Promise<void> {
+        await devApi.delBus(this.store.unit.id, item.id);
+    }
+    protected _inc() { this.dev.counts.bus++; }
+    protected _dec() { this.dev.counts.bus--; }
+}
+
 class Servers extends ObjItems<DevModel.Server> {
     protected async _load() {
         return await devApi.servers(this.store.unit.id);
@@ -241,6 +257,7 @@ export class Dev {
         this.store = store;
         this.apps = new Apps(store, this);
         this.apis = new Apis(store, this);
+        this.buses = new Buses(store, this);
         this.servers = new Servers(store, this);
         this.services = new Services(store, this);
         this.searchApp = new SearchItems<DevModel.App>(store, this, devApi.searchApp.bind(devApi));
@@ -251,6 +268,7 @@ export class Dev {
     @observable counts:Counts = undefined;
     apps:Apps = undefined;
     apis:Apis = undefined;
+    buses:Buses = undefined;
     servers:Servers = undefined;
     services:Services = undefined;
 

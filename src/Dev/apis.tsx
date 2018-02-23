@@ -33,12 +33,16 @@ class Info extends React.Component<DevModel.Api> {
     }
     private renderService(service:DevModel.Service, index:number):JSX.Element {
         let {url, server} = service;
-        return <div className="d-flex w-100 align-items-center cursor-pointer" style={{flex:1}}>
+        return <div className="d-flex w-100 align-items-center cursor-pointer py-2 px-3" style={{flex:1}}>
             <div>
                 <div>{url}</div>
-                <ServerSpan id={server} />
+                <Muted><ServerSpan id={server} /></Muted>
             </div>
         </div>;
+    }
+    private serviceClick(service:DevModel.Service) {
+        store.dev.services.cur = service;
+        nav.push(<ServiceInfo />);
     }
     render() {
         let services = store.dev.services.items;
@@ -54,7 +58,7 @@ class Info extends React.Component<DevModel.Api> {
                     增加Service
                 </Button>
             </div>
-            <List items={services} item={{render:this.renderService}} />
+            <List items={services} item={{render:this.renderService, onClick:this.serviceClick}} />
         </div>;
     }
 }

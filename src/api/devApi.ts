@@ -13,23 +13,29 @@ class DevApi extends CenterApi {
     async server(id:number):Promise<any> {
         return await this.get('server', {id:id});
     }
-    async apps(unit:number):Promise<any[]> {
-        return await this.get('apps', {unit:unit});
+    async apps(unit:number, pageSize:number=30):Promise<any[]> {
+        return await this.get('apps', {unit:unit, pageSize: pageSize});
     }
-    async apis(unit:number):Promise<any[]> {
-        return await this.get('apis', {unit:unit});
+    async apis(unit:number, pageSize:number=30):Promise<any[]> {
+        return await this.get('apis', {unit:unit, pageSize: pageSize});
     }
-    async servers(unit:number):Promise<any[]> {
-        return await this.get('servers', {unit:unit});
+    async buses(unit:number, pageSize:number=30):Promise<any[]> {
+        return await this.get('buses', {unit:unit, pageSize: pageSize});
     }
-    async services(unit:number):Promise<any[]> {
-        return await this.get('services', {unit:unit});
+    async servers(unit:number, pageSize:number=30):Promise<any[]> {
+        return await this.get('servers', {unit:unit, pageSize: pageSize});
+    }
+    async services(unit:number, pageSize:number=30):Promise<any[]> {
+        return await this.get('services', {unit:unit, pageSize: pageSize});
     }
     async saveApp(values:any):Promise<number> {
         return await this.post('app-save', values);
     }
     async saveApi(values:any):Promise<number> {
         return await this.post('api-save', values);
+    }
+    async saveBus(values:any):Promise<number> {
+        return await this.post('bus-save', values);
     }
     async saveServer(values:any):Promise<number> {
         return await this.post('server-save', values);
@@ -42,6 +48,9 @@ class DevApi extends CenterApi {
     }
     async delApi(unit:number,id:number):Promise<void> {
         return await this.post('api-del', {unit:unit, id:id});
+    }
+    async delBus(unit:number,id:number):Promise<void> {
+        return await this.post('bus-del', {unit:unit, id:id});
     }
     async delServer(unit:number,id:number):Promise<void> {
         return await this.post('server-del', {unit:unit, id:id});

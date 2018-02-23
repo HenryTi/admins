@@ -223,7 +223,7 @@ class Apis extends React.Component {
             onSearch={this.onSearch} 
             placeholder="搜索API名字" 
             maxLength={100} />;
-        return <Page close={true} header={header}>
+        return <Page back="close" header={header}>
             <List items={store.dev.apps.searchedApis} item={{render: this.row}} loading={null} />
         </Page>;
     }

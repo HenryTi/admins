@@ -19,6 +19,12 @@ export namespace DevModel {
         "public": number;
     }
 
+    export interface Bus extends ObjBase {
+        name: string;
+        discription: string;
+        schema: string;
+    }
+
     export interface Server extends ObjBase {
         discription: string;
         cloud: string;
