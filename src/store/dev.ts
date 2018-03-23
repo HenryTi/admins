@@ -48,6 +48,7 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
         }
         else {
             _.assign(this.cur, values);
+            //this.cur = values;
         }
         return true;
     }
@@ -106,6 +107,7 @@ class Apps extends ObjItems<DevModel.App> {
     public async searchApi(key:string) {
         this.searchedApis = await devApi.searchApi(this.store.unit.id, key, 0, searchPageSize);
     }
+    /*
     public async appBindApi(apiIds:number[], bind:boolean) {
         await devApi.appBindApi(this.store.unit.id, this.cur.id, apiIds, bind? 1:0);
         for (let api of apiIds) {
@@ -120,6 +122,18 @@ class Apps extends ObjItems<DevModel.App> {
                 if (index>=0) this.apis.splice(index, 1);
             }
         }
+    }*/
+    // if apis === undefined, then unbind
+    public async appBindApi(apis:{id:number, access:string[]}[]) {
+        await devApi.appBindApi(this.store.unit.id, this.cur.id, apis);
+        for (let api of apis) {
+            let index = this.apis.findIndex(a => a.id === api.id);
+            if (index>=0) this.apis.splice(index, 1);
+            if (this.searchedApis !== undefined) {
+                let find = this.searchedApis.find(a => a.id === api.id);
+                if (find !== undefined) this.apis.unshift(find);
+            }
+        }
     }
 }
 
@@ -130,6 +144,10 @@ class Apis extends ObjItems<DevModel.Api> {
         return ret;
     }
     protected async _save(item:DevModel.Api):Promise<number> {
+        let {access} = item;
+        if (!access) access = "*";
+        let parts = access.split(',').map(v => v.trim()).filter(v => v!=='');
+        item.access = parts.join(',');
         return await devApi.saveApi(item);
     }
     protected async _del(item:DevModel.Api):Promise<void> {

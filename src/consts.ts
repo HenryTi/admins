@@ -10,8 +10,8 @@ const consts = {
         }
     },
 
-    appIcon: 'https://www.google.ca/images/branding/product/ico/googleg_lodp.ico',
-    appItemIcon: 'https://www.google.ca/images/branding/product/ico/googleg_lodp.ico',
+    appIcon: 'http://101.200.46.56/imgs/Bear-icon.png',
+    appItemIcon: 'http://101.200.46.56/imgs/Bear-icon.png',
 };
 
 export default consts;

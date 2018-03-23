@@ -24,10 +24,10 @@ export class RolePage extends React.Component {
                 right={<small className="text-muted">{app.discription}</small>} />
     }
     private roleAppClick(app:UnitApp) {
-
+        nav.push(<RoleApps />);
     }
     private addRoleApp() {
-        nav.push(<RoleApps />);        
+        nav.push(<RoleApps />);
     }
     private members() {
         nav.push(<MembersPage />);

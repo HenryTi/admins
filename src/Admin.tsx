@@ -106,7 +106,7 @@ export default class AdminPage extends React.Component {
             top = <Container>
                 <Row className='my-4 bg-white py-1 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}>
                     <Col xs={2} className='d-flex justify-content-end align-items-start'>
-                        <img className='w-75' src={icon || process.env.REACT_APP_DEFAULT_ICON} />
+                        <img className='w-75' src={icon || consts.appIcon} />
                     </Col>
                     <Col xs="auto">
                         <h4 className='text-dark'>{name}</h4>

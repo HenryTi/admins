@@ -61,8 +61,12 @@ class DevApi extends CenterApi {
     async loadAppApis(app:number):Promise<any[]> {
         return await this.get('app-apis', {app: app});
     }
-    async appBindApi(unit:number,app:number,apiIds:number[], bind:0|1):Promise<void> {
-        await this.post('app-bind-api', {unit:unit, app:app, apiIds:apiIds, bind:bind});
+    async appBindApi(unit:number,app:number,apis:{id:number, access:string[]}[]):Promise<void> {
+        let apisText:string;
+        if (apis !== undefined) {
+            apisText = apis.map(v => String(v.id)+'|'+v.access.join(',')).join(';');
+        }
+        await this.post('app-bind-api', {unit:unit, app:app, apis:apisText});
     }
     async searchApi(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('api-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});

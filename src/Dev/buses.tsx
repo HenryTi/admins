@@ -15,6 +15,7 @@ import {ObjViewProps} from './ObjView';
 
 @observer
 class Info extends React.Component<DevModel.Bus> {
+    /*
     private rows: Prop[];
     constructor(props:any) {
         super(props);
@@ -36,13 +37,31 @@ class Info extends React.Component<DevModel.Bus> {
                 component: <SchemaView />,
             },
         ];
-    }
+    }*/
     async componentDidMount() {
         //await store.dev.buses.loadCurApis();
     }
     render() {
+        let {unit, name, discription, schema, date_init, date_update} = this.props;
+        let disp = <div>
+            <div>{discription}</div>
+            <IdDates date_update={date_update} date_init={date_init} />
+        </div>;
+        let rows:Prop[] = [
+            '',
+            {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
+            '',
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
+            '',
+            {
+                type: 'component', 
+                label: 'Schema',
+                vAlign: 'stretch',
+                component: <SchemaView />,
+            },
+        ];
         return <div>
-            <PropGrid rows={this.rows} values={this.props} />
+            <PropGrid rows={rows} values={this.props} />
         </div>
     }
 }

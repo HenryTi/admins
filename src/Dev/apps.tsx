@@ -16,8 +16,9 @@ import {NewService, ServiceInfo} from './servicePage';
 
 @observer
 class Info extends React.Component<DevModel.App> {
-    private rows: Prop[];
     @observable private apis:ListProp = {label: '关联API', type: 'list', list: undefined, row: ApiRow};
+    /*
+    private rows: Prop[];
     constructor(props:any) {
         super(props);
         let {unit, name, discription, icon, date_init, date_update} = this.props;
@@ -40,14 +41,34 @@ class Info extends React.Component<DevModel.App> {
             },
         ];
     }
+    */
     async componentDidMount() {
         await store.dev.apps.loadCurApis();
         await store.dev.services.loadAppServices(this.props.id);
         this.apis.list = store.dev.apps.apis;
     }
     render() {
+        let {unit, name, discription, icon, date_init, date_update} = this.props;
+        let disp = <div>
+            <div>{discription}</div>
+            <IdDates date_update={date_update} date_init={date_init} />
+        </div>;
+        let rows:Prop[] = [
+            '',
+            {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />},
+            '',
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
+            this.apis,
+            '',
+            {
+                type: 'component', 
+                label: 'Service',
+                vAlign: 'stretch',
+                component: <ServiceRow />,
+            },
+        ];
         return <div>
-            <PropGrid rows={this.rows} values={this.props} />
+            <PropGrid rows={rows} values={this.props} />
         </div>
     }
 }
@@ -146,16 +167,17 @@ class AppApis extends React.Component {
         super(props);
         this.row = this.row.bind(this);
         this.ref = this.ref.bind(this);
-        this.removeBind = this.removeBind.bind(this);
+        //this.removeBind = this.removeBind.bind(this);
         this.onSelect = this.onSelect.bind(this);
     }
     ref(list:List) {
         this._list = list;
     }
+    /*
     async removeBind() {
         let apiIds:number[] = this._list.selectedItems.map(v => v.id);
         await store.dev.apps.appBindApi(apiIds, false);
-    }
+    }*/
     onSelect(item: DevModel.App, isSelected:boolean, anySelected:boolean) {
         this.anySelected = anySelected;
     }
@@ -171,7 +193,7 @@ class AppApis extends React.Component {
     }
     render() {
         let btnProps = this.anySelected?
-            {color:'danger', onClick:this.removeBind, icon:'trash', text:'取消'}:
+            {color:'danger', /*onClick:this.removeBind, */icon:'trash', text:'取消'}:
             {color:'primary', onClick:()=>nav.push(<Apis/>), icon:'plus', text:'新增'};
         let btn = (p)=><Button outline={true} color={p.color} size="sm" onClick={p.onClick}>
             <i className={"fa fa-" + p.icon} /> {p.text}关联
@@ -197,7 +219,7 @@ class Apis extends React.Component {
         store.dev.apps.searchApi(key);
     }
     onBind(api: DevModel.Api, bind: boolean) {
-        store.dev.apps.appBindApi([api.id], bind);
+        store.dev.apps.appBindApi([{id:api.id, access:['*']}]);
     }
     row(api: DevModel.Api) {
         let isConnected = store.dev.apps.apis.find(a => a.id === api.id) !== undefined;

@@ -10,6 +10,7 @@ export namespace DevModel {
     export interface Api extends ObjBase {
         name: string;
         discription: string;
+        access: string;
     }
 
     export interface App extends ObjBase {

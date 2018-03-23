@@ -13,10 +13,11 @@ import {NewService, ServiceInfo} from './servicePage';
 
 @observer
 class Info extends React.Component<DevModel.Api> {
+    /*
     private rows:Prop[];
     constructor(props:any) {
         super(props);
-        let {name, discription, unit, date_init, date_update} = this.props;
+        let {name, discription, access, unit, date_init, date_update} = this.props;
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
@@ -26,8 +27,13 @@ class Info extends React.Component<DevModel.Api> {
             {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
+            {type: 'component', label: '入口', component: <div className="py-2">{
+                access? 
+                    access.split(',').join(', ')
+                    : <Muted>(全)</Muted>
+            }</div> },
         ];
-    }
+    }*/
     async componentDidMount() {
         await store.dev.services.loadApiServices(this.props.id);
     }
@@ -45,9 +51,25 @@ class Info extends React.Component<DevModel.Api> {
         nav.push(<ServiceInfo />);
     }
     render() {
+        let {name, discription, access, unit, date_init, date_update} = this.props;
+        let disp = <div>
+            <div>{discription}</div>
+            <IdDates date_update={date_update} date_init={date_init} />
+        </div>;
+        let rows:Prop[] = [
+            '',
+            {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
+            '',
+            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
+            {type: 'component', label: '入口', component: <div className="py-2">{
+                access? 
+                    access.split(',').join(', ')
+                    : <Muted>(全)</Muted>
+            }</div> },
+        ];
         let services = store.dev.services.items;
         return <div>
-            <PropGrid rows={this.rows} values={this.props} />
+            <PropGrid rows={rows} values={this.props} />
             <div className="d-flex mx-3 mt-3 mb-1 align-items-end">
                 <Muted style={{display:'block', flex:1}}>Service列表</Muted>
                 <Button
@@ -75,6 +97,11 @@ const apisProps:ObjViewProps<DevModel.Api> = {
             label: '描述',
             field: {name: 'discription', type: 'string', maxLength: 250},
             face: {type: 'textarea'}
+        },
+        {
+            label: '入口',
+            field: {name: 'access', type: 'string', maxLength: 250},
+            face: {type: 'textarea', placeholder: '逗号分隔的入口名'}
         },
     ],
     row: (item:DevModel.Api):JSX.Element => {
