@@ -32,6 +32,13 @@ export namespace DevModel {
         ip: string;
     }
 
+    export interface Usqldb extends ObjBase {
+        dbname: string;
+        discription: string;
+        cloud: string;
+        connection: string;
+    }
+
     export interface Service extends ObjBase {
         url: string;
         type: number;

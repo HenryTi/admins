@@ -11,6 +11,7 @@ interface Counts {
     bus: number;
     server: number;
     service: number;
+    usqldb: number;
 }
 
 export abstract class ObjItems<T extends DevModel.ObjBase> {
@@ -190,6 +191,20 @@ class Servers extends ObjItems<DevModel.Server> {
     protected _dec() { this.dev.counts.server--; }
 }
 
+class Usqldbs extends ObjItems<DevModel.Usqldb> {
+    protected async _load() {
+        return await devApi.usqldbs(this.store.unit.id);
+    }
+    protected async _save(item:DevModel.Usqldb):Promise<number> {
+        return await devApi.saveUsqldb(item);
+    }
+    protected async _del(item:DevModel.Usqldb):Promise<void> {
+        await devApi.delUsqldb(this.store.unit.id, item.id);
+    }
+    protected _inc() { this.dev.counts.usqldb++; }
+    protected _dec() { this.dev.counts.usqldb--; }
+}
+
 class Services extends ObjItems<DevModel.Service> {
     protected async _load() {
         return await devApi.services(this.store.unit.id);
@@ -277,6 +292,7 @@ export class Dev {
         this.apis = new Apis(store, this);
         this.buses = new Buses(store, this);
         this.servers = new Servers(store, this);
+        this.usqldbs = new Usqldbs(store, this);
         this.services = new Services(store, this);
         this.searchApp = new SearchItems<DevModel.App>(store, this, devApi.searchApp.bind(devApi));
         this.searchApi = new SearchItems<DevModel.Api>(store, this, devApi.searchApi.bind(devApi));
@@ -288,11 +304,13 @@ export class Dev {
     apis:Apis = undefined;
     buses:Buses = undefined;
     servers:Servers = undefined;
+    usqldbs:Usqldbs = undefined;
     services:Services = undefined;
 
     searchApp:SearchItems<DevModel.App> = undefined;
     searchApi:SearchItems<DevModel.Api> = undefined;
     searchServer:SearchItems<DevModel.Server> = undefined;
+    searchUsqldb:SearchItems<DevModel.Usqldb> = undefined;
     
     async loadCounts(): Promise<void> {
         let unit = this.store.unit;

@@ -2,7 +2,7 @@ import {observable, autorun} from 'mobx';
 import * as _ from 'lodash';
 //import consts from './consts';
 import {nav, meInFrame} from 'tonva-tools';
-import {mainApi} from '../api';
+import {mainApi, devApi} from '../api';
 import {Unit, UnitApps, App, Api, UnitAdmin, UnitApp, Role, RoleMember} from '../model';
 import {Admins} from './admins';
 import {Dev} from './dev';
@@ -16,6 +16,7 @@ export class Store {
     cacheApis: CacheApis;
     cacheApps: CacheApps;
     cacheServers: CacheServers;
+    usqlServer: string;
 
     @observable unit: Unit;
     @observable memberCount: number;
@@ -67,6 +68,7 @@ export class Store {
         let ret = await mainApi.unit(this.unitId);
         this.unit = ret;
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
+        this.usqlServer = await devApi.usqlServer();
     }
 
     async stopUnitApp(appId:number): Promise<void> {

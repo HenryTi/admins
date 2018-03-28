@@ -12,6 +12,7 @@ import appsProps from './apps';
 import apisProps from './apis';
 import busesProps from './buses';
 import serversProps from './servers';
+import usqldbsProps from './usqldbs';
 import servicesProps from './services';
 
 interface Item<T extends DevModel.ObjBase> {
@@ -90,11 +91,13 @@ export default class AdministorsPage extends React.Component {
                 //page: <ObjView {...servicesProps} items={store.dev.services} />
                 objProps: servicesProps,
             },
+            {
+                title: 'UsqlDB', 
+                count: counts.usqldb, 
+                icon: 'database', 
+                objProps: usqldbsProps,
+            },
         ];
-        /*
-        function rowClick(item: Item<DevModel.ObjBase>) {
-            nav.push(<ObjView {...item.objProps} items={item.items} />);
-        }*/   
         return <Page header={"应用开发"}>
             <List items={items} item={{render: this.row, onClick: this.onClick}} />
         </Page>;

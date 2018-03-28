@@ -1,6 +1,10 @@
 import {CenterApi} from 'tonva-tools';
 
 class DevApi extends CenterApi {
+    async usqlServer():Promise<any> {
+        let ret = await this.get('usql-server', undefined);
+        return ret;
+    }    
     async counts(unit:number):Promise<any> {
         return await this.get('counts', {unit:unit});
     }
@@ -13,6 +17,9 @@ class DevApi extends CenterApi {
     async server(id:number):Promise<any> {
         return await this.get('server', {id:id});
     }
+    async usqldb(id:number):Promise<any> {
+        return await this.get('usqldb', {id:id});
+    }
     async apps(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('apps', {unit:unit, pageSize: pageSize});
     }
@@ -24,6 +31,9 @@ class DevApi extends CenterApi {
     }
     async servers(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('servers', {unit:unit, pageSize: pageSize});
+    }
+    async usqldbs(unit:number, pageSize:number=30):Promise<any[]> {
+        return await this.get('usqldbs', {unit:unit, pageSize: pageSize});
     }
     async services(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('services', {unit:unit, pageSize: pageSize});
@@ -40,6 +50,9 @@ class DevApi extends CenterApi {
     async saveServer(values:any):Promise<number> {
         return await this.post('server-save', values);
     }
+    async saveUsqldb(values:any):Promise<number> {
+        return await this.post('usqldb-save', values);
+    }
     async saveService(values:any):Promise<number> {
         return await this.post('service-save', values);
     }
@@ -54,6 +67,9 @@ class DevApi extends CenterApi {
     }
     async delServer(unit:number,id:number):Promise<void> {
         return await this.post('server-del', {unit:unit, id:id});
+    }
+    async delUsqldb(unit:number,id:number):Promise<void> {
+        return await this.post('usqldb-del', {unit:unit, id:id});
     }
     async delService(unit:number,id:number):Promise<void> {
         return await this.post('service-del', {unit:unit, id:id});
@@ -76,6 +92,9 @@ class DevApi extends CenterApi {
     }
     async searchServer(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('server-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
+    }
+    async searchUsqldb(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
+        return await this.get('usqldb-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
     async loadAppServices(unit:number, app:number):Promise<any[]> {
         return await this.get('app-services', {unit:unit, app:app});
