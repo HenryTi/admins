@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {nav, NavView, Page, Action, DropdownActions} from 'tonva-tools';
+import {nav, NavView, Page, Action, DropdownActions, meInFrame} from 'tonva-tools';
 import AdminPage from './Admin';
 import './App.css';
 
@@ -10,7 +10,7 @@ import TestTonvaList from './TestTonvaList';
 class App extends React.Component {
   componentWillMount() {
       let user = nav.user;
-      if (user === undefined || user.id === 0) {
+      if (user === undefined || user.id === 0 || !meInFrame.unit) {
         nav.showLogin();
       }
   }
