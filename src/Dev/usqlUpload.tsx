@@ -11,9 +11,6 @@ interface State {
     text?: string;
 }
 
-let es = window['escape'];
-//escape('a'); 疯了，typescript编译器居然不认escape
-
 export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
     constructor(props) {
         super(props);
@@ -76,42 +73,6 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
           body: data
         });
         nav.push(<CompileResult res={res} />);
-        /*
-        let that = this;
-        function consume(reader: ReadableStreamReader) {
-            var total = 0
-            return new Promise((resolve, reject) => {
-                function uintToString(uintArray):string {
-                    var encodedString = String.fromCharCode.apply(null, uintArray),
-                        decodedString = decodeURIComponent(es(encodedString));
-                    return decodedString;
-                }
-                function pump() {
-                    reader.read().then(({done, value}) => {
-                        if (done) {
-                            that.setState({
-                                compiled: 'done: ' + total + ' bytes in total',
-                            });
-                            resolve();
-                            return;
-                        }
-                        total += value.byteLength;
-                        that.setState({
-                            compiled: 'received ' + value.byteLength + ' bytes ' + total + ' bytes in total',
-                            text: uintToString(value),
-                        });
-
-                        pump();
-                    }).catch(reject)
-                }
-                pump();
-            });
-        }
-        consume(res.body.getReader());
-        //let text = await res.text();
-        //this.setState({compiled: text});
-        //alert(JSON.stringify(json));
-        */
     }
     render() {
         let {files} = this.state;
@@ -192,15 +153,6 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             let childNodes = pane.childNodes;
             let last = childNodes.item(childNodes.length-1);
             (last as HTMLElement).scrollIntoView();
-            /*
-            var main = that.getParent(pane);
-            if (main) {
-                if (main.vi.offsetHeight > 3000) {
-                    let s = null;
-                }
-                main.scrollTop = main.offsetHeight;
-            }
-            */
             that.clearTimeHandler();
         }, 100);
     }
@@ -239,7 +191,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             return new Promise((resolve, reject) => {
                 function uintToString(uintArray):string {
                     var encodedString = String.fromCharCode.apply(null, uintArray),
-                        decodedString = decodeURIComponent(es(encodedString));
+                        decodedString = decodeURIComponent(escape(encodedString));
                     return decodedString;
                 }
                 function pump() {

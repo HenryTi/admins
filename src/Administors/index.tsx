@@ -43,7 +43,8 @@ export default class AdministorsPage extends React.Component<{}, null> {
         return <Row icon={item.icon|| consts.appItemIcon} main={item.name} vice={item.nick} />
     }
     render() {
-        let me = nav.local.user.get().id;
+        //let n = nav;
+        //let me = n.local.user.get().id;
         let {unit} = store;
         let {owners, admins, fellows} = store.admins;
         let right = <Button color="success" size="sm" onClick={this.onNewFellow}>新增成员</Button>;
