@@ -46,6 +46,7 @@ export default class AdministorsPage extends React.Component<{}, null> {
         //let n = nav;
         //let me = n.local.user.get().id;
         let {unit} = store;
+        if (!unit || !unit.id) return;
         let {owners, admins, fellows} = store.admins;
         let right = <Button color="success" size="sm" onClick={this.onNewFellow}>新增成员</Button>;
 

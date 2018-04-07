@@ -8,7 +8,7 @@ import TestTonvaMultiStep from './TestTonvaMultiStep';
 import TestTonvaList from './TestTonvaList';
 
 class App extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
       let user = nav.user;
       if (user === undefined || user.id === 0 || !meInFrame.unit) {
         nav.showLogin();
