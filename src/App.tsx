@@ -8,22 +8,23 @@ import TestTonvaMultiStep from './TestTonvaMultiStep';
 import TestTonvaList from './TestTonvaList';
 
 class App extends React.Component {
-  componentDidMount() {
-      let user = nav.user;
-      if (user === undefined || user.id === 0 || !meInFrame.unit) {
-        nav.showLogin();
-      }
-  }
-  render() {
-      //let env = process.env.NODE_ENV;
-      //console.log('env:%s REACT_APP_APIHOST:%s', env, process.env.REACT_APP_APIHOST);
-      return (
-          <NavView view={<AdminPage />} />
-          // <NavView view={<TestTonvaForm />} />
-          // <NavView view={<TestTonvaMultiStep />} />
-          // <NavView view={<TestTonvaList />} />
-      )
-  }
+    /*
+    componentDidMount() {
+        let user = nav.user;
+        if (user === undefined || user.id === 0 || !meInFrame.unit) {
+          nav.showLogin();
+        }
+    }*/
+    render() {
+        //let env = process.env.NODE_ENV;
+        //console.log('env:%s REACT_APP_APIHOST:%s', env, process.env.REACT_APP_APIHOST);
+        return (
+            <NavView view={<AdminPage />} />
+            // <NavView view={<TestTonvaForm />} />
+            // <NavView view={<TestTonvaMultiStep />} />
+            // <NavView view={<TestTonvaList />} />
+        )
+    }
 }
 
 export default App;
