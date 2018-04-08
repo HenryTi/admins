@@ -65,7 +65,7 @@ export class Store {
 
     async loadUnit(): Promise<void> {
         console.log('loadUnit()');
-        if (!this.unitId) return;
+        if (this.unitId === undefined) return;
         let ret = await mainApi.unit(this.unitId);
         this.unit = ret;
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
