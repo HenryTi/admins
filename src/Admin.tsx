@@ -58,6 +58,10 @@ export default class AdminPage extends React.Component {
     };
     constructor(props) {
         super(props);
+        this.logout = this.logout.bind(this);
+    }
+    private logout() {
+        store.logout();
     }
     private getItems():Item[] {
         let unit = store.unit;
@@ -116,7 +120,7 @@ export default class AdminPage extends React.Component {
                 </Row>
             </Container>
         }
-        return <Page header={header} debugLogout={true}>
+        return <Page header={header} logout={this.logout}>
             {top}
             <List items={items} item={{render:this.row, onClick:this.rowClick}} />
         </Page>;

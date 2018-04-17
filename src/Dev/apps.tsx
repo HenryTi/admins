@@ -76,7 +76,8 @@ class Info extends React.Component<DevModel.App> {
 @observer
 export class ServiceRow extends React.Component {
     private newClick() {
-        nav.push(<NewService type={2} id={store.dev.apps.cur.id} />);
+        let dev = store.dev;
+        nav.push(<NewService type={2} id={dev.apps.cur.id} />);
     }
     private infoClick() {
         nav.push(<ServiceInfo />);
@@ -115,9 +116,9 @@ class ApiRow extends React.Component<any> {
     render() {
         let {name, discription} = this.props;
         let disp;
-        if (discription) disp = <small className="col-sm col-sm-auto text-muted">{discription}</small>;
-        return <div className='row form-control-plaintext align-items-center'>
-            <div className='col'>{name}</div>
+        if (discription) disp = <div className="small text-muted">{discription}</div>;
+        return <div className='form-control-plaintext'>
+            <div>{name}</div>
             {disp}
         </div>
     }

@@ -38,6 +38,24 @@ export class Store {
         this.cacheServers = new CacheServers();
     }
 
+    logout() {
+        //meInFrame.app = undefined;
+        meInFrame.hash = undefined;
+        //meInFrame.unit = undefined;
+        let unitId = process.env.REACT_APP_DEBUG_UNITID;
+        if (unitId !== undefined)
+        meInFrame.unit = Number(unitId);
+        this.init();
+        this.memberCount = undefined;
+        this.apps = undefined;
+        this.role = undefined;
+        this.roles = undefined;
+        this.roleApps = undefined;
+        this.roleMember = undefined;
+        this.roleMembers = undefined;
+        this.memberRoles = undefined;
+    }
+
     setRole(role:Role) {
         if (this.role === role) return;
         this.role = role;
@@ -70,6 +88,7 @@ export class Store {
         this.unit = ret;
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
         this.usqlServer = await devApi.usqlServer();
+        console.log("usql-server: %s", this.usqlServer);
     }
 
     async stopUnitApp(appId:number): Promise<void> {

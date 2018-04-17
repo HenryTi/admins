@@ -59,7 +59,9 @@ export class AppSpan extends React.Component<AppSpanProps> {
 @observer
 class AppInfo extends React.Component<AppSpanProps> {
     private rows:Prop[];
-    @observable private apis:ListProp = {label: '关联API', type: 'list', list: undefined, row: AppRow};
+    @observable private apis:ListProp = {
+        label: '关联API', type: 'list', list: undefined, row: AppRow
+    };
     constructor(props:any) {
         super(props);
     }
@@ -90,9 +92,9 @@ class AppRow extends React.Component<any> {
     render() {
         let {name, discription} = this.props;
         let disp;
-        if (discription) disp = <small className="col-sm col-sm-auto text-muted">{discription}</small>;
-        return <div className='row form-control-plaintext align-items-center'>
-            <div className='col'>{name}</div>
+        if (discription) disp = <div className="small text-muted">{discription}</div>;
+        return <div className='form-control-plaintext'>
+            <div>{name}</div>
             {disp}
         </div>
     }

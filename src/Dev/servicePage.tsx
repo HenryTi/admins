@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Button} from 'reactstrap';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Step, Field, Prop, PropGrid, Media, 
@@ -84,7 +85,7 @@ export class NewService extends React.Component<Props> {
     }
     render() {
         return <Page header="新建Service">
-            <TonvaForm formRows={this.formRows} onSubmit={this.onSubmit} />
+            <TonvaForm className="m-3" formRows={this.formRows} onSubmit={this.onSubmit} />
         </Page>
     }
 }
@@ -98,13 +99,21 @@ export class ServiceInfo extends React.Component {
     private async onUrlChanged(value:any, orgValue:any):Promise<void> {
         await store.dev.services.changeProp('url', value);
     }
+    private async onDeleteClick() {
+        if (confirm("真的要删除Service吗？删除了不可恢复，需要重新录入。")!==true) return;
+        await store.dev.services.del();
+        nav.pop();
+    }
     render() {
-        let {type, name, discription, server, url} = store.dev.services.cur;
+        let cur = store.dev.services.cur;
+        let {type, name, discription, server, url} = cur;
         let rows:Prop[] = [
             '',
             {
                 type: 'component',
-                component: <div className="px-3 py-2"><b>{name}</b><br/><Muted>{discription}</Muted></div>,
+                component: <div className="px-3 py-2">
+                    <b>{name}</b><br/><Muted>{discription}</Muted>
+                </div>,
             },
             '',
             {
@@ -129,8 +138,9 @@ export class ServiceInfo extends React.Component {
             case 2: typeName = 'APP'; break;
             case 3: typeName = 'API'; break;
         }
-        return <Page header={typeName + ' Service'}>
-            <PropGrid rows={rows} values={store.dev.services.cur} />
+        let right = <Button onClick={this.onDeleteClick} color="success">删除</Button>;
+        return <Page header={typeName + ' Service'} right={right}>
+            <PropGrid rows={rows} values={cur} />
         </Page>
     }
 }

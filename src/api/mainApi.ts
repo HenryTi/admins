@@ -18,11 +18,12 @@ class MainApi extends CenterApi {
     }
 
     async sendMessage(to:string, type:string, message:any, norepeat?:boolean) {
-        let {unit, app} = meInFrame;
+        let {unit} = meInFrame;
+        let adminApp = 0;
         return await this.post('tie/send-message', {
             to:to, 
             unit:unit, 
-            app:app,
+            app:adminApp,
             type:type, 
             message:message, 
             norepeat:norepeat

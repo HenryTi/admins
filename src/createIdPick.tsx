@@ -29,6 +29,7 @@ interface IdPickPageState {
 }
 
 class IdPickPage extends React.Component<IdPickPageProps, IdPickPageState> {
+    private items:any[];
     constructor(props) {
         super(props);
         this.state = {
