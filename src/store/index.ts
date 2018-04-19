@@ -44,7 +44,7 @@ export class Store {
         //meInFrame.unit = undefined;
         let unitId = process.env.REACT_APP_DEBUG_UNITID;
         if (unitId !== undefined)
-        meInFrame.unit = Number(unitId);
+            meInFrame.unit = Number(unitId);
         this.init();
         this.memberCount = undefined;
         this.apps = undefined;
@@ -82,10 +82,11 @@ export class Store {
     }
 
     async loadUnit(): Promise<void> {
-        console.log('loadUnit()');
         if (this.unitId === undefined) return;
+        console.log('loadUnit()');
         let ret = await mainApi.unit(this.unitId);
         this.unit = ret;
+        console.log("loadUnit unit=%s", JSON.stringify(ret));
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
         this.usqlServer = await devApi.usqlServer();
         console.log("usql-server: %s", this.usqlServer);

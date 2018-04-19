@@ -96,8 +96,12 @@ export default class AdminPage extends React.Component {
         nav.push(<item.page />);
     }
     render() {
+        console.log("admin render without unit");
         let unit:Unit = store.unit;
-        if (unit === undefined) return null;
+        if (unit === undefined) {
+            return null;
+        }
+        console.log("admin render with unit");
         let items = this.getItems();
         if (items === undefined) {
             return <Page header="" />;
