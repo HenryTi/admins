@@ -33,6 +33,8 @@ export namespace DevModel {
     }
 
     export interface Usqldb extends ObjBase {
+        name: string;
+        dbtype: string;
         dbname: string;
         discription: string;
         cloud: string;

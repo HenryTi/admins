@@ -83,6 +83,7 @@ export default class AdministorsPage extends React.Component {
                 //page: <ObjView {...serversProps} items={store.dev.servers} />
                 objProps: serversProps,
             },
+            /*
             {
                 title: 'Service', 
                 count: counts.service, 
@@ -90,7 +91,7 @@ export default class AdministorsPage extends React.Component {
                 //items: store.dev.services, 
                 //page: <ObjView {...servicesProps} items={store.dev.services} />
                 objProps: servicesProps,
-            },
+            },*/
             {
                 title: 'UsqlDB', 
                 count: counts.usqldb, 
