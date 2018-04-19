@@ -68,7 +68,7 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
         }
   
         // "http://localhost:3009/upload"
-        let res = await fetch(store.usqlServer + 'usql-compile/' + this.props.name + '/debug/update', {
+        let res = await fetch(store.usqlServer + 'usql-compile/' + this.props.id + '/debug/update', {
           method: "POST",
           body: data
         });
