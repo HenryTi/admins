@@ -15,10 +15,17 @@ import {Members} from './Members';
 
 @observer
 export class StartPage extends React.Component {
+    private isDebug:boolean;
+    constructor(props) {
+        super(props);
+        this.isDebug = document.location.hash.startsWith('#tv');
+    }
     async componentWillMount() {
+        if (!this.isDebug) return;
         await store.loadAdminUnits();
     }
     render() {
+        if (!this.isDebug) return <AdminPage />;
         let {adminUnits} = store;
         if (adminUnits === undefined)
             return <Page>loading ... </Page>;
