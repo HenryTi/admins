@@ -2,8 +2,8 @@ import * as React from 'react';
 import {Container, Row, Col, Card, CardBody, CardTitle, CardSubtitle, CardText} from 'reactstrap';
 import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
-import {nav, Page} from 'tonva-tools';
-import {List, LMR, FA, StackedFA, PropGrid, Prop} from 'tonva-react-form';
+import {nav, Page, meInFrame} from 'tonva-tools';
+import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
 import {StringValueEdit} from './tools';
 import consts from './consts';
 import {Unit, UnitApps, UnitAdmin} from './model';
@@ -12,6 +12,53 @@ import Administors from './Administors';
 import Dev from './Dev';
 import AppsPage from './Apps';
 import {Members} from './Members';
+
+@observer
+export class StartPage extends React.Component {
+    async componentWillMount() {
+        await store.loadAdminUnits();
+    }
+    render() {
+        let {adminUnits} = store;
+        if (adminUnits === undefined)
+            return <Page>loading ... </Page>;
+        if (adminUnits.length === 1)
+            return <AdminPage />;
+        return <SelectUnit />;
+    }
+}
+
+//@observer 
+class SelectUnit extends React.Component {
+    constructor(props) {
+        super(props);
+        this.renderRow = this.renderRow.bind(this);
+        this.onRowClick = this.onRowClick.bind(this);
+    }
+    async toAdminPage() {
+        meInFrame.unit = 25;
+        await store.loadUnit();
+        nav.pop();
+        nav.push(<AdminPage />);
+    }
+    private renderRow(item: UnitAdmin, index: number):JSX.Element {
+        return <LMR className="p-2" right={'id: ' + item.id}>
+            <div>{item.nick || item.name}</div>
+        </LMR>;
+    }
+    private async onRowClick(item: UnitAdmin) {
+        meInFrame.unit = item.id; // 25;
+        await store.loadUnit();
+        nav.pop();
+        nav.push(<AdminPage />);
+    }
+    render() {
+        let {adminUnits} = store;
+        return <Page header="选择小号">
+            <List items={adminUnits} item={{render: this.renderRow, onClick: this.onRowClick}}/>
+        </Page>
+    }
+}
 
 interface Item {
     main: string;

@@ -33,7 +33,7 @@ export default class AdministorsPage extends React.Component<{}, null> {
     }
 
     onNewFellow() {
-        nav.push(<NewFellow />);
+        //nav.push(<NewFellow />);
     }
     onItemClick(ua:UnitAdmin) {
         store.admins.cur = ua;
@@ -42,6 +42,9 @@ export default class AdministorsPage extends React.Component<{}, null> {
     row(item:UnitAdmin) {
         return <Row icon={item.icon|| consts.appItemIcon} main={item.name} vice={item.nick} />
     }
+    onNewAdmin(isOwner:boolean, isAdmin:boolean) {
+        nav.push(<NewFellow isOwner={isOwner} isAdmin={isAdmin} />);
+    } 
     render() {
         //let n = nav;
         //let me = n.local.user.get().id;
@@ -57,36 +60,43 @@ export default class AdministorsPage extends React.Component<{}, null> {
             showAdmins = true;
         }
         if (unit.isOwner === 1) showAdmins = true;
-        if (showOwners === true) ownersView = <List 
-            className='my-4' 
-            header='高管' items={owners}
-            none='[ 无高管 ]'
-            item={{onClick: this.onItemClick, render: this.row}}
-        />;
-        if (showAdmins === true) adminsView = <List 
-            className='my-4' 
-            header='管理员' items={admins} 
-            none='[ 无管理员 ]'
-            item={{onClick: this.onItemClick, render: this.row}}
-        />;
+        if (showOwners === true) {
+            let header = <LMR left="高管" right={<a className="small" href='#' onClick={(e)=>{e.preventDefault();this.onNewAdmin(true, false)}}>新增</a>} />;
+            ownersView = <List 
+                className="my-4"
+                header={header} items={owners}
+                none="[ 无高管 ]"
+                item={{onClick: this.onItemClick, render: this.row}}
+            />;
+        }
+        if (showAdmins === true) {
+            let header = <LMR left="管理员" right={<a className="small" href='#' onClick={(e)=>{e.preventDefault();this.onNewAdmin(false, true)}}>新增</a>} />;
+            adminsView = <List 
+                className='my-4' 
+                header={header} items={admins} 
+                none='[ 无管理员 ]'
+                item={{onClick: this.onItemClick, render: this.row}}
+            />;
+        }
+        /*
         fellowsView = <List
             className='my-4' 
             header='成员' items={fellows} 
             none='[ 无普通成员 ]'
             item={{onClick: this.onItemClick, render: this.row}}
-        />
+        />*/
         return <Page header={"管理员"} right={right}>
             {ownersView}
             {adminsView}
-            {fellowsView}
+            {/*fellowsView*/}
             <Card className='mx-1 my-4'>
                 <CardHeader>说明</CardHeader>
                 <CardBody>
                     <ul>
-                    <li><CardText>管理组包括创始人、高管、管理员和成员</CardText></li>
-                    <li><CardText>小号创始人可以增减高管</CardText></li>
-                    <li><CardText>高管可以增减管理员和普通成员</CardText></li>
-                    <li><CardText>管理员可以小号，程序的开发，以及用户</CardText></li>
+                        <li><CardText>管理组包括主人、高管、管理员</CardText></li>
+                        <li><CardText>小号主人可以增减高管</CardText></li>
+                        <li><CardText>高管可以增减管理员</CardText></li>
+                        <li><CardText>管理员可以管理小号，程序的开发，以及用户</CardText></li>
                     </ul>
                 </CardBody>
             </Card>

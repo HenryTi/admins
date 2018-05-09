@@ -18,6 +18,8 @@ export class Store {
     cacheServers: CacheServers;
     usqlServer: string;
 
+    @observable adminUnits: UnitAdmin[]; // 仅仅为Admins调试用。从登录用户获取units
+
     @observable unit: Unit;
     @observable memberCount: number;
     @observable apps: UnitApp[];
@@ -41,12 +43,13 @@ export class Store {
     logout() {
         //meInFrame.app = undefined;
         meInFrame.hash = undefined;
-        //meInFrame.unit = undefined;
-        let unitId = process.env.REACT_APP_DEBUG_UNITID;
-        if (unitId !== undefined)
-            meInFrame.unit = Number(unitId);
+        //let unitId = process.env.REACT_APP_DEBUG_UNITID;
+        //if (unitId !== undefined)
+        //    meInFrame.unit = Number(unitId);
+        meInFrame.unit = undefined;
         this.init();
         this.memberCount = undefined;
+        this.adminUnits = undefined;
         this.apps = undefined;
         this.role = undefined;
         this.roles = undefined;
@@ -81,9 +84,13 @@ export class Store {
         this.apps = await mainApi.unitApps(this.unitId);
     }
 
+    async loadAdminUnits(): Promise<void> {
+        this.adminUnits = await mainApi.userAdminUnits();
+    }
+
     async loadUnit(): Promise<void> {
         if (this.unitId === undefined) return;
-        console.log('loadUnit()');
+        console.log('loadUnit()');  
         let ret = await mainApi.unit(this.unitId);
         this.unit = ret;
         console.log("loadUnit unit=%s", JSON.stringify(ret));

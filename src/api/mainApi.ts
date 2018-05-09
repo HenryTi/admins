@@ -17,16 +17,23 @@ class MainApi extends CenterApi {
         return await this.get('tie/app-api', {unit:unit, app:app, apiName:apiName});
     }
 
-    async sendMessage(to:string, type:string, message:any, norepeat?:boolean) {
+    async userId(name:string):Promise<number> {
+        return await this.get('tie/user-id', {name:name});
+    }
+
+    async userAdminUnits():Promise<any[]> {
+        return await this.get('tie/user-admin-units', {});
+    }
+
+    async sendMessage(toUser:number, type:string, content:any) {
         let {unit} = meInFrame;
         let adminApp = 0;
         return await this.post('tie/send-message', {
-            to:to, 
-            unit:unit, 
-            app:adminApp,
-            type:type, 
-            message:message, 
-            norepeat:norepeat
+            type: type, 
+            fromUnit: unit, 
+            fromApp: adminApp,
+            toUser: toUser, 
+            content: content, 
         });
     }
 
@@ -44,6 +51,10 @@ class MainApi extends CenterApi {
 
     async unitSetAdmin(fellow:number, unit:number, isOwner:number, isAdmin:number):Promise<any> {
         return await this.post('unit/set-admin', {fellow:fellow, unit:unit, isOwner:isOwner, isAdmin:isAdmin});
+    }
+
+    async unitAddAdmin(user:string, unit:number, isOwner:number, isAdmin:number):Promise<any> {
+        return await this.post('unit/add-admin', {user:user, unit:unit, isOwner:isOwner, isAdmin:isAdmin});
     }
 
     async unitApps(unit:number):Promise<any[]> {

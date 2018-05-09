@@ -57,4 +57,21 @@ export class Admins {
             if (isAdmin === 1) this.admins.unshift(cur);
         }
     }
+
+    async addNew(user:string, isOwner:number, isAdmin:number):Promise<UnitAdmin> {
+        let admin = await mainApi.unitAddAdmin(user, this.store.unit.id, isOwner, isAdmin);
+        if (admin !== undefined) {
+            let cur = this.cur = admin;
+            this.removeCur(this.owners);
+            this.removeCur(this.admins);
+            this.removeCur(this.fellows);
+            if (isOwner === 0 && isAdmin === 0)
+                this.fellows.unshift(cur);
+            else {
+                if (isOwner === 1) this.owners.unshift(cur);
+                if (isAdmin === 1) this.admins.unshift(cur);
+            }
+        }
+        return admin;
+    }
 }
