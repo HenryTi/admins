@@ -19,6 +19,7 @@ export class StartPage extends React.Component {
     constructor(props) {
         super(props);
         this.isDebug = document.location.hash.startsWith('#tv');
+        console.log('admins isDebug %s', this.isDebug);
     }
     async componentWillMount() {
         if (!this.isDebug) return;
