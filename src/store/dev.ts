@@ -217,12 +217,13 @@ class Services extends ObjItems<DevModel.Service> {
     }
     protected _inc() { this.dev.counts.service++; }
     protected _dec() { this.dev.counts.service--; }
-    async changeProp(prop:string, value:any):Promise<void> {
-        await devApi.changeServiceProp(this.store.unit.id, this.cur.id, prop, value);
+    async changeProp(prop:string, value:any):Promise<number> {
+        let ret = await devApi.changeServiceProp(this.store.unit.id, this.cur.id, prop, value);
         switch (prop) {
             case 'url': this.cur.url = value; break;
             case 'server': this.cur.server = value; break;
         }
+        return ret;
     }
     async loadApiServices(api:number):Promise<void> {
         this.items = await devApi.loadApiServices(this.store.unit.id, api);

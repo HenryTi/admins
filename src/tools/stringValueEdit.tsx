@@ -4,13 +4,14 @@ import {nav, Page} from 'tonva-tools';
 
 interface StringValueEditProps {
     title: string;
-    onChanged:(value:any, orgValue:any)=>Promise<void>;
+    onChanged:(value:any, orgValue:any)=>Promise<string|void>;
     value?: any;
     buttonText?: string;
     info?: string;
 }
 interface StringValueEditState {
     disabled: boolean;
+    error?: string;
 }
 
 export class StringValueEdit extends React.Component<StringValueEditProps, StringValueEditState> {
@@ -43,25 +44,33 @@ export class StringValueEdit extends React.Component<StringValueEditProps, Strin
         let v = this.input.value.trim();
         let onChanged = this.props.onChanged;
         if (onChanged !== undefined) {
-            await onChanged(v, org);
+            let ret = await onChanged(v, org);
+            if (typeof ret === 'string') {
+                this.setState({error: ret});
+                return;
+            }
             nav.pop();
         }
     }
     render() {
         let {title, onChanged, buttonText, info, value} = this.props;
+        let {disabled, error} = this.state;
         let right = <Button
             color="success"
             size="sm"
-            disabled={this.state.disabled}
+            disabled={disabled}
             onClick={this.onSubmit}
         >
             {buttonText||'保存'}
         </Button>;
+        let errorDiv;
+        if (error !== undefined) errorDiv = <div className='text-danger'>{error}</div>;
         return <Page header={title} right={right}>
             <div className="m-4">
                 <input className="form-control w-100" type="text"
                     ref={this.ref}
                     onChange={this.onChange} />
+                {errorDiv}
                 <small className="d-block mt-2 text-muted">{info}</small>
             </div>
         </Page>;

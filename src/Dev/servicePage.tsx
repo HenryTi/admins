@@ -67,6 +67,7 @@ interface Props {
 
 @observer
 export class NewService extends React.Component<Props> {
+    private tonvaForm:TonvaForm;
     private formRows:FormRow[] = [
         urlRow,
         serverRow,
@@ -79,13 +80,19 @@ export class NewService extends React.Component<Props> {
         values.type = this.props.type;
         values.bindId = this.props.id;
         let dev = store.dev;
-        await dev.services.saveCur(values);
+        let ret = await dev.services.saveCur(values);
+        if (ret === false) {
+            if (this.tonvaForm !== undefined) {
+                this.tonvaForm.formView.setError('url', '已经有Service使用这个url');
+            }
+            return;
+        }
         nav.pop();
         return;
     }
     render() {
         return <Page header="新建Service">
-            <TonvaForm className="m-3" formRows={this.formRows} onSubmit={this.onSubmit} />
+            <TonvaForm ref={t=>this.tonvaForm=t} className="m-3" formRows={this.formRows} onSubmit={this.onSubmit} />
         </Page>
     }
 }
@@ -96,8 +103,11 @@ export class ServiceInfo extends React.Component {
         super(props);
         this.onUrlChanged = this.onUrlChanged.bind(this);
     }
-    private async onUrlChanged(value:any, orgValue:any):Promise<void> {
-        await store.dev.services.changeProp('url', value);
+    private async onUrlChanged(value:any, orgValue:any):Promise<string|void> {
+        let ret = await store.dev.services.changeProp('url', value);
+        if (ret === 0) {
+            return 'URL已经被使用了';
+        }
     }
     private async onDeleteClick() {
         if (confirm("真的要删除Service吗？删除了不可恢复，需要重新录入。")!==true) return;
@@ -121,7 +131,7 @@ export class ServiceInfo extends React.Component {
                 name: 'url',
                 label: 'URL',
                 onClick: ()=>nav.push(<StringValueEdit 
-                    title="修改名称"
+                    title="修改URL"
                     value={url}
                     onChanged={this.onUrlChanged} 
                     info="好的名字便于理解" />)

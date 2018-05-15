@@ -102,8 +102,8 @@ class DevApi extends CenterApi {
     async loadApiServices(unit:number, api:number):Promise<any[]> {
         return await this.get('api-services', {unit:unit, api:api});
     }
-    async changeServiceProp(unit:number, service:number, prop:string, value:any):Promise<void> {
-        await this.post('service-change-prop', {unit:unit, service:service, prop:prop, value:value});
+    async changeServiceProp(unit:number, service:number, prop:string, value:any):Promise<number> {
+        return await this.post('service-change-prop', {unit:unit, service:service, prop:prop, value:value});
     }
 }
 
