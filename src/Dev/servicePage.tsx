@@ -80,6 +80,7 @@ export class NewService extends React.Component<Props> {
         values.type = this.props.type;
         values.bindId = this.props.id;
         let dev = store.dev;
+        dev.services.cur = undefined;
         let ret = await dev.services.saveCur(values);
         if (ret === false) {
             if (this.tonvaForm !== undefined) {
