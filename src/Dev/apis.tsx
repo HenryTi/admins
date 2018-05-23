@@ -34,6 +34,9 @@ class Info extends React.Component<DevModel.Api> {
             }</div> },
         ];
     }*/
+    componentWillMount() {
+        store.dev.services.items = undefined;
+    }
     async componentDidMount() {
         await store.dev.services.loadApiServices(this.props.id);
     }

@@ -48,7 +48,7 @@ const idPickServerProps: IdPickProps = {
         await store.dev.searchServer.more();
     },
     row: (item:DevModel.Server, index:number) => {
-        return <div>{item.discription + ' ' + item.cloud + ' ' + item.ip}</div>;
+        return <div className="px-3 py-2">{item.discription + ' ' + item.cloud + ' ' + item.ip}</div>;
     },
 };
 
@@ -130,7 +130,13 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
                 {
                     label: '服务类型', 
                     field: bindTypeField,
-                    face: {type: 'select', list: [{text:'APP', value:2}, {text:'API', value:3}]}
+                    face: {
+                        type: 'select', 
+                        list: [
+                            {text:'APP', value:2}, 
+                            {text:'API', value:3}
+                        ]
+                    }
                 },
             ],
             next: (values:any) => {

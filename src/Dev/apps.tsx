@@ -17,31 +17,9 @@ import {NewService, ServiceInfo} from './servicePage';
 @observer
 class Info extends React.Component<DevModel.App> {
     @observable private apis:ListProp = {label: '关联API', type: 'list', list: undefined, row: ApiRow};
-    /*
-    private rows: Prop[];
-    constructor(props:any) {
-        super(props);
-        let {unit, name, discription, icon, date_init, date_update} = this.props;
-        let disp = <div>
-            <div>{discription}</div>
-            <IdDates date_update={date_update} date_init={date_init} />
-        </div>;
-        this.rows = [
-            '',
-            {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />},
-            '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
-            this.apis,
-            '',
-            {
-                type: 'component', 
-                label: 'Service',
-                vAlign: 'stretch',
-                component: <ServiceRow />,
-            },
-        ];
+    componentWillMount() {
+        store.dev.services.cur = undefined;
     }
-    */
     async componentDidMount() {
         await store.dev.apps.loadCurApis();
         await store.dev.services.loadAppServices(this.props.id);

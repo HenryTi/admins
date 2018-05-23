@@ -230,7 +230,8 @@ class Services extends ObjItems<DevModel.Service> {
     }
     async loadAppServices(app:number) {
         this.items = await devApi.loadAppServices(this.store.unit.id, app);
-        if (this.items.length > 0) this.cur = this.items[0];
+        this.cur = this.items.length > 0?
+            this.items[0] : undefined;
     }
 }
 
