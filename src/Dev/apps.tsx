@@ -120,7 +120,7 @@ const appsProps:ObjViewProps<DevModel.App> = {
         },
         {
             label: '公开',
-            field: {name: 'public', type: 'bool', defaultValue: 0}
+            field: {name: 'public', type: 'bool', defaultValue: 1}
         },
     ],
     row: (item:DevModel.App):JSX.Element => {
