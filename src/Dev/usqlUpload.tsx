@@ -203,6 +203,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 function pump() {
                     reader.read().then(({done, value}) => {
                         if (done) {
+                            that.scrollToBottom();
                             that.setState({
                                 seconds: (new Date().getTime() - time.getTime()),
                             })

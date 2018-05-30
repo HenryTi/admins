@@ -107,4 +107,4 @@ class DevApi extends CenterApi {
     }
 }
 
-export const devApi = new DevApi('tv/dev/');
+export const devApi = new DevApi('tv/dev/', undefined);

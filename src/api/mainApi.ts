@@ -114,4 +114,4 @@ class MainApi extends CenterApi {
     }
 }
 
-export const mainApi = new MainApi('tv/');
+export const mainApi = new MainApi('tv/', undefined);
