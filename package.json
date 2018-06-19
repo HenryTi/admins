@@ -4,7 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.1.1",
     "lodash": "^4.17.4",
     "mobx": "^4.1.1",
     "mobx-react": "^5.0.0",

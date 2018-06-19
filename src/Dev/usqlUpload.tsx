@@ -12,10 +12,13 @@ interface State {
 }
 
 export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
+    private thoroughly:boolean = false;
     constructor(props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
         this.onFilesChange = this.onFilesChange.bind(this);
+        this.update = this.update.bind(this);
+        this.updateThoroughly = this.updateThoroughly.bind(this);
         this.state = {
             files: undefined,
         }
@@ -69,16 +72,25 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
   
         // "http://localhost:3009/upload"
         let url = store.usqlServer + 'usql-compile/' + this.props.id + '/debug/update';
+        if (this.thoroughly === true) url += '-thoroughly';
         try {
+            let abortController = new AbortController();
             let res = await fetch(url, {
-            method: "POST",
-            body: data
+                method: "POST",
+                body: data,
+                signal: abortController.signal,
             });
-            nav.push(<CompileResult res={res} />);
+            nav.push(<CompileResult res={res} abortController={abortController} />);
         }
         catch (e) {
             console.error('%s %s', url, e);
         }
+    }
+    update() {
+        this.thoroughly = false;
+    }
+    updateThoroughly() {
+        this.thoroughly = true;
     }
     render() {
         let {files} = this.state;
@@ -88,8 +100,10 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
         }
         let button;
         if (files !== undefined && files.length > 0) {
-            button = <div className="my-2">
-                <Button type="submit" color="primary">升级数据库</Button>
+            button = <div className="my-2 d-flex">
+                <Button type="submit" color="success">优化编译</Button>
+                <div className="py-2 flex-grow-1" />
+                <Button type="submit" onClick={this.updateThoroughly} color="warning" outline={true}>完全编译</Button>
             </div>;
         }
         return <Page header="编译USQL">
@@ -123,6 +137,7 @@ class UsqlPage extends React.Component<UsqlPgeProps> {
 
 interface CompileResultProps {
     res: Response;
+    abortController: AbortController;
 }
 interface CompileResultState {
     texts: string[];
@@ -140,6 +155,30 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         }
         this.doubleClick = this.doubleClick.bind(this);
     }
+    componentWillMount() {
+        nav.regConfirmClose(async ():Promise<boolean>=>{
+            if (this.state.seconds>=0) return true;
+            return new Promise<boolean>((resolve, reject) => {
+                try {
+                    if (confirm('正在编译usql，真的要中止吗？') === true) {
+                        try {
+                            this.props.abortController.abort();
+                        }
+                        catch (err) {
+                            console.error(err);
+                        }
+                        resolve(true);
+                    }
+                    else {
+                        resolve(false);
+                    }
+                }
+                catch (err) {
+                    reject(err);
+                }
+            })
+        });
+    }
     private clearTimeHandler() {
         if (this.timeHandler !== undefined) {
             clearTimeout(this.timeHandler);
@@ -156,9 +195,11 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         let that = this;
         this.timeHandler = setTimeout(() => {
             var pane = document.getElementById('scrollDiv');
-            let childNodes = pane.childNodes;
-            let last = childNodes.item(childNodes.length-1);
-            (last as HTMLElement).scrollIntoView();
+            if (pane !== undefined) {
+                let childNodes = pane.childNodes;
+                let last = childNodes.item(childNodes.length-1);
+                (last as HTMLElement).scrollIntoView();
+            }
             that.clearTimeHandler();
         }, 100);
     }
@@ -189,7 +230,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             this.bottomIntoView();
         }
     }
-    componentDidMount() {
+    async componentDidMount() {
         let that = this;
         let time = new Date();
         function consume(reader: ReadableStreamReader) {
@@ -223,11 +264,16 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 pump();
             });
         }
-        consume(this.props.res.body.getReader());
+        try {
+            await consume(this.props.res.body.getReader());
+        }
+        catch (err) {
+            console.error(err);
+        }
     }
     render() {
         let {seconds, texts} = this.state;
-        return <Page header={seconds>=0? "编译完成" : "编译中..."}>
+        return <Page header={seconds>=0? "编译完成" : "编译中..."} back="close">
             <div onDoubleClick={this.doubleClick} id='scrollDiv' className='py-2 px-3' style={{wordWrap: 'break-word', whiteSpace: 'normal'}}>
                 {texts.map((v, i) => <pre style={{whiteSpace: 'pre-wrap'}} key={i}>{v}</pre>)}
             </div>

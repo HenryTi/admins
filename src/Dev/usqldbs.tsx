@@ -26,8 +26,9 @@ class Info extends React.Component<DevModel.Usqldb> {
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'string', label: '云服务', name: 'cloud'},
             {type: 'component', label: 'usql代码', component: 
-                <LMR onClick={()=>this.onUsql()} className="w-100 py-2 cursor-pointer" left="上传编译usql代码" right={
-                    <FA className="align-self-center" name="chevron-right" />
+                <LMR onClick={()=>this.onUsql()} className="w-100 py-2 cursor-pointer" 
+                    left="上传编译usql代码" right={
+                        <FA className="align-self-center" name="chevron-right" />
                 } />
             },
         ];
