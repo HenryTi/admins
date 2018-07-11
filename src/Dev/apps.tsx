@@ -194,8 +194,8 @@ class Apis extends React.Component {
         this.onSearch = this.onSearch.bind(this);
         this.row = this.row.bind(this);
     }
-    onSearch(key:string) {
-        store.dev.apps.searchApi(key);
+    async onSearch(key:string) {
+        await store.dev.apps.searchApi(key);
     }
     onBind(api: DevModel.Api, bind: boolean) {
         store.dev.apps.appBindApi([{id:api.id, access:['*']}]);

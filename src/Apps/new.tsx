@@ -41,8 +41,8 @@ export class NewApp extends React.Component {
         this.appActed = this.appActed.bind(this);
         this.apps = new PagedApps(store.unit.id);
     }
-    private onSearch(key:string) {
-        this.apps.first(key);
+    private async onSearch(key:string) {
+        await this.apps.first(key);
     }
     private appClick(app:UnitApp) {
         nav.push(<Page header="App详细信息">

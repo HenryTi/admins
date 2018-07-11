@@ -101,7 +101,7 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
         let button;
         if (files !== undefined && files.length > 0) {
             button = <div className="my-2 d-flex">
-                <Button type="submit" color="success">优化编译</Button>
+                <Button type="submit" color="success" onClick={this.update}>优化编译</Button>
                 <div className="py-2 flex-grow-1" />
                 <Button type="submit" onClick={this.updateThoroughly} color="warning" outline={true}>完全编译</Button>
             </div>;
