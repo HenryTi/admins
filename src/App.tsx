@@ -9,11 +9,14 @@ import TestTonvaMultiStep from './TestTonvaMultiStep';
 import TestTonvaList from './TestTonvaList';
 
 class App extends React.Component {
+    async onLogined() {
+        nav.push(<StartPage />);
+    }
     render() {
         //let env = process.env.NODE_ENV;
         //console.log('env:%s REACT_APP_APIHOST:%s', env, process.env.REACT_APP_APIHOST);
         return (
-            <NavView view={<StartPage />} />
+            <NavView onLogined={this.onLogined} />
             // <NavView view={<TestTonvaForm />} />
             // <NavView view={<TestTonvaMultiStep />} />
             // <NavView view={<TestTonvaList />} />
