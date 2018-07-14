@@ -70,7 +70,6 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
             data.append("file" + i, files[i]);
         }
   
-        // "http://localhost:3009/upload"
         let url = store.usqlServer + 'usql-compile/' + this.props.id + '/debug/update';
         if (this.thoroughly === true) url += '-thoroughly';
         try {

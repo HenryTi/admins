@@ -1,7 +1,7 @@
 import {observable, autorun} from 'mobx';
 import * as _ from 'lodash';
 //import consts from './consts';
-import {nav, meInFrame} from 'tonva-tools';
+import {nav, meInFrame, getUrlOrDebug} from 'tonva-tools';
 import {mainApi, devApi} from '../api';
 import {Unit, UnitApps, App, Api, UnitAdmin, UnitApp, Role, RoleMember} from '../model';
 import {Admins} from './admins';
@@ -95,8 +95,10 @@ export class Store {
         this.unit = ret;
         console.log("loadUnit unit=%s", JSON.stringify(ret));
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
-        this.usqlServer = await devApi.usqlServer();
-        console.log("usql-server: %s", this.usqlServer);
+        let usqlServer = await devApi.usqlServer();
+        let {url, urlDebug} = usqlServer;
+        this.usqlServer = await getUrlOrDebug(url, urlDebug);
+        console.log("usql-server: %s", JSON.stringify(this.usqlServer));
     }
 
     async stopUnitApp(appId:number): Promise<void> {

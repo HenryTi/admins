@@ -10,6 +10,7 @@ import TestTonvaList from './TestTonvaList';
 
 class App extends React.Component {
     async onLogined() {
+        nav.clear();
         nav.push(<StartPage />);
     }
     render() {
