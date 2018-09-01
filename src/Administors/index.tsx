@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Card, CardHeader, CardBody, CardText, CardTitle, Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
 import NewFellow from './NewFellow';
@@ -40,7 +40,7 @@ export default class AdministorsPage extends React.Component<{}, null> {
         nav.push(<EditAdmin />);
     }
     row(item:UnitAdmin) {
-        return <Row icon={item.icon|| consts.appItemIcon} main={item.name} vice={item.nick} />
+        return <Row icon={item.icon|| appItemIcon} main={item.name} vice={item.nick} />
     }
     onNewAdmin(isOwner:boolean, isAdmin:boolean) {
         nav.push(<NewFellow isOwner={isOwner} isAdmin={isAdmin} />);

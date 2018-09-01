@@ -16,7 +16,7 @@ export class Admins {
     
     async load(): Promise<void> {
         let unit = this.store.unit;
-        if (!unit || !unit.id) return;
+        if (unit !== undefined && unit.id !== undefined) return;
         if (this.admins !== undefined) return;
         let all = await mainApi.unitAdmins(unit.id);
         let owners:UnitAdmin[] = [];

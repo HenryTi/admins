@@ -1,0 +1,1 @@
+{"version":3,"file":"organization.js","sourceRoot":"","sources":["../../../src/organization/organization.tsx"],"names":[],"mappings":"AACA,OAAO,EAAE,KAAK,EAAE,MAAM,kBAAkB,CAAC;AACzC,gDAAgD;AAGhD,MAAM,OAAO,cAAe,SAAQ,KAAK;IACrC;QACI,KAAK,CAAC,YAAY,EAAE,SAAS,CAAC,CAAC;IACnC,CAAC;CACJ"}

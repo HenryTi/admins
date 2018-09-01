@@ -1,9 +1,10 @@
 import * as React from 'react';
+import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
 import {nav, Page, ValidForm, Field, FormFields, FormSchema} from 'tonva-tools';
 import {FormRow, FormView, TonvaForm, Step, MultiStep, DropdownActions, Action, List, FA, SubmitResult} from 'tonva-react-form';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
 import {ObjItems} from '../store/dev';
@@ -37,7 +38,7 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
         nav.push(<New {...this.props} />);
     }
     itemClick(item:T) {
-        this.props.items().cur = item;
+        this.props.items().cur = observable(item);
         nav.push(<Info {...this.props} />);
     }
     render() {

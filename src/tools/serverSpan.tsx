@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import * as classNames from 'classnames';
 import {Prop, ListProp, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
 import {devApi} from '../api';
@@ -19,6 +19,7 @@ export interface ServerSpanProps {
 
 @observer
 export class ServerSpan extends React.Component<ServerSpanProps> {
+    /*
     constructor(props:any) {
         super(props);
         this.onClick = this.onClick.bind(this);
@@ -27,7 +28,8 @@ export class ServerSpan extends React.Component<ServerSpanProps> {
         let {id} = this.props;
         store.cacheServers.get(id);
     }
-    onClick(evt) {
+    */
+    onClick = (evt) => {
         evt.preventDefault();
         nav.push(<ServerInfo id={this.props.id} />)
         return false;
@@ -66,7 +68,7 @@ class ServerInfo extends React.Component<ServerSpanProps> {
         </div>;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={ip} />},
+            {type: 'component', component: <Media icon={appIcon} main={discription} discription={ip} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'string', label: '云服务', name: 'cloud'},

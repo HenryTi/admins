@@ -7,7 +7,7 @@ import {nav, Page} from 'tonva-tools';
 import {FormRow, EasyDate, Media, 
     Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva-react-form';
 import {UnitSpan, IdDates, ServerSpan} from '../tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {Row} from './row';
@@ -26,7 +26,7 @@ class Info extends React.Component<DevModel.Bus> {
         </div>;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             '',
@@ -49,7 +49,7 @@ class Info extends React.Component<DevModel.Bus> {
         </div>;
         let rows:Prop[] = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             '',
@@ -100,7 +100,7 @@ const busesProps:ObjViewProps<DevModel.Bus> = {
         },
     ],
     row: (item:DevModel.Bus):JSX.Element => {
-        return <Row icon={consts.appItemIcon} main={item.name} vice={item.discription} />;
+        return <Row icon={appItemIcon} main={item.name} vice={item.discription} />;
     },
     items: ()=>store.dev.buses,
     repeated: {

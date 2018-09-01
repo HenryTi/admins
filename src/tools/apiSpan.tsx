@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import * as classNames from 'classnames';
 import {Prop, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
 import {IdDates} from './idDates';
@@ -18,15 +18,13 @@ export interface ApiLinkProps {
 
 @observer
 export class ApiSpan extends React.Component<ApiLinkProps> {
-    constructor(props) {
-        super(props);
-        this.onClick = this.onClick.bind(this);
-    }
+    /*
     componentWillMount() {
         let {id} = this.props;
         store.cacheApis.get(id);
     }
-    onClick(evt) {
+    */
+    onClick = (evt) => {
         evt.preventDefault();
         nav.push(<ApiInfo id={this.props.id} />);
         return false;
@@ -67,7 +65,7 @@ class ApiInfo extends React.Component<ApiLinkProps> {
         </div>;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
         ];

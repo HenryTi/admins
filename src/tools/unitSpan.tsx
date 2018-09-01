@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import * as classNames from 'classnames';
 import {Prop, ListProp, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
 import {Unit, DevModel} from '../model';
 import {devApi} from '../api';
@@ -18,6 +18,7 @@ export interface UnitLinkProps {
 
 @observer
 export class UnitSpan extends React.Component<UnitLinkProps> {
+    /*
     constructor(props:any) {
         super(props);
         this.onClick = this.onClick.bind(this);
@@ -26,7 +27,8 @@ export class UnitSpan extends React.Component<UnitLinkProps> {
         let {id} = this.props;
         store.cacheUnits.get(id);
     }
-    onClick(evt) {
+    */
+    onClick = (evt) => {
         evt.preventDefault();
         nav.push(<UnitInfo id={this.props.id} />);
         return false;
@@ -61,7 +63,7 @@ class UnitInfo extends React.Component<UnitLinkProps> {
         let {name, nick, icon, discription} = unit;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={discription} />},
+            {type: 'component', component: <Media icon={icon || appIcon} main={name} discription={discription} />},
             '',
         ];
         return <Page header={'小号 - 详细资料'}>

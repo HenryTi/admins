@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {Step, Field, Prop, PropGrid, Media} from 'tonva-react-form';
 import {UnitSpan, IdDates, ServerSpan, ApiSpan, AppSpan} from '../tools';
 import {Row} from './row';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
@@ -25,7 +25,7 @@ class Info extends React.Component<DevModel.Service> {
 
         let rows:Prop[] = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={url} />},
+            {type: 'component', component: <Media icon={appIcon} main={discription} discription={url} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'component', label: '服务器', component: <div className="py-2"><ServerSpan id={server} isLink={true} /></div> },
@@ -198,7 +198,7 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
     },
     row: (item:DevModel.Service):JSX.Element => {
         return <Row
-            icon={consts.appItemIcon}
+            icon={appItemIcon}
             main={item.url}
             vice={serviceTypeNames[item.type] + ': ' + item.discription} />;
     },

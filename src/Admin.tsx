@@ -1,31 +1,62 @@
 import * as React from 'react';
-import {Container, Row, Col, Card, CardBody, CardTitle, CardSubtitle, CardText} from 'reactstrap';
+import {Container, Row, Col} from 'reactstrap';
 import {observer} from 'mobx-react';
-import {Button} from 'reactstrap';
-import {nav, Page, meInFrame} from 'tonva-tools';
+import {nav, Page, meInFrame} from  'tonva-tools'; 
 import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
+import { VmPage, ViewModel, TypeViewModel, Coordinator } from 'tonva-react-usql';
 import {StringValueEdit} from './tools';
-import consts from './consts';
+import {appIcon, appItemIcon} from './consts';
 import {Unit, UnitApps, UnitAdmin} from './model';
 import {store} from './store';
 import Administors from './Administors';
 import Dev from './Dev';
 import AppsPage from './Apps';
 import {Members} from './Members';
+import { mainApi } from 'api';
+import { CrOrganization } from 'organization';
 
-@observer
-export class StartPage extends React.Component {
-    private isProduction:boolean;
-    constructor(props) {
-        super(props);
+export class VmAdmin extends VmPage {
+    private isProduction: boolean;
+    adminUnits: UnitAdmin[]; // 仅仅为Admins调试用。从登录用户获取units
+
+    private async loadAdminUnits(): Promise<void> {
+        let ret = await mainApi.userAdminUnits();
+        this.adminUnits = ret;
+        if (ret.length === 1) {
+            meInFrame.unit = ret[0].id;
+            await store.loadUnit();
+            let a:List
+        }
+    }
+    protected async beforeStart(param?:any):Promise<void> {
+        store.init();
+        
         this.isProduction = document.location.hash.startsWith('#tv');
         console.log('admins isProduction %s', this.isProduction);
+
+        if (this.isProduction === false) {
+            await this.loadAdminUnits();
+        }
+        else {
+            let user = nav.user;
+            if (user === undefined) {
+                console.log('autorun: user has logged out');
+                return;
+            }
+        
+            console.log('autorun login');
+            await store.loadUnit();
+        }
     }
-    async componentWillMount() {
-        if (this.isProduction === true) return;
-        await store.loadAdminUnits();
-    }
-    render() {
+
+    async show() {
+        if (this.isProduction === false && this.adminUnits.length > 1) {
+            this.pushPage(<this.selectUnitPage />);
+        }
+        else {
+            this.pushPage(<AdminPage />);
+        }
+        /*
         if (this.isProduction === true) return <AdminPage />;
         let {adminUnits} = store;
         if (adminUnits === undefined)
@@ -33,39 +64,32 @@ export class StartPage extends React.Component {
         if (adminUnits.length === 1)
             return <AdminPage />;
         return <SelectUnit />;
+        */
     }
-}
 
-//@observer 
-class SelectUnit extends React.Component {
-    constructor(props) {
-        super(props);
-        this.renderRow = this.renderRow.bind(this);
-        this.onRowClick = this.onRowClick.bind(this);
+    private selectUnitPage = () => {
+        return <Page header="选择小号" logout={logout}>
+            <List items={this.adminUnits} item={{render: this.renderRow, onClick: this.onRowClick}}/>
+        </Page>;
     }
-    async toAdminPage() {
-        meInFrame.unit = 25;
-        await store.loadUnit();
-        nav.pop();
-        nav.push(<AdminPage />);
-    }
-    private renderRow(item: UnitAdmin, index: number):JSX.Element {
+
+    protected get view() {return undefined}
+
+    renderRow = (item: UnitAdmin, index: number):JSX.Element => {
         return <LMR className="p-2" right={'id: ' + item.id}>
             <div>{item.nick || item.name}</div>
         </LMR>;
     }
-    private async onRowClick(item: UnitAdmin) {
+    onRowClick = async (item: UnitAdmin) => {
         meInFrame.unit = item.id; // 25;
         await store.loadUnit();
-        nav.pop();
-        nav.push(<AdminPage />);
+        this.popPage();
+        this.pushPage(<AdminPage />);
     }
-    render() {
-        let {adminUnits} = store;
-        return <Page header="选择小号">
-            <List items={adminUnits} item={{render: this.renderRow, onClick: this.onRowClick}}/>
-        </Page>
-    }
+}
+
+const logout = () => {
+    store.logout();
 }
 
 interface Item {
@@ -74,19 +98,15 @@ interface Item {
     icon: string|JSX.Element;
     page?: new (props:any) => React.Component;
     //onClick: () => nav.push(<Administors />),
+    cr?: Coordinator;
 }
 
 @observer
-export default class AdminPage extends React.Component {
+default class AdminPage extends React.Component {
     private appsAction:Item = {
         main: 'App设置',
         right: '小号增减App',
-        // 'mobile-phone'
         icon: 'cog',
-        /*<StackedFA>
-            <FA name="square-o" className="fa-stack-2x text-secondary" />
-            <FA name="cog" className="fa-stack-1x text-primary"  />
-        </StackedFA>*/
         page: AppsPage,
     };
     private usersAction:Item = {
@@ -107,17 +127,18 @@ export default class AdminPage extends React.Component {
         icon: 'universal-access',
         page: Administors,
     };
+    private organizeAction:Item = {
+        main: '组织结构',
+        right: '组织，结构，人员，角色',
+        icon: 'sitemap',
+        cr: new CrOrganization
+    };
+
     private noneAction:Item = {
         main: '请耐心等待分配任务',
         icon: 'hourglass-start',
     };
-    constructor(props) {
-        super(props);
-        this.logout = this.logout.bind(this);
-    }
-    private logout() {
-        store.logout();
-    }
+
     private getItems():Item[] {
         let unit = store.unit;
         let {isAdmin, isOwner, type} = unit;
@@ -128,7 +149,7 @@ export default class AdminPage extends React.Component {
         if (isAdmin === 1) {
             if ((type & 2) !== 0) {
                 // unit
-                items.push(this.appsAction, this.usersAction);
+                items.push(this.appsAction, this.usersAction, this.organizeAction);
             }
             if ((type & 1) !== 0) {
                 // dev unit
@@ -144,16 +165,22 @@ export default class AdminPage extends React.Component {
                 item.icon
             }
             right={<small className="text-muted">{item.right}</small>}>
-            <b>{item.main}</b>
+            <div className="px-2"><b>{item.main}</b></div>
         </LMR>
     }
-    rowClick(item:Item) {
-        nav.push(<item.page />);
+    async rowClick(item:Item) {
+        //let {vm, page} = item;
+        if (item.page !== undefined)
+            nav.push(<item.page />);
+        else {
+            let {cr} = item;
+            await cr.start();
+        }
     }
     render() {
-        console.log("admin render without unit");
         let unit:Unit = store.unit;
         if (unit === undefined) {
+            console.log("admin render without unit");
             return null;
         }
         console.log("admin render with unit");
@@ -169,7 +196,7 @@ export default class AdminPage extends React.Component {
             top = <Container>
                 <Row className='my-4 bg-white py-1 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}>
                     <Col xs={2} className='d-flex justify-content-end align-items-start'>
-                        <img className='w-75' src={icon || consts.appIcon} />
+                        <img className='w-75' src={icon || appIcon} />
                     </Col>
                     <Col xs="auto">
                         <h4 className='text-dark'>{name}</h4>
@@ -179,7 +206,7 @@ export default class AdminPage extends React.Component {
                 </Row>
             </Container>
         }
-        return <Page header={header} logout={this.logout}>
+        return <Page header={header} logout={logout}>
             {top}
             <List items={items} item={{render:this.row, onClick:this.rowClick}} />
         </Page>;

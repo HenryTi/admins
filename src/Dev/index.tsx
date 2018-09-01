@@ -3,7 +3,7 @@ import {observer} from 'mobx-react';
 import {Card, CardHeader, CardBody, CardText, CardTitle, Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
 import {List, LMR, FA} from 'tonva-react-form';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {UnitApps, UnitAdmin, DevModel} from '../model';
 import {store} from '../store';
 import {ObjItems} from '../store/dev';

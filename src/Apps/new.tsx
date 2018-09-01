@@ -7,7 +7,7 @@ import {Container, ButtonGroup,
     FormText, FormFeedback} from 'reactstrap';
 import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid} from 'tonva-react-form';
 import {nav, Page, PagedItems} from 'tonva-tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {IdDates, UnitSpan} from '../tools';
 import {mainApi} from '../api';
 import {store} from '../store';
@@ -63,7 +63,7 @@ export class NewApp extends React.Component {
         else if (inUnit === 0)
             right = <small>已停用</small>;
         return <LMR className="px-3 py-2"
-            left={<Badge><img src={icon || consts.appIcon} /></Badge>}
+            left={<Badge><img src={icon || appIcon} /></Badge>}
             right={right}>
             <div>{name}</div>
             <small className="text-muted">{discription}</small>

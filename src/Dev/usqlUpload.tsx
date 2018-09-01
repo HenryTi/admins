@@ -124,7 +124,7 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
 
 interface UsqlPgeProps {
     name: string;
-    content: string;
+    content: string|ArrayBuffer;
 }
 class UsqlPage extends React.Component<UsqlPgeProps> {
     render() {
@@ -189,34 +189,43 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         if (el.tagName === 'MAIN') return el;
         return this.getParent(el.parentElement);
     }
-    private scrollToBottom() {
+    private scrollToBottom(defer:number = 100) {
         this.clearTimeHandler();
         let that = this;
         this.timeHandler = setTimeout(() => {
-            var pane = document.getElementById('scrollDiv');
+            var pane = document.getElementById('bottomDiv');
+            pane && pane.scrollIntoView();
+            /*
             if (pane !== undefined) {
                 let childNodes = pane.childNodes;
                 let last = childNodes.item(childNodes.length-1);
                 (last as HTMLElement).scrollIntoView();
             }
+            */
             that.clearTimeHandler();
-        }, 100);
+        }, defer);
     }
     private topIntoView() {
-        var pane = document.getElementById('scrollDiv');
+        var pane = document.getElementById('topDiv');
+        pane && pane.scrollIntoView();
+        /*
         let childNodes = pane.childNodes;
         let len = childNodes.length;
         if (len === 0) return;
         let first = childNodes.item(0);
         (first as HTMLElement).scrollIntoView();
+        */
     }
     private bottomIntoView() {
-        var pane = document.getElementById('scrollDiv');
+        var pane = document.getElementById('bottomDiv');
+        pane && pane.scrollIntoView();
+        /*
         let childNodes = pane.childNodes;
         let len = childNodes.length;
         if (len === 0) return;
         let last = childNodes.item(len-1);
         (last as HTMLElement).scrollIntoView();
+        */
     }
     private doubleClick() {
         var pane = document.getElementById('scrollDiv');
@@ -273,12 +282,17 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
     render() {
         let {seconds, texts} = this.state;
         return <Page header={seconds>=0? "编译完成" : "编译中..."} back="close">
-            <div onDoubleClick={this.doubleClick} id='scrollDiv' className='py-2 px-3' style={{wordWrap: 'break-word', whiteSpace: 'normal'}}>
+            <div id='topDiv' />
+            <div id='scrollDiv'
+                onDoubleClick={this.doubleClick} 
+                className='py-2 px-3' 
+                style={{wordWrap: 'break-word', whiteSpace: 'normal'}}>
                 {texts.map((v, i) => <pre style={{whiteSpace: 'pre-wrap'}} key={i}>{v}</pre>)}
             </div>
             {seconds>=0? <div className='px-3 pb-3' style={{color: 'red', fontWeight: 'bold'}}>
                 编译完成。共计用时{Math.floor(seconds/1000)}秒
             </div> : undefined}
+            <div id='bottomDiv' />
         </Page>;
     }
 }

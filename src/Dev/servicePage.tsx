@@ -7,7 +7,7 @@ import {Step, Field, Prop, PropGrid, Media,
 import {nav, Page} from 'tonva-tools';
 import {UnitSpan, IdDates, ServerSpan, ApiSpan, AppSpan} from '../tools';
 import {Row} from './row';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {StringValueEdit} from '../tools';

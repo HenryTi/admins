@@ -35,6 +35,7 @@ export namespace DevModel {
     export interface Usqldb extends ObjBase {
         name: string;
         dbtype: string;
+        api: number;
         dbname: string;
         discription: string;
         cloud: string;

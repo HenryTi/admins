@@ -4,7 +4,7 @@ import {Button} from 'reactstrap';
 import {FormRow, FormView, TonvaForm, Step, MultiStep, DropdownActions, 
     Action, List, FA, SubmitResult, LMR, Badge} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
 import { AppSpan } from '../tools/index';
 import {NewApp} from './new';
@@ -22,7 +22,7 @@ export default class AppsPage extends React.Component {
         if (inUnit === 0)
             ban = <FA className="text-danger" name='ban' />;
         return <LMR className="px-3 py-2"
-            left={<Badge><img src={icon || consts.appIcon} /></Badge>}
+            left={<Badge><img src={icon || appIcon} /></Badge>}
             right={ban}>
             <div>{name}</div>
             <small className="text-muted">{discription}</small>

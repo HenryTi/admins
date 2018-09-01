@@ -5,7 +5,7 @@ import {EasyDate, Media, Prop, PropGrid, Muted, List} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
 import {UnitSpan, IdDates, ServerSpan} from '../tools';
 import {Row} from './row';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
@@ -24,7 +24,7 @@ class Info extends React.Component<DevModel.Api> {
         </div>;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'component', label: '入口', component: <div className="py-2">{
@@ -61,7 +61,7 @@ class Info extends React.Component<DevModel.Api> {
         </div>;
         let rows:Prop[] = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'component', label: '入口', component: <div className="py-2">{
@@ -108,7 +108,7 @@ const apisProps:ObjViewProps<DevModel.Api> = {
         },
     ],
     row: (item:DevModel.Api):JSX.Element => {
-        return <Row icon={consts.appItemIcon} main={item.name} vice={item.discription} />;
+        return <Row icon={appItemIcon} main={item.name} vice={item.discription} />;
     },
     items: ()=>store.dev.apis,
     repeated: {

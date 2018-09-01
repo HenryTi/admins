@@ -7,7 +7,7 @@ import {nav, Page} from 'tonva-tools';
 import {FormRow, EasyDate, Media, 
     Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva-react-form';
 import {UnitSpan, IdDates, ServerSpan} from '../tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {Row} from './row';
@@ -33,7 +33,7 @@ class Info extends React.Component<DevModel.App> {
         </div>;
         let rows:Prop[] = [
             '',
-            {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <Media icon={icon || appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             this.apis,
@@ -124,7 +124,7 @@ const appsProps:ObjViewProps<DevModel.App> = {
         },
     ],
     row: (item:DevModel.App):JSX.Element => {
-        return <Row icon={item.icon || consts.appItemIcon} main={item.name} vice={item.discription} />;
+        return <Row icon={item.icon || appItemIcon} main={item.name} vice={item.discription} />;
     },
     items: ()=>store.dev.apps,
     repeated: {
@@ -189,18 +189,13 @@ class AppApis extends React.Component {
 
 @observer
 class Apis extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onSearch = this.onSearch.bind(this);
-        this.row = this.row.bind(this);
-    }
-    async onSearch(key:string) {
+    onSearch = async (key:string) => {
         await store.dev.apps.searchApi(key);
     }
     onBind(api: DevModel.Api, bind: boolean) {
         store.dev.apps.appBindApi([{id:api.id, access:['*']}]);
     }
-    row(api: DevModel.Api) {
+    row = (api: DevModel.Api) => {
         let isConnected = store.dev.apps.apis.find(a => a.id === api.id) !== undefined;
         let btnProps = {
             outline:true,

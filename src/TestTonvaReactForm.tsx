@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Page} from 'tonva-tools';
-import consts from './consts';
+import {appIcon, appItemIcon} from './consts';
 import {Fields, FormRow, FormView, TonvaForm, IdPick, IdPickFace, PropGrid, Prop, 
     Media} from 'tonva-react-form';
 import {createIdPick} from './createIdPick';
@@ -72,7 +72,7 @@ export default class  TestTonvaForm extends React.Component {
     }
 
     private propValues = {
-        icon: consts.appIcon,
+        icon: appIcon,
         a: 1,
         b: 'dsdffasfasdf',
         c: 'dsfasfd',

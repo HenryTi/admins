@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import * as classNames from 'classnames';
 import {Prop, ListProp, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
 import {DevModel} from '../model';
 import {devApi} from '../api';
@@ -20,6 +20,7 @@ export interface AppSpanProps {
 
 @observer
 export class AppSpan extends React.Component<AppSpanProps> {
+    /*
     constructor(props:any) {
         super(props);
         this.onClick = this.onClick.bind(this);
@@ -28,7 +29,8 @@ export class AppSpan extends React.Component<AppSpanProps> {
         let {id} = this.props;
         store.cacheApps.get(id);
     }
-    onClick(evt) {
+    */
+    onClick = (evt) => {
         evt.preventDefault();
         nav.push(<AppInfo id={this.props.id} />)
         return false;
@@ -77,7 +79,7 @@ class AppInfo extends React.Component<AppSpanProps> {
         </div>;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={icon || consts.appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <Media icon={icon || appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             this.apis,

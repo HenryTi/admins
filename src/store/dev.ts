@@ -46,7 +46,7 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
             values.id = id;
             if (this.items !== undefined) this.items.unshift(values);
             this._inc();
-            this.cur = values;
+            this.cur = observable(values);
         }
         else {
             _.assign(this.cur, values);

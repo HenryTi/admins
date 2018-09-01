@@ -2,7 +2,7 @@ import * as React from 'react';
 import {EasyDate, Media, Prop, PropGrid} from 'tonva-react-form';
 import {UnitSpan, IdDates} from '../tools';
 import {Row} from './row';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjView';
@@ -19,7 +19,7 @@ class Info extends React.Component<DevModel.Server> {
         </div>;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={ip} />},
+            {type: 'component', component: <Media icon={appIcon} main={discription} discription={ip} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'string', label: '云服务', name: 'cloud'},
@@ -33,7 +33,7 @@ class Info extends React.Component<DevModel.Server> {
         </div>;
         let rows:Prop[] = [
             '',
-            {type: 'component', component: <Media icon={consts.appIcon} main={discription} discription={ip} />},
+            {type: 'component', component: <Media icon={appIcon} main={discription} discription={ip} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'string', label: '云服务', name: 'cloud'},
@@ -62,7 +62,7 @@ const serversProps:ObjViewProps<DevModel.Server> = {
         },
     ],
     row: (item: DevModel.Server):JSX.Element => {
-        return <Row icon={consts.appItemIcon} main={item.discription} vice={<>{item.cloud}  {item.ip}</>} />;
+        return <Row icon={appItemIcon} main={item.discription} vice={<>{item.cloud}  {item.ip}</>} />;
     },
     items: ()=>store.dev.servers,
     repeated: {

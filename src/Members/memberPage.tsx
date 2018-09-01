@@ -5,7 +5,7 @@ import {List, LMR, FA, TonvaForm, SubmitResult, FormRow, Media, Muted, PropGrid,
 import {nav, Page} from 'tonva-tools';
 import {Role} from '../model';
 import {store} from '../store';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {StringValueEdit} from '../tools';
 import {RoleApps} from './roleApps';
 
@@ -41,7 +41,7 @@ export class MemberPage extends React.Component {
             '',
             {
                 type: 'component',
-                component: <Media icon={icon||consts.appIcon} main={roleUser.assigned||nick||name} discription={disp} />
+                component: <Media icon={icon||appIcon} main={roleUser.assigned||nick||name} discription={disp} />
             },
             '',
             {

@@ -5,7 +5,7 @@ import {List, LMR, Badge, FA, TonvaForm, SubmitResult, FormRow, Muted, SearchBox
 import {nav, Page} from 'tonva-tools';
 import {Role, RoleMember} from '../model';
 import {store} from '../store';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {mainApi} from '../api';
 import {MemberPage} from './memberPage';
 
@@ -44,7 +44,7 @@ const MemberRow = (member:RoleMember) => {
     else
         content = <div><b>{name}</b></div>;
     return <LMR className="py-1 px-2 align-items-stretch"
-        left={<Badge size="sm"><img src={icon||consts.appIcon} /></Badge>}>
+        left={<Badge size="sm"><img src={icon||appIcon} /></Badge>}>
         {content}
     </LMR>;
 };

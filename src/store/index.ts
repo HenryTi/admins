@@ -1,6 +1,6 @@
 import {observable, autorun} from 'mobx';
 import * as _ from 'lodash';
-//import consts from './consts';
+//import {appIcon, appItemIcon} from './consts';
 import {nav, meInFrame, getUrlOrDebug} from 'tonva-tools';
 import {mainApi, devApi} from '../api';
 import {Unit, UnitApps, App, Api, UnitAdmin, UnitApp, Role, RoleMember} from '../model';
@@ -17,8 +17,6 @@ export class Store {
     cacheApps: CacheApps;
     cacheServers: CacheServers;
     usqlServer: string;
-
-    @observable adminUnits: UnitAdmin[]; // 仅仅为Admins调试用。从登录用户获取units
 
     @observable unit: Unit;
     @observable memberCount: number;
@@ -49,7 +47,6 @@ export class Store {
         meInFrame.unit = undefined;
         this.init();
         this.memberCount = undefined;
-        this.adminUnits = undefined;
         this.apps = undefined;
         this.role = undefined;
         this.roles = undefined;
@@ -84,13 +81,9 @@ export class Store {
         this.apps = await mainApi.unitApps(this.unitId);
     }
 
-    async loadAdminUnits(): Promise<void> {
-        this.adminUnits = await mainApi.userAdminUnits();
-    }
-
     async loadUnit(): Promise<void> {
         if (this.unitId === undefined) return;
-        console.log('loadUnit()');  
+        console.log('loadUnit()');    
         let ret = await mainApi.unit(this.unitId);
         this.unit = ret;
         console.log("loadUnit unit=%s", JSON.stringify(ret));
@@ -206,6 +199,7 @@ export class Store {
 
 export const store = new Store();
 
+/*
 autorun(async () => {
     let user = nav.user;
     if (user === undefined) {
@@ -217,3 +211,4 @@ autorun(async () => {
     store.init();
     await store.loadUnit();
 });
+*/

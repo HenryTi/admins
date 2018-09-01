@@ -4,7 +4,7 @@ import {Card, CardHeader, CardBody, CardText, CardTitle, Button,
     Container, Row, Col} from 'reactstrap';
 import {nav, Page, FormSchema, SubmitReturn, ValidForm, InputSchema} from 'tonva-tools';
 import {TonvaForm, FormRow, SubmitResult} from 'tonva-react-form';
-import consts from '../consts';
+import {appIcon, appItemIcon} from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
 import {mainApi} from '../api';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Page} from 'tonva-tools';
 import {List, ListProps, LMR, Badge, FA, StackedFA} from 'tonva-react-form';
-import consts from './consts';
+import {appIcon, appItemIcon} from './consts';
 
 interface Item {
     text: string;
@@ -15,7 +15,7 @@ export default class  TestTonvaMultiForm extends React.Component {
         item: {
             render: (item, index) => (index===0?
             <LMR className="py-1 px-2 align-items-stretch"
-                left={<Badge badge={1}><img src={consts.appIcon} /></Badge>}
+                left={<Badge badge={1}><img src={appIcon} /></Badge>}
                 right={<small className="d-block align-self-end">KK</small>}
             >
                 <div><h6>ddd</h6><div>{item.text}</div></div>
