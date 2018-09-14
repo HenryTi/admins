@@ -28,7 +28,7 @@ export class CacheApis extends CacheIds {
     }
     _loadId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield devApi.api(id);
+            return yield devApi.usq(id);
         });
     }
 }

@@ -12,7 +12,7 @@ import {createIdPick, IdPickProps} from '../createIdPick';
 
 class Info extends React.Component<DevModel.Service> {
     render() {
-        let {url, type, discription, server, app, api, unit, date_init, date_update} = this.props;
+        let {url, type, discription, server, app, usq, unit, date_init, date_update} = this.props;
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
@@ -21,7 +21,7 @@ class Info extends React.Component<DevModel.Service> {
         if (app !== undefined)
             obj = {type: 'component', label: 'APP', component: <div className="py-2"><AppSpan id={app} isLink={true} /></div> };
         else
-            obj = {type: 'component', label: 'API', component: <div className="py-2"><ApiSpan id={api} isLink={true} /></div> };
+            obj = {type: 'component', label: 'USQ', component: <div className="py-2"><ApiSpan id={usq} isLink={true} /></div> };
 
         let rows:Prop[] = [
             '',
@@ -71,13 +71,13 @@ const idPickApiProps: IdPickProps = {
     caption: '选择API',
     searchPlaceHolder: '搜索API',
     candidateItems: async (params:any, key:string) => {
-        await store.dev.searchApi.first(key);
-        return store.dev.searchApi.items;
+        await store.dev.searchUsq.first(key);
+        return store.dev.searchUsq.items;
     },
     moreCandidates: async () => {
-        await store.dev.searchApi.more();
+        await store.dev.searchUsq.more();
     },
-    row: (item:DevModel.Api, index:number) => {
+    row: (item:DevModel.Usq, index:number) => {
         return <div>{item.name + ' ' + item.discription}</div>;
     },
 };
@@ -180,7 +180,7 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
                         type: 'pick-id', 
                         initCaption: '请选择API', 
                         pick: createIdPick(idPickApiProps), //this.idPick,
-                        fromPickedItem: (item:DevModel.Api)=>{
+                        fromPickedItem: (item:DevModel.Usq)=>{
                             return {id: item.id, caption: item.name + ' ' + item.discription}
                         },
                     },

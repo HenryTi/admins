@@ -16,7 +16,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Media, PropGrid } from 'tonva-react-form';
 import { UnitSpan, IdDates } from '../tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon, appItemIcon } from '../consts';
 import { store } from '../store';
 import { Row } from './row';
 let Info = class Info extends React.Component {

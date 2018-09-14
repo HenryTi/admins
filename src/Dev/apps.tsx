@@ -16,14 +16,14 @@ import {NewService, ServiceInfo} from './servicePage';
 
 @observer
 class Info extends React.Component<DevModel.App> {
-    @observable private apis:ListProp = {label: '关联API', type: 'list', list: undefined, row: ApiRow};
+    @observable private apis:ListProp = {label: '关联API', type: 'list', list: undefined, row: UsqRow};
     componentWillMount() {
         store.dev.services.cur = undefined;
     }
     async componentDidMount() {
         await store.dev.apps.loadCurApis();
         await store.dev.services.loadAppServices(this.props.id);
-        this.apis.list = store.dev.apps.apis;
+        this.apis.list = store.dev.apps.usqs;
     }
     render() {
         let {unit, name, discription, icon, date_init, date_update} = this.props;
@@ -90,7 +90,7 @@ export class ServiceRow extends React.Component {
     }
 }
 
-class ApiRow extends React.Component<any> {
+class UsqRow extends React.Component<any> {
     render() {
         let {name, discription} = this.props;
         let disp;
@@ -133,12 +133,12 @@ const appsProps:ObjViewProps<DevModel.App> = {
     },
     info: Info,
     extraMenuActions: [
-        {icon:'cogs', caption:'设置关联API', action: ()=>nav.push(<AppApis />)}
+        {icon:'cogs', caption:'设置关联API', action: ()=>nav.push(<AppUsqs />)}
     ],
 };
 
 @observer
-class AppApis extends React.Component {
+class AppUsqs extends React.Component {
     @observable anySelected: boolean = false;
     private _list: List;
 
@@ -173,51 +173,51 @@ class AppApis extends React.Component {
     render() {
         let btnProps = this.anySelected?
             {color:'danger', /*onClick:this.removeBind, */icon:'trash', text:'取消'}:
-            {color:'primary', onClick:()=>nav.push(<Apis/>), icon:'plus', text:'新增'};
+            {color:'primary', onClick:()=>nav.push(<Usqs/>), icon:'plus', text:'新增'};
         let btn = (p)=><Button outline={true} color={p.color} size="sm" onClick={p.onClick}>
             <i className={"fa fa-" + p.icon} /> {p.text}关联
         </Button>;
         let listHeader = <div className="va-row py-1 justify-content-center">{btn(btnProps)}</div>;
-        return <Page header="关联API">
+        return <Page header="关联USQ">
             <List ref={this.ref}
                 header={listHeader}
-                items={store.dev.apps.apis}
+                items={store.dev.apps.usqs}
                 item={{render: this.row, onSelect: this.onSelect}} />
         </Page>;
     }
 }
 
 @observer
-class Apis extends React.Component {
+class Usqs extends React.Component {
     onSearch = async (key:string) => {
         await store.dev.apps.searchApi(key);
     }
-    onBind(api: DevModel.Api, bind: boolean) {
-        store.dev.apps.appBindApi([{id:api.id, access:['*']}]);
+    onBind(api: DevModel.Usq, bind: boolean) {
+        store.dev.apps.appBindUsq([{id:api.id, access:['*']}]);
     }
-    row = (api: DevModel.Api) => {
-        let isConnected = store.dev.apps.apis.find(a => a.id === api.id) !== undefined;
+    row = (usq: DevModel.Usq) => {
+        let isConnected = store.dev.apps.usqs.find(a => a.id === usq.id) !== undefined;
         let btnProps = {
             outline:true,
             size:'sm'
         } as any, btnContent:any;
         if (isConnected) {
-            _.assign(btnProps, {onClick:()=>this.onBind(api, false), color:'success'});
+            _.assign(btnProps, {onClick:()=>this.onBind(usq, false), color:'success'});
             btnContent = "已关联";
         }
         else {
-            _.assign(btnProps, {onClick:()=>this.onBind(api, true), color:'primary'});
+            _.assign(btnProps, {onClick:()=>this.onBind(usq, true), color:'primary'});
             btnContent = <span><i className="fa fa-check"/> 关联</span>;
         }
-        return <div className="d-flex justify-content-start py-1 px-2">
-            <div className="align-self-center">{api.name + ' - ' + api.discription}</div>
+        return <div className="d-flex justify-content-start py-1 px-3">
+            <div className="align-self-center">{usq.name + ' - ' + usq.discription}</div>
             <footer className="ml-auto"><Button {...btnProps}>{btnContent}</Button></footer>
         </div>
     }
     render() {
         let header = <SearchBox className="w-100 mx-1" 
             onSearch={this.onSearch} 
-            placeholder="搜索API名字" 
+            placeholder="搜索USQ名字" 
             maxLength={100} />;
         return <Page back="close" header={header}>
             <List items={store.dev.apps.searchedApis} item={{render: this.row}} loading={null} />

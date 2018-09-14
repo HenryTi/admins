@@ -19,7 +19,7 @@ import { Media, PropGrid, Muted, List } from 'tonva-react-form';
 import { nav } from 'tonva-tools';
 import { UnitSpan, IdDates, ServerSpan } from '../tools';
 import { Row } from './row';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon, appItemIcon } from '../consts';
 import { store } from '../store';
 import { NewService, ServiceInfo } from './servicePage';
 let Info = class Info extends React.Component {

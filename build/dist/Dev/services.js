@@ -10,12 +10,12 @@ import * as React from 'react';
 import { PropGrid, Media } from 'tonva-react-form';
 import { UnitSpan, IdDates, ServerSpan, ApiSpan, AppSpan } from '../tools';
 import { Row } from './row';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon, appItemIcon } from '../consts';
 import { store } from '../store';
 import { createIdPick } from '../createIdPick';
 class Info extends React.Component {
     render() {
-        let { url, type, discription, server, app, api, unit, date_init, date_update } = this.props;
+        let { url, type, discription, server, app, usq, unit, date_init, date_update } = this.props;
         let disp = React.createElement("div", null,
             React.createElement("div", null, discription),
             React.createElement(IdDates, { date_update: date_update, date_init: date_init }));
@@ -24,8 +24,8 @@ class Info extends React.Component {
             obj = { type: 'component', label: 'APP', component: React.createElement("div", { className: "py-2" },
                     React.createElement(AppSpan, { id: app, isLink: true })) };
         else
-            obj = { type: 'component', label: 'API', component: React.createElement("div", { className: "py-2" },
-                    React.createElement(ApiSpan, { id: api, isLink: true })) };
+            obj = { type: 'component', label: 'USQ', component: React.createElement("div", { className: "py-2" },
+                    React.createElement(ApiSpan, { id: usq, isLink: true })) };
         let rows = [
             '',
             { type: 'component', component: React.createElement(Media, { icon: appIcon, main: discription, discription: url }) },
@@ -72,11 +72,11 @@ const idPickApiProps = {
     caption: '选择API',
     searchPlaceHolder: '搜索API',
     candidateItems: (params, key) => __awaiter(this, void 0, void 0, function* () {
-        yield store.dev.searchApi.first(key);
-        return store.dev.searchApi.items;
+        yield store.dev.searchUsq.first(key);
+        return store.dev.searchUsq.items;
     }),
     moreCandidates: () => __awaiter(this, void 0, void 0, function* () {
-        yield store.dev.searchApi.more();
+        yield store.dev.searchUsq.more();
     }),
     row: (item, index) => {
         return React.createElement("div", null, item.name + ' ' + item.discription);

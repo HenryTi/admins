@@ -20,14 +20,14 @@ import { Button } from 'reactstrap';
 import { nav, Page } from 'tonva-tools';
 import { Media, PropGrid, List, SearchBox, LMR, Muted } from 'tonva-react-form';
 import { UnitSpan, IdDates, ServerSpan } from '../tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon, appItemIcon } from '../consts';
 import { store } from '../store';
 import { Row } from './row';
 import { NewService, ServiceInfo } from './servicePage';
 let Info = class Info extends React.Component {
     constructor() {
         super(...arguments);
-        this.apis = { label: '关联API', type: 'list', list: undefined, row: ApiRow };
+        this.apis = { label: '关联API', type: 'list', list: undefined, row: UsqRow };
     }
     componentWillMount() {
         store.dev.services.cur = undefined;
@@ -36,7 +36,7 @@ let Info = class Info extends React.Component {
         return __awaiter(this, void 0, void 0, function* () {
             yield store.dev.apps.loadCurApis();
             yield store.dev.services.loadAppServices(this.props.id);
-            this.apis.list = store.dev.apps.apis;
+            this.apis.list = store.dev.apps.usqs;
         });
     }
     render() {
@@ -111,7 +111,7 @@ ServiceRow = __decorate([
     observer
 ], ServiceRow);
 export { ServiceRow };
-class ApiRow extends React.Component {
+class UsqRow extends React.Component {
     render() {
         let { name, discription } = this.props;
         let disp;
@@ -153,10 +153,10 @@ const appsProps = {
     },
     info: Info,
     extraMenuActions: [
-        { icon: 'cogs', caption: '设置关联API', action: () => nav.push(React.createElement(AppApis, null)) }
+        { icon: 'cogs', caption: '设置关联API', action: () => nav.push(React.createElement(AppUsqs, null)) }
     ],
 };
-let AppApis = class AppApis extends React.Component {
+let AppUsqs = class AppUsqs extends React.Component {
     constructor(props) {
         super(props);
         this.anySelected = false;
@@ -187,66 +187,62 @@ let AppApis = class AppApis extends React.Component {
     render() {
         let btnProps = this.anySelected ?
             { color: 'danger', /*onClick:this.removeBind, */ icon: 'trash', text: '取消' } :
-            { color: 'primary', onClick: () => nav.push(React.createElement(Apis, null)), icon: 'plus', text: '新增' };
+            { color: 'primary', onClick: () => nav.push(React.createElement(Usqs, null)), icon: 'plus', text: '新增' };
         let btn = (p) => React.createElement(Button, { outline: true, color: p.color, size: "sm", onClick: p.onClick },
             React.createElement("i", { className: "fa fa-" + p.icon }),
             " ",
             p.text,
             "\u5173\u8054");
         let listHeader = React.createElement("div", { className: "va-row py-1 justify-content-center" }, btn(btnProps));
-        return React.createElement(Page, { header: "\u5173\u8054API" },
-            React.createElement(List, { ref: this.ref, header: listHeader, items: store.dev.apps.apis, item: { render: this.row, onSelect: this.onSelect } }));
+        return React.createElement(Page, { header: "\u5173\u8054USQ" },
+            React.createElement(List, { ref: this.ref, header: listHeader, items: store.dev.apps.usqs, item: { render: this.row, onSelect: this.onSelect } }));
     }
 };
 __decorate([
     observable
-], AppApis.prototype, "anySelected", void 0);
-AppApis = __decorate([
+], AppUsqs.prototype, "anySelected", void 0);
+AppUsqs = __decorate([
     observer
-], AppApis);
-let Apis = class Apis extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onSearch = this.onSearch.bind(this);
-        this.row = this.row.bind(this);
-    }
-    onSearch(key) {
-        return __awaiter(this, void 0, void 0, function* () {
+], AppUsqs);
+let Usqs = class Usqs extends React.Component {
+    constructor() {
+        super(...arguments);
+        this.onSearch = (key) => __awaiter(this, void 0, void 0, function* () {
             yield store.dev.apps.searchApi(key);
         });
+        this.row = (usq) => {
+            let isConnected = store.dev.apps.usqs.find(a => a.id === usq.id) !== undefined;
+            let btnProps = {
+                outline: true,
+                size: 'sm'
+            }, btnContent;
+            if (isConnected) {
+                _.assign(btnProps, { onClick: () => this.onBind(usq, false), color: 'success' });
+                btnContent = "已关联";
+            }
+            else {
+                _.assign(btnProps, { onClick: () => this.onBind(usq, true), color: 'primary' });
+                btnContent = React.createElement("span", null,
+                    React.createElement("i", { className: "fa fa-check" }),
+                    " \u5173\u8054");
+            }
+            return React.createElement("div", { className: "d-flex justify-content-start py-1 px-3" },
+                React.createElement("div", { className: "align-self-center" }, usq.name + ' - ' + usq.discription),
+                React.createElement("footer", { className: "ml-auto" },
+                    React.createElement(Button, Object.assign({}, btnProps), btnContent)));
+        };
     }
     onBind(api, bind) {
-        store.dev.apps.appBindApi([{ id: api.id, access: ['*'] }]);
-    }
-    row(api) {
-        let isConnected = store.dev.apps.apis.find(a => a.id === api.id) !== undefined;
-        let btnProps = {
-            outline: true,
-            size: 'sm'
-        }, btnContent;
-        if (isConnected) {
-            _.assign(btnProps, { onClick: () => this.onBind(api, false), color: 'success' });
-            btnContent = "已关联";
-        }
-        else {
-            _.assign(btnProps, { onClick: () => this.onBind(api, true), color: 'primary' });
-            btnContent = React.createElement("span", null,
-                React.createElement("i", { className: "fa fa-check" }),
-                " \u5173\u8054");
-        }
-        return React.createElement("div", { className: "d-flex justify-content-start py-1 px-2" },
-            React.createElement("div", { className: "align-self-center" }, api.name + ' - ' + api.discription),
-            React.createElement("footer", { className: "ml-auto" },
-                React.createElement(Button, Object.assign({}, btnProps), btnContent)));
+        store.dev.apps.appBindUsq([{ id: api.id, access: ['*'] }]);
     }
     render() {
-        let header = React.createElement(SearchBox, { className: "w-100 mx-1", onSearch: this.onSearch, placeholder: "\u641C\u7D22API\u540D\u5B57", maxLength: 100 });
+        let header = React.createElement(SearchBox, { className: "w-100 mx-1", onSearch: this.onSearch, placeholder: "\u641C\u7D22USQ\u540D\u5B57", maxLength: 100 });
         return React.createElement(Page, { back: "close", header: header },
             React.createElement(List, { items: store.dev.apps.searchedApis, item: { render: this.row }, loading: null }));
     }
 };
-Apis = __decorate([
+Usqs = __decorate([
     observer
-], Apis);
+], Usqs);
 export default appsProps;
 //# sourceMappingURL=apps.js.map

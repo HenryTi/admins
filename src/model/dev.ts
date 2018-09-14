@@ -7,7 +7,7 @@ export namespace DevModel {
         date_update: Date;
     }
 
-    export interface Api extends ObjBase {
+    export interface Usq extends ObjBase {
         name: string;
         discription: string;
         access: string;
@@ -35,7 +35,7 @@ export namespace DevModel {
     export interface Usqldb extends ObjBase {
         name: string;
         dbtype: string;
-        api: number;
+        usq: number;
         dbname: string;
         discription: string;
         cloud: string;
@@ -49,6 +49,6 @@ export namespace DevModel {
         discription: string;
         server: number;
         app: number;
-        api: number;
+        usq: number;
     }
 }

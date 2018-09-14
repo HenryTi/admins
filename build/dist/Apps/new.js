@@ -16,7 +16,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { SearchBox, List, LMR, Badge } from 'tonva-react-form';
 import { nav, Page, PagedItems } from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon } from '../consts';
 import { mainApi } from '../api';
 import { store } from '../store';
 import { Info } from './info';

@@ -12,12 +12,12 @@ export class CacheUnits extends CacheIds<Unit> {
     }
 }
 
-export class CacheApis extends CacheIds<DevModel.Api> {
-    protected async _loadIds(ids:number[]):Promise<DevModel.Api[]> {
+export class CacheApis extends CacheIds<DevModel.Usq> {
+    protected async _loadIds(ids:number[]):Promise<DevModel.Usq[]> {
         return;
     }
-    protected async _loadId(id:number):Promise<DevModel.Api> {
-        return await devApi.api(id);
+    protected async _loadId(id:number):Promise<DevModel.Usq> {
+        return await devApi.usq(id);
     }
 }
 

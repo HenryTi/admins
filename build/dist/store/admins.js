@@ -25,7 +25,9 @@ export class Admins {
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             let unit = this.store.unit;
-            if (unit !== undefined && unit.id !== undefined)
+            if (unit === undefined)
+                return;
+            if (unit.id === undefined)
                 return;
             if (this.admins !== undefined)
                 return;

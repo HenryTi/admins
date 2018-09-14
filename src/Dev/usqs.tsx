@@ -3,16 +3,16 @@ import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
 import {EasyDate, Media, Prop, PropGrid, Muted, List} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
-import {UnitSpan, IdDates, ServerSpan} from '../tools';
+import {UnitSpan, IdDates, ServerSpan} from 'tools';
 import {Row} from './row';
-import {appIcon, appItemIcon} from '../consts';
-import {DevModel} from '../model';
-import {store} from '../store';
+import {appIcon, appItemIcon} from 'consts';
+import {DevModel} from 'model';
+import {store} from 'store';
 import {ObjViewProps} from './ObjView';
 import {NewService, ServiceInfo} from './servicePage';
 
 @observer
-class Info extends React.Component<DevModel.Api> {
+class Info extends React.Component<DevModel.Usq> {
     /*
     private rows:Prop[];
     constructor(props:any) {
@@ -88,8 +88,8 @@ class Info extends React.Component<DevModel.Api> {
     }
 }
 
-const apisProps:ObjViewProps<DevModel.Api> = {
-    title: 'API',
+const usqsProps:ObjViewProps<DevModel.Usq> = {
+    title: 'USQ',
     info: Info,
     formRows: [
         {
@@ -107,14 +107,14 @@ const apisProps:ObjViewProps<DevModel.Api> = {
             face: {type: 'textarea', placeholder: '逗号分隔的入口名'}
         },
     ],
-    row: (item:DevModel.Api):JSX.Element => {
+    row: (item:DevModel.Usq):JSX.Element => {
         return <Row icon={appItemIcon} main={item.name} vice={item.discription} />;
     },
-    items: ()=>store.dev.apis,
+    items: ()=>store.dev.usqs,
     repeated: {
         name: 'name',
         err: '跟已有的名称重复',
     }
 };
 
-export default apisProps;
+export default usqsProps;

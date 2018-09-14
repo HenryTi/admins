@@ -8,24 +8,29 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Media, PropGrid } from 'tonva-react-form';
 import { nav, Page } from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon } from '../consts';
 import { store } from '../store';
 import { span } from './span';
 import { IdDates } from './idDates';
 import { UnitSpan } from './unitSpan';
 let ServerSpan = class ServerSpan extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onClick = this.onClick.bind(this);
-    }
-    componentWillMount() {
-        let { id } = this.props;
-        store.cacheServers.get(id);
-    }
-    onClick(evt) {
-        evt.preventDefault();
-        nav.push(React.createElement(ServerInfo, { id: this.props.id }));
-        return false;
+    constructor() {
+        super(...arguments);
+        /*
+        constructor(props:any) {
+            super(props);
+            this.onClick = this.onClick.bind(this);
+        }
+        componentWillMount() {
+            let {id} = this.props;
+            store.cacheServers.get(id);
+        }
+        */
+        this.onClick = (evt) => {
+            evt.preventDefault();
+            nav.push(React.createElement(ServerInfo, { id: this.props.id }));
+            return false;
+        };
     }
     render() {
         let { id, isLink, className } = this.props;

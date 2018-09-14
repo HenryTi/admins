@@ -15,7 +15,7 @@ class Info extends React.Component<DevModel.Usqldb> {
         nav.push(<UsqlUpload {...this.props} />);
     }
     render() {
-        let {dbname, discription, api, cloud, connection, unit, date_init, date_update} = this.props;
+        let {dbname, discription, usq, cloud, connection, unit, date_init, date_update} = this.props;
         //api = 55;
         let disp = <div>
             <div>{discription}</div>
@@ -27,7 +27,7 @@ class Info extends React.Component<DevModel.Usqldb> {
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'component', label: 'API', component: <div className="py-2">
-                <ApiSpan id={api} isLink={true} />
+                <ApiSpan id={usq} isLink={true} />
             </div>},
             {type: 'string', label: '云服务', name: 'cloud'},
             {type: 'component', label: 'usql代码', component: 
@@ -104,7 +104,7 @@ interface SearchApisProps {
 @observer
 class SearchApis extends React.Component<SearchApisProps> {
     async componentWillMount() {
-        await store.dev.apis.load();
+        await store.dev.usqs.load();
     }
     /*
     onSearch = async (key:string) => {
@@ -114,13 +114,13 @@ class SearchApis extends React.Component<SearchApisProps> {
         store.dev.apps.appBindApi([{id:api.id, access:['*']}]);
     }
     */
-    row = (api: DevModel.Api) => {
+    row = (api: DevModel.Usq) => {
         let {name, discription} = api;
         return <div className="d-flex justify-content-start py-2 px-3">
             <div className="align-self-center">{name} <Muted>{discription && ' -  ' + discription}</Muted></div>
         </div>
     }
-    onSelect = (api: DevModel.Api) => {
+    onSelect = (api: DevModel.Usq) => {
         nav.pop();
         this.props.resolve(api);
     }
@@ -131,7 +131,7 @@ class SearchApis extends React.Component<SearchApisProps> {
             placeholder="搜索API名字" 
             maxLength={100} />;*/
         return <Page back="close" header="选择API">
-            <List items={store.dev.apis.items} item={{render: this.row, onClick: this.onSelect}} loading={null} />
+            <List items={store.dev.usqs.items} item={{render: this.row, onClick: this.onSelect}} loading={null} />
         </Page>;
     }
 }

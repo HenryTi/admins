@@ -13,6 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Button } from 'reactstrap';
 import { nav, Page } from 'tonva-tools';
@@ -35,7 +36,7 @@ let DevObjs = class DevObjs extends React.Component {
         nav.push(React.createElement(New, Object.assign({}, this.props)));
     }
     itemClick(item) {
-        this.props.items().cur = item;
+        this.props.items().cur = observable(item);
         nav.push(React.createElement(Info, Object.assign({}, this.props)));
     }
     render() {

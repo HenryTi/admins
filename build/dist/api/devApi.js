@@ -24,9 +24,9 @@ class DevApi extends CenterApi {
             return yield this.get('app', { id: id });
         });
     }
-    api(id) {
+    usq(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('api', { id: id });
+            return yield this.get('usq', { id: id });
         });
     }
     server(id) {
@@ -44,9 +44,9 @@ class DevApi extends CenterApi {
             return yield this.get('apps', { unit: unit, pageSize: pageSize });
         });
     }
-    apis(unit, pageSize = 30) {
+    usqs(unit, pageSize = 30) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('apis', { unit: unit, pageSize: pageSize });
+            return yield this.get('usqs', { unit: unit, pageSize: pageSize });
         });
     }
     buses(unit, pageSize = 30) {
@@ -74,9 +74,9 @@ class DevApi extends CenterApi {
             return yield this.post('app-save', values);
         });
     }
-    saveApi(values) {
+    saveUsq(values) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.post('api-save', values);
+            return yield this.post('usq-save', values);
         });
     }
     saveBus(values) {
@@ -104,9 +104,9 @@ class DevApi extends CenterApi {
             return yield this.post('app-del', { unit: unit, id: id });
         });
     }
-    delApi(unit, id) {
+    delUsq(unit, id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.post('api-del', { unit: unit, id: id });
+            return yield this.post('usq-del', { unit: unit, id: id });
         });
     }
     delBus(unit, id) {
@@ -129,23 +129,23 @@ class DevApi extends CenterApi {
             return yield this.post('service-del', { unit: unit, id: id });
         });
     }
-    loadAppApis(app) {
+    loadAppUsqs(app) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('app-apis', { app: app });
+            return yield this.get('app-usqs', { app: app });
         });
     }
-    appBindApi(unit, app, apis) {
+    appBindUsq(unit, app, usqs) {
         return __awaiter(this, void 0, void 0, function* () {
-            let apisText;
-            if (apis !== undefined) {
-                apisText = apis.map(v => String(v.id) + '|' + v.access.join(',')).join(';');
+            let usqsText;
+            if (usqs !== undefined) {
+                usqsText = usqs.map(v => String(v.id) + '|' + v.access.join(',')).join(';');
             }
-            yield this.post('app-bind-api', { unit: unit, app: app, apis: apisText });
+            yield this.post('app-bind-usq', { unit: unit, app: app, usqs: usqsText });
         });
     }
-    searchApi(unit, key, pageStart, pageSize) {
+    searchUsq(unit, key, pageStart, pageSize) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('api-search', { unit: unit, key: key, pageStart: pageStart, pageSize: pageSize });
+            return yield this.get('usq-search', { unit: unit, key: key, pageStart: pageStart, pageSize: pageSize });
         });
     }
     searchApp(unit, key, pageStart, pageSize) {
@@ -168,9 +168,9 @@ class DevApi extends CenterApi {
             return yield this.get('app-services', { unit: unit, app: app });
         });
     }
-    loadApiServices(unit, api) {
+    loadUsqServices(unit, usq) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('api-services', { unit: unit, api: api });
+            return yield this.get('usq-services', { unit: unit, usq: usq });
         });
     }
     changeServiceProp(unit, service, prop, value) {

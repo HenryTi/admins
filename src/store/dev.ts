@@ -6,7 +6,7 @@ import {Store} from './index';
 import { observer } from 'mobx-react';
 
 interface Counts {
-    api: number;
+    usq: number;
     app: number;
     bus: number;
     server: number;
@@ -82,8 +82,8 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
 }
 
 class Apps extends ObjItems<DevModel.App> {
-    @observable apis: DevModel.Api[] = undefined;
-    @observable searchedApis: DevModel.Api[] = undefined;
+    @observable usqs: DevModel.Usq[] = undefined;
+    @observable searchedApis: DevModel.Usq[] = undefined;
     //@observable service: DevModel.Service = null;
     protected async _load() {
         return await devApi.apps(this.store.unit.id);
@@ -98,15 +98,15 @@ class Apps extends ObjItems<DevModel.App> {
     protected _dec() { this.dev.counts.app--; }
 
     public async loadCurApis() {
-        let ret = await devApi.loadAppApis(this.cur.id);
-        this.apis = ret;
+        let ret = await devApi.loadAppUsqs(this.cur.id);
+        this.usqs = ret;
     }
     /*
     public async loadService() {
         this.service = await devApi.loadAppServices(this.store.unit.id, this.cur.id);
     }*/
     public async searchApi(key:string) {
-        this.searchedApis = await devApi.searchApi(this.store.unit.id, key, 0, searchPageSize);
+        this.searchedApis = await devApi.searchUsq(this.store.unit.id, key, 0, searchPageSize);
     }
     /*
     public async appBindApi(apiIds:number[], bind:boolean) {
@@ -125,37 +125,37 @@ class Apps extends ObjItems<DevModel.App> {
         }
     }*/
     // if apis === undefined, then unbind
-    public async appBindApi(apis:{id:number, access:string[]}[]) {
-        await devApi.appBindApi(this.store.unit.id, this.cur.id, apis);
-        for (let api of apis) {
-            let index = this.apis.findIndex(a => a.id === api.id);
-            if (index>=0) this.apis.splice(index, 1);
+    public async appBindUsq(usqs:{id:number, access:string[]}[]) {
+        await devApi.appBindUsq(this.store.unit.id, this.cur.id, usqs);
+        for (let usq of usqs) {
+            let index = this.usqs.findIndex(a => a.id === usq.id);
+            if (index>=0) this.usqs.splice(index, 1);
             if (this.searchedApis !== undefined) {
-                let find = this.searchedApis.find(a => a.id === api.id);
-                if (find !== undefined) this.apis.unshift(find);
+                let find = this.searchedApis.find(a => a.id === usq.id);
+                if (find !== undefined) this.usqs.unshift(find);
             }
         }
     }
 }
 
-class Apis extends ObjItems<DevModel.Api> {
+class Usqs extends ObjItems<DevModel.Usq> {
     //@observable services: DevModel.Service[];
     protected async _load() {
-        let ret = await devApi.apis(this.store.unit.id);
+        let ret = await devApi.usqs(this.store.unit.id);
         return ret;
     }
-    protected async _save(item:DevModel.Api):Promise<number> {
+    protected async _save(item:DevModel.Usq):Promise<number> {
         let {access} = item;
         if (!access) access = "*";
         let parts = access.split(',').map(v => v.trim()).filter(v => v!=='');
         item.access = parts.join(',');
-        return await devApi.saveApi(item);
+        return await devApi.saveUsq(item);
     }
-    protected async _del(item:DevModel.Api):Promise<void> {
-        await devApi.delApi(this.store.unit.id, item.id);
+    protected async _del(item:DevModel.Usq):Promise<void> {
+        await devApi.delUsq(this.store.unit.id, item.id);
     }
-    protected _inc() { this.dev.counts.api++; }
-    protected _dec() { this.dev.counts.api--; }
+    protected _inc() { this.dev.counts.usq++; }
+    protected _dec() { this.dev.counts.usq--; }
     /*
     public async loadServices() {
         this.services = await devApi.loadAppIdServices(this.store.unit.id, this.cur.id);
@@ -226,7 +226,7 @@ class Services extends ObjItems<DevModel.Service> {
         return ret;
     }
     async loadApiServices(api:number):Promise<void> {
-        this.items = await devApi.loadApiServices(this.store.unit.id, api);
+        this.items = await devApi.loadUsqServices(this.store.unit.id, api);
     }
     async loadAppServices(app:number) {
         this.items = await devApi.loadAppServices(this.store.unit.id, app);
@@ -291,31 +291,31 @@ export class Dev {
     constructor(store:Store) {
         this.store = store;
         this.apps = new Apps(store, this);
-        this.apis = new Apis(store, this);
+        this.usqs = new Usqs(store, this);
         this.buses = new Buses(store, this);
         this.servers = new Servers(store, this);
         this.usqldbs = new Usqldbs(store, this);
         this.services = new Services(store, this);
         this.searchApp = new SearchItems<DevModel.App>(store, this, devApi.searchApp.bind(devApi));
-        this.searchApi = new SearchItems<DevModel.Api>(store, this, devApi.searchApi.bind(devApi));
+        this.searchUsq = new SearchItems<DevModel.Usq>(store, this, devApi.searchUsq.bind(devApi));
         this.searchServer = new SearchItems<DevModel.Server>(store, this, devApi.searchServer.bind(devApi));
     }
 
     @observable counts:Counts = undefined;
     apps:Apps = undefined;
-    apis:Apis = undefined;
+    usqs:Usqs = undefined;
     buses:Buses = undefined;
     servers:Servers = undefined;
     usqldbs:Usqldbs = undefined;
     services:Services = undefined;
 
     searchApp:SearchItems<DevModel.App> = undefined;
-    searchApi:SearchItems<DevModel.Api> = undefined;
+    searchUsq:SearchItems<DevModel.Usq> = undefined;
     searchServer:SearchItems<DevModel.Server> = undefined;
     searchUsqldb:SearchItems<DevModel.Usqldb> = undefined;
     
     async loadCounts(): Promise<void> {
-        let unit = this.store.unit;
+        let {unit} = this.store;
         this.counts = await devApi.counts(unit.id);
     }
 }

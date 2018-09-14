@@ -10,7 +10,7 @@ export interface RowProps {
 export class Row extends React.Component<RowProps> {
     render() {
         let {icon, main, vice} = this.props;
-        return <LMR className="py-1 px-2 align-items-stretch"
+        return <LMR className="py-1 px-3 align-items-stretch"
             left={<Badge size="sm" className="pt-1"><img src={icon} /></Badge>}>
             <div className="px-3">
                 <div><b>{main}</b></div>

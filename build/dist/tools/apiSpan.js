@@ -8,24 +8,25 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Media, PropGrid } from 'tonva-react-form';
 import { nav, Page } from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon } from '../consts';
 import { store } from '../store';
 import { IdDates } from './idDates';
 import { span } from './span';
 import { UnitSpan } from './unitSpan';
 let ApiSpan = class ApiSpan extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onClick = this.onClick.bind(this);
-    }
-    componentWillMount() {
-        let { id } = this.props;
-        store.cacheApis.get(id);
-    }
-    onClick(evt) {
-        evt.preventDefault();
-        nav.push(React.createElement(ApiInfo, { id: this.props.id }));
-        return false;
+    constructor() {
+        super(...arguments);
+        /*
+        componentWillMount() {
+            let {id} = this.props;
+            store.cacheApis.get(id);
+        }
+        */
+        this.onClick = (evt) => {
+            evt.preventDefault();
+            nav.push(React.createElement(ApiInfo, { id: this.props.id }));
+            return false;
+        };
     }
     render() {
         let { id, className, isLink } = this.props;

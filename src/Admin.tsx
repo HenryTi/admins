@@ -3,20 +3,24 @@ import {Container, Row, Col} from 'reactstrap';
 import {observer} from 'mobx-react';
 import {nav, Page, meInFrame} from  'tonva-tools'; 
 import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
-import { VmPage, ViewModel, TypeViewModel, Coordinator } from 'tonva-react-usql';
+import { Coordinator, VmPage } from 'tonva-react-usql';
 import {StringValueEdit} from './tools';
 import {appIcon, appItemIcon} from './consts';
-import {Unit, UnitApps, UnitAdmin} from './model';
+import {Unit, UnitApps, UnitAdmin, DevModel} from './model';
 import {store} from './store';
 import Administors from './Administors';
-import Dev from './Dev';
+//import DevActions from './Dev';
 import AppsPage from './Apps';
 import {Members} from './Members';
 import { mainApi } from 'api';
 import { CrOrganization } from 'organization';
+import {
+    ObjViewProps, ObjView,
+    appsProps, usqsProps, busesProps, 
+    serversProps, usqldbsProps, servicesProps} from './Dev';
 
-export class VmAdmin extends VmPage {
-    private isProduction: boolean;
+export class CrAdmin extends Coordinator {
+    isProduction: boolean;
     adminUnits: UnitAdmin[]; // 仅仅为Admins调试用。从登录用户获取units
 
     private async loadAdminUnits(): Promise<void> {
@@ -28,7 +32,7 @@ export class VmAdmin extends VmPage {
             let a:List
         }
     }
-    protected async beforeStart(param?:any):Promise<void> {
+    protected async internalStart(param?:any):Promise<void> {
         store.init();
         
         this.isProduction = document.location.hash.startsWith('#tv');
@@ -47,14 +51,20 @@ export class VmAdmin extends VmPage {
             console.log('autorun login');
             await store.loadUnit();
         }
+        this.showVm(VmAdmin);
     }
+}
 
-    async show() {
-        if (this.isProduction === false && this.adminUnits.length > 1) {
-            this.pushPage(<this.selectUnitPage />);
+export class VmAdmin extends VmPage {
+    protected coordinator: CrAdmin;
+
+    async showEntry() {
+        let {isProduction, adminUnits} = this.coordinator;
+        if (isProduction === false && adminUnits.length > 1) {
+            this.openPage(this.selectUnitPage);
         }
         else {
-            this.pushPage(<AdminPage />);
+            this.openPageElement(<AdminPage />);
         }
         /*
         if (this.isProduction === true) return <AdminPage />;
@@ -69,7 +79,7 @@ export class VmAdmin extends VmPage {
 
     private selectUnitPage = () => {
         return <Page header="选择小号" logout={logout}>
-            <List items={this.adminUnits} item={{render: this.renderRow, onClick: this.onRowClick}}/>
+            <List items={this.coordinator.adminUnits} item={{render: this.renderRow, onClick: this.onRowClick}}/>
         </Page>;
     }
 
@@ -83,8 +93,8 @@ export class VmAdmin extends VmPage {
     onRowClick = async (item: UnitAdmin) => {
         meInFrame.unit = item.id; // 25;
         await store.loadUnit();
-        this.popPage();
-        this.pushPage(<AdminPage />);
+        this.closePage();
+        this.openPageElement(<AdminPage />);
     }
 }
 
@@ -92,8 +102,8 @@ const logout = () => {
     store.logout();
 }
 
-interface Item {
-    main: string;
+interface ActionItem {
+    main: string | JSX.Element;
     right?: string;
     icon: string|JSX.Element;
     page?: new (props:any) => React.Component;
@@ -101,46 +111,71 @@ interface Item {
     cr?: Coordinator;
 }
 
+interface DevItem<T extends DevModel.ObjBase> {
+    title: string;
+    count: number;
+    icon: string;
+    objProps: ObjViewProps<T>
+}
+
+type Item = ActionItem|DevItem<DevModel.ObjBase>;
+
 @observer
 default class AdminPage extends React.Component {
-    private appsAction:Item = {
+    private caption:string;
+
+    async componentWillMount() {
+        let {unit, dev} = store;
+        let {isAdmin, isOwner, type} = unit;
+        if ((type & 1) !== 0) {
+            // dev unit
+            this.caption = '开发号';
+            await store.dev.loadCounts();
+        }
+        else {
+            this.caption = '小号';
+        }
+    }
+
+    private appsAction:ActionItem = {
         main: 'App设置',
-        right: '小号增减App',
+        right: '增减',
         icon: 'cog',
         page: AppsPage,
     };
-    private usersAction:Item = {
+    private usersAction:ActionItem = {
         main: '用户角色',
-        right: '用户权限',
+        right: '权限',
         icon: 'users',
         page: Members,
     };
+    /*
     private devAction:Item = {
-        main: '应用开发',
+        main: <DevActions />,
         right: '程序开发相关管理',
         icon: 'laptop',
-        page: Dev,
-    };
-    private adminsAction:Item = {
+        //page: Dev,
+    };*/
+    private adminsAction:ActionItem = {
         main: '系统管理员',
-        right: '增删管理员',
+        right: '增减',
         icon: 'universal-access',
         page: Administors,
     };
-    private organizeAction:Item = {
+    private organizeAction:ActionItem = {
         main: '组织结构',
-        right: '组织，结构，人员，角色',
+        right: '调整',
         icon: 'sitemap',
         cr: new CrOrganization
     };
 
-    private noneAction:Item = {
+    private noneAction:ActionItem = {
         main: '请耐心等待分配任务',
         icon: 'hourglass-start',
     };
 
-    private getItems():Item[] {
-        let unit = store.unit;
+    private buildItems():Item[] {
+        let {unit, dev} = store;
         let {isAdmin, isOwner, type} = unit;
         let items:Item[] = [];
         if (isOwner === 1) {
@@ -153,28 +188,96 @@ default class AdminPage extends React.Component {
             }
             if ((type & 1) !== 0) {
                 // dev unit
-                items.push(this.devAction);
+                let {counts} = dev;
+                if (counts !== undefined) {
+                    let devItems:DevItem<DevModel.ObjBase>[] = [
+                    {
+                        title: 'APP', 
+                        count: counts.app, 
+                        icon: 'tablet', 
+                        //items: store.dev.apps,
+                        //page: <ObjView {...appsProps} items={store.dev.apps} />
+                        objProps: appsProps
+                    },
+                    {
+                        title: 'USQ', 
+                        count: counts.usq, 
+                        icon: 'cogs', 
+                        //items: store.dev.apis, 
+                        objProps: usqsProps,
+                        //page: <ObjView {...apisProps} items={store.dev.apis} />
+                    },
+                    {
+                        title: 'BUS', 
+                        count: counts.bus, 
+                        icon: 'cogs', 
+                        objProps: busesProps,
+                    },
+                    {
+                        title: 'Server', 
+                        count: counts.server, 
+                        icon: 'server', 
+                        //items: store.dev.servers, 
+                        //page: <ObjView {...serversProps} items={store.dev.servers} />
+                        objProps: serversProps,
+                    },
+                    /*
+                    {
+                        title: 'Service', 
+                        count: counts.service, 
+                        icon: 'microchip', 
+                        //items: store.dev.services, 
+                        //page: <ObjView {...servicesProps} items={store.dev.services} />
+                        objProps: servicesProps,
+                    },*/
+                    {
+                        title: 'UsqlDB', 
+                        count: counts.usqldb, 
+                        icon: 'database', 
+                        objProps: usqldbsProps,
+                    },
+                    ];
+                    items.push(...devItems);
+                }
             }
         }
         return items;
     }
-    row(item:Item, index:number):JSX.Element {
-        return <LMR className="py-2 px-3 align-items-center"
-            left={typeof item.icon === 'string'? 
-                <FA className="text-primary" name={item.icon} fixWidth={true} size="lg" /> :
-                item.icon
-            }
-            right={<small className="text-muted">{item.right}</small>}>
-            <div className="px-2"><b>{item.main}</b></div>
-        </LMR>
-    }
-    async rowClick(item:Item) {
-        //let {vm, page} = item;
-        if (item.page !== undefined)
-            nav.push(<item.page />);
+    private row = (item:Item, index:number):JSX.Element => {
+        let {title} = item as DevItem<DevModel.ObjBase>;
+        let left, mid, r;
+        if (title !== undefined) {
+            let {icon, count} = item as DevItem<DevModel.ObjBase>;
+            left = <FA className="text-primary" name={icon} fixWidth={true} size="lg" />;
+            mid = title;
+            r = count>0 && <small className="text-muted">{count}</small>;
+        }
         else {
-            let {cr} = item;
-            await cr.start();
+            let {right, main, icon} = item as ActionItem;
+            left = typeof icon === 'string'? 
+                <FA className="text-primary" name={icon} fixWidth={true} size="lg" /> :
+                item.icon;
+            mid = main;
+            r = <small className="text-muted">{right}</small>;
+        }
+        return <LMR className="px-3 py-2 align-items-center" left={left} right={r}>
+            <div className="px-3"><b>{mid}</b></div>
+        </LMR>;
+    }
+    private rowClick = async (item:Item) => {
+        //let {vm, page} = item;
+        let {title} = item as DevItem<DevModel.ObjBase>;
+        if (title !== undefined) {
+            let {objProps} = item as DevItem<DevModel.ObjBase>;
+            return nav.push(<ObjView {...objProps} />);
+        }
+        else {
+            let {page:P, cr} = item as ActionItem;
+            if (P !== undefined)
+                nav.push(<P />);
+            else {
+                await cr.start();
+            }
         }
     }
     render() {
@@ -184,27 +287,25 @@ default class AdminPage extends React.Component {
             return null;
         }
         console.log("admin render with unit");
-        let items = this.getItems();
+        let items = this.buildItems();
         if (items === undefined) {
             return <Page header="" />;
         }
-        let title = '管理小号';
+        let title = this.caption;
         let header = title, top;
         if (unit !== undefined) {
             let {name, nick, icon, discription} = unit;
             header = title + ' - ' + (unit.nick || unit.name);
-            top = <Container>
-                <Row className='my-4 bg-white py-1 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}>
-                    <Col xs={2} className='d-flex justify-content-end align-items-start'>
-                        <img className='w-75' src={icon || appIcon} />
+            top = <div className='row px-3 my-4 bg-white py-2 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}>
+                    <Col xs="auto">
+                        <img src={icon || appIcon} />
                     </Col>
                     <Col xs="auto">
-                        <h4 className='text-dark'>{name}</h4>
+                        <h6 className='text-dark'>{name}</h6>
                         <h6><small className='text-secondary'>{nick}</small></h6>
                         <div className='text-info'>{discription}</div>
                     </Col>
-                </Row>
-            </Container>
+                </div>;
         }
         return <Page header={header} logout={logout}>
             {top}

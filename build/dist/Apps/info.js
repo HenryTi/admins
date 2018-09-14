@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 import * as classNames from 'classnames';
 import { Media, PropGrid, FA } from 'tonva-react-form';
 import { nav } from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon } from '../consts';
 import { IdDates, UnitSpan } from '../tools';
 import { store } from '../store';
 export class Info extends React.Component {

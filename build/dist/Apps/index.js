@@ -17,7 +17,7 @@ import { observer } from 'mobx-react';
 import { Button } from 'reactstrap';
 import { List, FA, LMR, Badge } from 'tonva-react-form';
 import { nav, Page } from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon } from '../consts';
 import { store } from '../store';
 import { NewApp } from './new';
 import { Info } from './info';

@@ -1,56 +1,61 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
+/*
 import * as React from 'react';
-import { observer } from 'mobx-react';
-import { nav, Page } from 'tonva-tools';
-import { List, LMR, FA } from 'tonva-react-form';
-import { store } from '../store';
-import ObjView from './ObjView';
-import appsProps from './apps';
-import apisProps from './apis';
-import busesProps from './buses';
-import serversProps from './servers';
-import usqldbsProps from './usqldbs';
-let AdministorsPage = class AdministorsPage extends React.Component {
-    componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield store.dev.loadCounts();
-        });
+import {observer} from 'mobx-react';
+import {Card, CardHeader, CardBody, CardText, CardTitle, Button} from 'reactstrap';
+import {nav, Page} from 'tonva-tools';
+import {List, LMR, FA} from 'tonva-react-form';
+import {appIcon, appItemIcon} from '../consts';
+import {UnitApps, UnitAdmin, DevModel} from '../model';
+import {store} from '../store';
+import {ObjItems} from '../store/dev';
+import ObjView, {ObjViewProps} from './ObjView';
+*/
+export { default as appsProps } from './apps';
+export { default as usqsProps } from './usqs';
+export { default as busesProps } from './buses';
+export { default as serversProps } from './servers';
+export { default as usqldbsProps } from './usqldbs';
+export { default as servicesProps } from './services';
+export { default as ObjView } from './ObjView';
+/*
+interface Item<T extends DevModel.ObjBase> {
+    title: string;
+    count: number;
+    icon: string;
+    objProps: ObjViewProps<T>
+}
+
+@observer
+export default class DevActions extends React.Component {
+    async componentDidMount() {
+        await store.dev.loadCounts();
     }
+
     onNewFellow() {
         //nav.push(<NewFellow />);
     }
-    onItemClick(ua) {
+    onItemClick(ua:UnitAdmin) {
         store.admins.cur = ua;
         //nav.push(<EditAdmin />);
     }
-    row(item, index) {
-        let { icon, title, count } = item;
-        return React.createElement(LMR, { className: "px-3 py-2 align-items-center", left: React.createElement(FA, { className: "text-primary", name: icon, fixWidth: true, size: "lg" }), right: count && React.createElement("small", { className: "text-muted" }, count) },
-            React.createElement("b", null, title));
+    row(item: Item<DevModel.ObjBase>, index: number):JSX.Element {
+        let {icon, title, count} = item;
+        return <LMR className="px-3 py-2 align-items-center"
+            left={<FA className="text-primary" name={icon} fixWidth={true} size="lg" />}
+            right={count && <small className="text-muted">{count}</small>}>
+            <b>{title}</b>
+        </LMR>;
     }
-    onClick(item) {
+    onClick(item:Item<DevModel.ObjBase>) {
         //items={item.items}
-        return nav.push(React.createElement(ObjView, Object.assign({}, item.objProps)));
+        return nav.push(<ObjView {...item.objProps} />)
     }
     render() {
-        let { unit, dev } = store;
-        let { counts } = dev;
-        if (counts === undefined)
-            return null;
-        let items = [
+        let {unit, dev} = store;
+        let {counts} = dev;
+        if (counts === undefined) return null;
+
+        let items:Item<DevModel.ObjBase>[] = [
             {
                 title: 'APP',
                 count: counts.app,
@@ -63,8 +68,9 @@ let AdministorsPage = class AdministorsPage extends React.Component {
                 title: 'API',
                 count: counts.api,
                 icon: 'cogs',
-                //items: store.dev.apis, 
+                //items: store.dev.apis,
                 objProps: apisProps,
+                //page: <ObjView {...apisProps} items={store.dev.apis} />
             },
             {
                 title: 'BUS',
@@ -76,11 +82,10 @@ let AdministorsPage = class AdministorsPage extends React.Component {
                 title: 'Server',
                 count: counts.server,
                 icon: 'server',
-                //items: store.dev.servers, 
+                //items: store.dev.servers,
                 //page: <ObjView {...serversProps} items={store.dev.servers} />
                 objProps: serversProps,
             },
-            /*
             {
                 title: 'Service',
                 count: counts.service,
@@ -88,7 +93,7 @@ let AdministorsPage = class AdministorsPage extends React.Component {
                 //items: store.dev.services,
                 //page: <ObjView {...servicesProps} items={store.dev.services} />
                 objProps: servicesProps,
-            },*/
+            },
             {
                 title: 'UsqlDB',
                 count: counts.usqldb,
@@ -96,12 +101,10 @@ let AdministorsPage = class AdministorsPage extends React.Component {
                 objProps: usqldbsProps,
             },
         ];
-        return React.createElement(Page, { header: "应用开发" },
-            React.createElement(List, { items: items, item: { render: this.row, onClick: this.onClick } }));
+        //<Page header={"应用开发"}>
+        //</Page>;
+        return <List items={items} item={{render: this.row, onClick: this.onClick}} />;
     }
-};
-AdministorsPage = __decorate([
-    observer
-], AdministorsPage);
-export default AdministorsPage;
+}
+*/ 
 //# sourceMappingURL=index.js.map

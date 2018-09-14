@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Page } from 'tonva-tools';
 import { List, LMR, Badge, FA, StackedFA } from 'tonva-react-form';
-import {appIcon, appItemIcon} from './consts';
+import { appIcon } from './consts';
 export default class TestTonvaMultiForm extends React.Component {
     constructor() {
         super(...arguments);

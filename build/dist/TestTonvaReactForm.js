@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Page } from 'tonva-tools';
-import {appIcon, appItemIcon} from './consts';
+import { appIcon } from './consts';
 import { FormView, PropGrid, Media } from 'tonva-react-form';
 import { createIdPick } from './createIdPick';
 export default class TestTonvaForm extends React.Component {

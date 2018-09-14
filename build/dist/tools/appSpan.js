@@ -17,25 +17,30 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Media, PropGrid } from 'tonva-react-form';
 import { nav, Page } from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon } from '../consts';
 import { store } from '../store';
 import { devApi } from '../api';
 import { span } from './span';
 import { IdDates } from './idDates';
 import { UnitSpan } from './unitSpan';
 let AppSpan = class AppSpan extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onClick = this.onClick.bind(this);
-    }
-    componentWillMount() {
-        let { id } = this.props;
-        store.cacheApps.get(id);
-    }
-    onClick(evt) {
-        evt.preventDefault();
-        nav.push(React.createElement(AppInfo, { id: this.props.id }));
-        return false;
+    constructor() {
+        super(...arguments);
+        /*
+        constructor(props:any) {
+            super(props);
+            this.onClick = this.onClick.bind(this);
+        }
+        componentWillMount() {
+            let {id} = this.props;
+            store.cacheApps.get(id);
+        }
+        */
+        this.onClick = (evt) => {
+            evt.preventDefault();
+            nav.push(React.createElement(AppInfo, { id: this.props.id }));
+            return false;
+        };
     }
     render() {
         let { id, isLink, className } = this.props;
@@ -74,7 +79,7 @@ let AppInfo = class AppInfo extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.apis.list = yield devApi.loadAppApis(this.props.id);
+            this.apis.list = yield devApi.loadAppUsqs(this.props.id);
         });
     }
     render() {

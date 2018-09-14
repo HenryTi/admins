@@ -177,36 +177,43 @@ class CompileResult extends React.Component {
             return el;
         return this.getParent(el.parentElement);
     }
-    scrollToBottom() {
+    scrollToBottom(defer = 100) {
         this.clearTimeHandler();
         let that = this;
         this.timeHandler = setTimeout(() => {
-            var pane = document.getElementById('scrollDiv');
+            var pane = document.getElementById('bottomDiv');
+            pane && pane.scrollIntoView();
+            /*
             if (pane !== undefined) {
                 let childNodes = pane.childNodes;
-                let last = childNodes.item(childNodes.length - 1);
-                last.scrollIntoView();
+                let last = childNodes.item(childNodes.length-1);
+                (last as HTMLElement).scrollIntoView();
             }
+            */
             that.clearTimeHandler();
-        }, 100);
+        }, defer);
     }
     topIntoView() {
-        var pane = document.getElementById('scrollDiv');
+        var pane = document.getElementById('topDiv');
+        pane && pane.scrollIntoView();
+        /*
         let childNodes = pane.childNodes;
         let len = childNodes.length;
-        if (len === 0)
-            return;
+        if (len === 0) return;
         let first = childNodes.item(0);
-        first.scrollIntoView();
+        (first as HTMLElement).scrollIntoView();
+        */
     }
     bottomIntoView() {
-        var pane = document.getElementById('scrollDiv');
+        var pane = document.getElementById('bottomDiv');
+        pane && pane.scrollIntoView();
+        /*
         let childNodes = pane.childNodes;
         let len = childNodes.length;
-        if (len === 0)
-            return;
-        let last = childNodes.item(len - 1);
-        last.scrollIntoView();
+        if (len === 0) return;
+        let last = childNodes.item(len-1);
+        (last as HTMLElement).scrollIntoView();
+        */
     }
     doubleClick() {
         var pane = document.getElementById('scrollDiv');
@@ -265,11 +272,13 @@ class CompileResult extends React.Component {
     render() {
         let { seconds, texts } = this.state;
         return React.createElement(Page, { header: seconds >= 0 ? "编译完成" : "编译中...", back: "close" },
-            React.createElement("div", { onDoubleClick: this.doubleClick, id: 'scrollDiv', className: 'py-2 px-3', style: { wordWrap: 'break-word', whiteSpace: 'normal' } }, texts.map((v, i) => React.createElement("pre", { style: { whiteSpace: 'pre-wrap' }, key: i }, v))),
+            React.createElement("div", { id: 'topDiv' }),
+            React.createElement("div", { id: 'scrollDiv', onDoubleClick: this.doubleClick, className: 'py-2 px-3', style: { wordWrap: 'break-word', whiteSpace: 'normal' } }, texts.map((v, i) => React.createElement("pre", { style: { whiteSpace: 'pre-wrap' }, key: i }, v))),
             seconds >= 0 ? React.createElement("div", { className: 'px-3 pb-3', style: { color: 'red', fontWeight: 'bold' } },
                 "\u7F16\u8BD1\u5B8C\u6210\u3002\u5171\u8BA1\u7528\u65F6",
                 Math.floor(seconds / 1000),
-                "\u79D2") : undefined);
+                "\u79D2") : undefined,
+            React.createElement("div", { id: 'bottomDiv' }));
     }
 }
 //# sourceMappingURL=usqlUpload.js.map

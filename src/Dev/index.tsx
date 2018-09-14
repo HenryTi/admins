@@ -1,3 +1,4 @@
+/*
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Card, CardHeader, CardBody, CardText, CardTitle, Button} from 'reactstrap';
@@ -8,13 +9,16 @@ import {UnitApps, UnitAdmin, DevModel} from '../model';
 import {store} from '../store';
 import {ObjItems} from '../store/dev';
 import ObjView, {ObjViewProps} from './ObjView';
-import appsProps from './apps';
-import apisProps from './apis';
-import busesProps from './buses';
-import serversProps from './servers';
-import usqldbsProps from './usqldbs';
-import servicesProps from './services';
+*/
+export {default as appsProps} from './apps';
+export {default as usqsProps} from './usqs';
+export {default as busesProps} from './buses';
+export {default as serversProps} from './servers';
+export {default as usqldbsProps} from './usqldbs';
+export {default as servicesProps} from './services';
+export {default as ObjView, ObjViewProps} from './ObjView';
 
+/*
 interface Item<T extends DevModel.ObjBase> {
     title: string;
     count: number;
@@ -23,7 +27,7 @@ interface Item<T extends DevModel.ObjBase> {
 }
 
 @observer
-export default class AdministorsPage extends React.Component {
+export default class DevActions extends React.Component {
     async componentDidMount() {
         await store.dev.loadCounts();
     }
@@ -83,7 +87,6 @@ export default class AdministorsPage extends React.Component {
                 //page: <ObjView {...serversProps} items={store.dev.servers} />
                 objProps: serversProps,
             },
-            /*
             {
                 title: 'Service', 
                 count: counts.service, 
@@ -91,7 +94,7 @@ export default class AdministorsPage extends React.Component {
                 //items: store.dev.services, 
                 //page: <ObjView {...servicesProps} items={store.dev.services} />
                 objProps: servicesProps,
-            },*/
+            },
             {
                 title: 'UsqlDB', 
                 count: counts.usqldb, 
@@ -99,8 +102,9 @@ export default class AdministorsPage extends React.Component {
                 objProps: usqldbsProps,
             },
         ];
-        return <Page header={"应用开发"}>
-            <List items={items} item={{render: this.row, onClick: this.onClick}} />
-        </Page>;
+        //<Page header={"应用开发"}>
+        //</Page>;
+        return <List items={items} item={{render: this.row, onClick: this.onClick}} />;
     }
 }
+*/

@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { CrApp } from "tonva-react-usql";
 import { Page } from 'tonva-tools';
-//import { Page, meInFrame } from "tonva-tools";
+import { List } from 'tonva-react-form';
+import { CrUsq, VmPage, VmEntityLink } from "tonva-react-usql";
+import ui from './ui';
 
+export class CrOrganization extends CrUsq {
+    vmLinks: VmEntityLink[];
 
-export class CrOrganization extends CrApp {
     constructor() {
-        super('$$$/$unitx', undefined);
+        super('$$$/$unitx', 0, 0, undefined, ui);
     }
 
     protected clearPrevPages() {
@@ -14,13 +16,33 @@ export class CrOrganization extends CrApp {
         //nav.clear();
     }
 
+    protected async internalStart() {
+        await this.loadSchema();
+        this.vmLinks= [
+            this.vmLinkFromName('map', 'teamPerson'),
+            this.vmLinkFromName('map', 'teamPerson'),
+            this.vmLinkFromName('map', 'teamPerson'),
+        ];
+        this.showVm(VmOrganization);
+    }
+    
+}
+
+class VmOrganization extends VmPage {
+    protected coordinator: CrOrganization;
+
+    async showEntry() {
+        this.openPage(this.appPage);
+    }
+
+    private renderRow = (vmLink: VmEntityLink, index:number) => {
+        return vmLink.render('bg-white');
+    }
+
     protected appPage = () => {
-        let crUsq = this.crUsqCollection['$$$/$unitx'];
-        let teamPerson = crUsq.vmLinkFromName('map', 'teamPerson');
-        return <Page header={this.caption} logout={()=>{}}>
-            <button onClick={this.testClick}>定义组织结构</button>
-            {teamPerson.render()}
+        let {vmLinks} = this.coordinator;
+        return <Page header="组织结构" logout={()=>{}}>
+            <List items={vmLinks} item={{render: this.renderRow}} />
         </Page>;
     };
-    
 }

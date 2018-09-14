@@ -61,20 +61,26 @@ export default class AdministorsPage extends React.Component<{}, null> {
         }
         if (unit.isOwner === 1) showAdmins = true;
         if (showOwners === true) {
-            let header = <LMR left="高管" right={<a className="small" href='#' onClick={(e)=>{e.preventDefault();this.onNewAdmin(true, false)}}>新增</a>} />;
+            let header = <LMR 
+                className="px-3 small"
+                left="高管" 
+                right={<a className="small" href='#' onClick={(e)=>{e.preventDefault();this.onNewAdmin(true, false)}}>新增</a>} />;
             ownersView = <List 
                 className="my-4"
                 header={header} items={owners}
-                none="[ 无高管 ]"
+                none="[无]"
                 item={{onClick: this.onItemClick, render: this.row}}
             />;
         }
         if (showAdmins === true) {
-            let header = <LMR left="管理员" right={<a className="small" href='#' onClick={(e)=>{e.preventDefault();this.onNewAdmin(false, true)}}>新增</a>} />;
+            let header = <LMR 
+                className="px-3 small"
+                left="管理员" 
+                right={<a className="small" href='#' onClick={(e)=>{e.preventDefault();this.onNewAdmin(false, true)}}>新增</a>} />;
             adminsView = <List 
                 className='my-4' 
                 header={header} items={admins} 
-                none='[ 无管理员 ]'
+                none='[无]'
                 item={{onClick: this.onItemClick, render: this.row}}
             />;
         }
@@ -92,7 +98,7 @@ export default class AdministorsPage extends React.Component<{}, null> {
             <Card className='mx-1 my-4'>
                 <CardHeader>说明</CardHeader>
                 <CardBody>
-                    <ul>
+                    <ul style={{paddingLeft:'1em'}}>
                         <li><CardText>管理组包括主人、高管、管理员</CardText></li>
                         <li><CardText>小号主人可以增减高管</CardText></li>
                         <li><CardText>高管可以增减管理员</CardText></li>

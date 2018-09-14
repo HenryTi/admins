@@ -68,7 +68,7 @@ class AppInfo extends React.Component<AppSpanProps> {
         super(props);
     }
     async componentDidMount() {
-        this.apis.list = await devApi.loadAppApis(this.props.id);
+        this.apis.list = await devApi.loadAppUsqs(this.props.id);
     }
     render() {
         let app = store.cacheApps.get(this.props.id);

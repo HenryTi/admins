@@ -46,7 +46,7 @@ export class ObjItems {
                 if (this.items !== undefined)
                     this.items.unshift(values);
                 this._inc();
-                this.cur = values;
+                this.cur = observable(values);
             }
             else {
                 _.assign(this.cur, values);
@@ -92,7 +92,7 @@ __decorate([
 class Apps extends ObjItems {
     constructor() {
         super(...arguments);
-        this.apis = undefined;
+        this.usqs = undefined;
         this.searchedApis = undefined;
     }
     //@observable service: DevModel.Service = null;
@@ -115,8 +115,8 @@ class Apps extends ObjItems {
     _dec() { this.dev.counts.app--; }
     loadCurApis() {
         return __awaiter(this, void 0, void 0, function* () {
-            let ret = yield devApi.loadAppApis(this.cur.id);
-            this.apis = ret;
+            let ret = yield devApi.loadAppUsqs(this.cur.id);
+            this.usqs = ret;
         });
     }
     /*
@@ -125,7 +125,7 @@ class Apps extends ObjItems {
     }*/
     searchApi(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.searchedApis = yield devApi.searchApi(this.store.unit.id, key, 0, searchPageSize);
+            this.searchedApis = yield devApi.searchUsq(this.store.unit.id, key, 0, searchPageSize);
         });
     }
     /*
@@ -145,17 +145,17 @@ class Apps extends ObjItems {
         }
     }*/
     // if apis === undefined, then unbind
-    appBindApi(apis) {
+    appBindUsq(usqs) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield devApi.appBindApi(this.store.unit.id, this.cur.id, apis);
-            for (let api of apis) {
-                let index = this.apis.findIndex(a => a.id === api.id);
+            yield devApi.appBindUsq(this.store.unit.id, this.cur.id, usqs);
+            for (let usq of usqs) {
+                let index = this.usqs.findIndex(a => a.id === usq.id);
                 if (index >= 0)
-                    this.apis.splice(index, 1);
+                    this.usqs.splice(index, 1);
                 if (this.searchedApis !== undefined) {
-                    let find = this.searchedApis.find(a => a.id === api.id);
+                    let find = this.searchedApis.find(a => a.id === usq.id);
                     if (find !== undefined)
-                        this.apis.unshift(find);
+                        this.usqs.unshift(find);
                 }
             }
         });
@@ -163,15 +163,15 @@ class Apps extends ObjItems {
 }
 __decorate([
     observable
-], Apps.prototype, "apis", void 0);
+], Apps.prototype, "usqs", void 0);
 __decorate([
     observable
 ], Apps.prototype, "searchedApis", void 0);
-class Apis extends ObjItems {
+class Usqs extends ObjItems {
     //@observable services: DevModel.Service[];
     _load() {
         return __awaiter(this, void 0, void 0, function* () {
-            let ret = yield devApi.apis(this.store.unit.id);
+            let ret = yield devApi.usqs(this.store.unit.id);
             return ret;
         });
     }
@@ -182,16 +182,16 @@ class Apis extends ObjItems {
                 access = "*";
             let parts = access.split(',').map(v => v.trim()).filter(v => v !== '');
             item.access = parts.join(',');
-            return yield devApi.saveApi(item);
+            return yield devApi.saveUsq(item);
         });
     }
     _del(item) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield devApi.delApi(this.store.unit.id, item.id);
+            yield devApi.delUsq(this.store.unit.id, item.id);
         });
     }
-    _inc() { this.dev.counts.api++; }
-    _dec() { this.dev.counts.api--; }
+    _inc() { this.dev.counts.usq++; }
+    _dec() { this.dev.counts.usq--; }
 }
 class Buses extends ObjItems {
     _load() {
@@ -285,7 +285,7 @@ class Services extends ObjItems {
     }
     loadApiServices(api) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.items = yield devApi.loadApiServices(this.store.unit.id, api);
+            this.items = yield devApi.loadUsqServices(this.store.unit.id, api);
         });
     }
     loadAppServices(app) {
@@ -349,29 +349,29 @@ export class Dev {
     constructor(store) {
         this.counts = undefined;
         this.apps = undefined;
-        this.apis = undefined;
+        this.usqs = undefined;
         this.buses = undefined;
         this.servers = undefined;
         this.usqldbs = undefined;
         this.services = undefined;
         this.searchApp = undefined;
-        this.searchApi = undefined;
+        this.searchUsq = undefined;
         this.searchServer = undefined;
         this.searchUsqldb = undefined;
         this.store = store;
         this.apps = new Apps(store, this);
-        this.apis = new Apis(store, this);
+        this.usqs = new Usqs(store, this);
         this.buses = new Buses(store, this);
         this.servers = new Servers(store, this);
         this.usqldbs = new Usqldbs(store, this);
         this.services = new Services(store, this);
         this.searchApp = new SearchItems(store, this, devApi.searchApp.bind(devApi));
-        this.searchApi = new SearchItems(store, this, devApi.searchApi.bind(devApi));
+        this.searchUsq = new SearchItems(store, this, devApi.searchUsq.bind(devApi));
         this.searchServer = new SearchItems(store, this, devApi.searchServer.bind(devApi));
     }
     loadCounts() {
         return __awaiter(this, void 0, void 0, function* () {
-            let unit = this.store.unit;
+            let { unit } = this.store;
             this.counts = yield devApi.counts(unit.id);
         });
     }

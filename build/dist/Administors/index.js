@@ -16,7 +16,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Card, CardHeader, CardBody, CardText, Button } from 'reactstrap';
 import { nav, Page } from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
+import { appItemIcon } from '../consts';
 import { store } from '../store';
 import NewFellow from './NewFellow';
 import EditAdmin from './EditAdmin';
@@ -66,12 +66,12 @@ let AdministorsPage = class AdministorsPage extends React.Component {
         if (unit.isOwner === 1)
             showAdmins = true;
         if (showOwners === true) {
-            let header = React.createElement(LMR, { left: "\u9AD8\u7BA1", right: React.createElement("a", { className: "small", href: '#', onClick: (e) => { e.preventDefault(); this.onNewAdmin(true, false); } }, "\u65B0\u589E") });
-            ownersView = React.createElement(List, { className: "my-4", header: header, items: owners, none: "[ \u65E0\u9AD8\u7BA1 ]", item: { onClick: this.onItemClick, render: this.row } });
+            let header = React.createElement(LMR, { className: "px-3 small", left: "\u9AD8\u7BA1", right: React.createElement("a", { className: "small", href: '#', onClick: (e) => { e.preventDefault(); this.onNewAdmin(true, false); } }, "\u65B0\u589E") });
+            ownersView = React.createElement(List, { className: "my-4", header: header, items: owners, none: "[\u65E0]", item: { onClick: this.onItemClick, render: this.row } });
         }
         if (showAdmins === true) {
-            let header = React.createElement(LMR, { left: "\u7BA1\u7406\u5458", right: React.createElement("a", { className: "small", href: '#', onClick: (e) => { e.preventDefault(); this.onNewAdmin(false, true); } }, "\u65B0\u589E") });
-            adminsView = React.createElement(List, { className: 'my-4', header: header, items: admins, none: '[ \u65E0\u7BA1\u7406\u5458 ]', item: { onClick: this.onItemClick, render: this.row } });
+            let header = React.createElement(LMR, { className: "px-3 small", left: "\u7BA1\u7406\u5458", right: React.createElement("a", { className: "small", href: '#', onClick: (e) => { e.preventDefault(); this.onNewAdmin(false, true); } }, "\u65B0\u589E") });
+            adminsView = React.createElement(List, { className: 'my-4', header: header, items: admins, none: '[\u65E0]', item: { onClick: this.onItemClick, render: this.row } });
         }
         /*
         fellowsView = <List
@@ -86,7 +86,7 @@ let AdministorsPage = class AdministorsPage extends React.Component {
             React.createElement(Card, { className: 'mx-1 my-4' },
                 React.createElement(CardHeader, null, "\u8BF4\u660E"),
                 React.createElement(CardBody, null,
-                    React.createElement("ul", null,
+                    React.createElement("ul", { style: { paddingLeft: '1em' } },
                         React.createElement("li", null,
                             React.createElement(CardText, null, "\u7BA1\u7406\u7EC4\u5305\u62EC\u4E3B\u4EBA\u3001\u9AD8\u7BA1\u3001\u7BA1\u7406\u5458")),
                         React.createElement("li", null,

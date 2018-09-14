@@ -18,7 +18,7 @@ import { Button } from 'reactstrap';
 import { List, LMR, Badge, FA, Muted, SearchBox } from 'tonva-react-form';
 import { nav, Page } from 'tonva-tools';
 import { store } from '../store';
-import {appIcon, appItemIcon} from '../consts';
+import { appIcon } from '../consts';
 import { mainApi } from '../api';
 import { MemberPage } from './memberPage';
 let MembersPage = class MembersPage extends React.Component {
