@@ -31,7 +31,9 @@ export class NewRole extends React.Component {
     }
     render() {
         return <Page header="新建角色">
-            <TonvaForm ref={tf => this.form = tf} formRows={this.formRows} onSubmit={this.onSubmit} />
+            <TonvaForm className="m-3" ref={tf => this.form = tf} 
+                formRows={this.formRows} 
+                onSubmit={this.onSubmit} />
         </Page>;
     }
 }

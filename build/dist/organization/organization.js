@@ -7,10 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import { CrUsq, VmPage } from "tonva-react-usql";
 import { Page } from 'tonva-tools';
-//import { Page, meInFrame } from "tonva-tools";
+import { List, FA } from 'tonva-react-form';
+import { CrUsq, VmPage, CrLink } from "tonva-react-usql";
 import ui from './ui';
+import { OpCoordinator } from './op';
 export class CrOrganization extends CrUsq {
     constructor() {
         super('$$$/$unitx', 0, 0, undefined, ui);
@@ -22,6 +23,11 @@ export class CrOrganization extends CrUsq {
     internalStart() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.loadSchema();
+            this.links = [
+                this.linkFromName('map', 'teamPerson'),
+                this.linkFromName('map', 'teamPerson'),
+                new CrLink(new OpCoordinator(this), React.createElement(FA, { name: "plus", fixWidth: true }), '设置操作权限'),
+            ];
             this.showVm(VmOrganization);
         });
     }
@@ -29,12 +35,13 @@ export class CrOrganization extends CrUsq {
 class VmOrganization extends VmPage {
     constructor() {
         super(...arguments);
+        this.renderRow = (link, index) => {
+            return link.render('bg-white');
+        };
         this.appPage = () => {
-            //let crUsq = this.crUsqCollection['$$$/$unitx'];
-            let teamPerson = this.coordinator.vmLinkFromName('map', 'teamPerson');
+            let { links } = this.coordinator;
             return React.createElement(Page, { header: "\u7EC4\u7EC7\u7ED3\u6784", logout: () => { } },
-                React.createElement("button", { onClick: () => alert('定义组织结构') }, "\u5B9A\u4E49\u7EC4\u7EC7\u7ED3\u6784"),
-                teamPerson.render());
+                React.createElement(List, { items: links, item: { render: this.renderRow } }));
         };
     }
     showEntry() {

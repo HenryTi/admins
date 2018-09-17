@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { Page } from 'tonva-tools';
-import { List } from 'tonva-react-form';
-import { CrUsq, VmPage, VmEntityLink } from "tonva-react-usql";
+import { List, FA } from 'tonva-react-form';
+import { CrUsq, VmPage, Link, CrLink } from "tonva-react-usql";
 import ui from './ui';
+import { CrOpBinding } from './op';
 
 export class CrOrganization extends CrUsq {
-    vmLinks: VmEntityLink[];
-
     constructor() {
         super('$$$/$unitx', 0, 0, undefined, ui);
     }
+
+    label = '岗位权限';
+    icon = 'sitemap';
+    links: (Link|string)[];
 
     protected clearPrevPages() {
         // 保留回退按钮，所以，去掉下面这行
@@ -18,10 +21,18 @@ export class CrOrganization extends CrUsq {
 
     protected async internalStart() {
         await this.loadSchema();
-        this.vmLinks= [
-            this.vmLinkFromName('map', 'teamPerson'),
-            this.vmLinkFromName('map', 'teamPerson'),
-            this.vmLinkFromName('map', 'teamPerson'),
+        this.links= [
+            '',
+            new CrLink(new CrOpBinding(this)),
+            '',
+            this.linkFromName('map', 'teamPerson'),
+            this.linkFromName('map', 'sectionTeam'),
+            this.linkFromName('map', 'teamOrganization'),
+            '',
+            this.linkFromName('tuid', 'person'),
+            this.linkFromName('tuid', 'team'),
+            this.linkFromName('tuid', 'section'),
+            this.linkFromName('tuid', 'organization'),
         ];
         this.showVm(VmOrganization);
     }
@@ -35,14 +46,14 @@ class VmOrganization extends VmPage {
         this.openPage(this.appPage);
     }
 
-    private renderRow = (vmLink: VmEntityLink, index:number) => {
-        return vmLink.render('bg-white');
+    private renderRow = (link: Link, index:number) => {
+        return link.render('bg-white');
     }
 
     protected appPage = () => {
-        let {vmLinks} = this.coordinator;
-        return <Page header="组织结构" logout={()=>{}}>
-            <List items={vmLinks} item={{render: this.renderRow}} />
+        let {links, label} = this.coordinator;
+        return <Page header={label} logout={()=>{}}>
+            <List items={links} item={{render: this.renderRow}} />
         </Page>;
     };
 }

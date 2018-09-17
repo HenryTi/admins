@@ -9,6 +9,7 @@ import NewFellow from './NewFellow';
 import EditAdmin from './EditAdmin';
 import {LMR, Badge, List} from 'tonva-react-form';
 
+/*
 export interface RowProps {
     icon: string;
     main: string;
@@ -18,13 +19,16 @@ export interface RowProps {
 export class Row extends React.Component<RowProps> {
     render() {
         let {icon, main, vice} = this.props;
-        return <LMR className="py-1 px-2 align-items-stretch"
+        return <LMR className="py-1 px-3 align-items-stretch"
             left={<Badge size="sm"><img src={icon} /></Badge>}>
-            <b>{main}</b>
-            <small>{vice}</small>
+            <div className="px-3">
+                <b>{main}</b>
+                <small>{vice}</small>
+            </div>
         </LMR>;
     }
 }
+*/
 
 @observer
 export default class AdministorsPage extends React.Component<{}, null> {
@@ -39,10 +43,30 @@ export default class AdministorsPage extends React.Component<{}, null> {
         store.admins.cur = ua;
         nav.push(<EditAdmin />);
     }
-    row(item:UnitAdmin) {
-        return <Row icon={item.icon|| appItemIcon} main={item.name} vice={item.nick} />
+    private row = ({icon, name, nick}:UnitAdmin) => {
+        let content;
+        if (nick === undefined) {
+            content = <b>{name}</b>;
+        }
+        else {
+            content = <><b>{nick}</b> &nbsp; <small className="text-muted">{name}</small></>;
+        }
+        return <LMR className="py-1 px-3 align-items-stretch"
+            left={<Badge size="sm"><img src={icon|| appItemIcon} /></Badge>}>
+            <div className="px-3">{content}</div>
+        </LMR>;
     }
-    onNewAdmin(isOwner:boolean, isAdmin:boolean) {
+
+    private onNewOwner = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+        this.newAdmin(evt, true, false);
+    }
+
+    private onNewAdmin = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+        this.newAdmin(evt, false, true);
+    }
+
+    private newAdmin(evt: React.MouseEvent<HTMLAnchorElement>, isOwner:boolean, isAdmin:boolean) {
+        evt.preventDefault();
         nav.push(<NewFellow isOwner={isOwner} isAdmin={isAdmin} />);
     } 
     render() {
@@ -64,7 +88,7 @@ export default class AdministorsPage extends React.Component<{}, null> {
             let header = <LMR 
                 className="px-3 small"
                 left="高管" 
-                right={<a className="small" href='#' onClick={(e)=>{e.preventDefault();this.onNewAdmin(true, false)}}>新增</a>} />;
+                right={<a className="small" href='#' onClick={this.onNewOwner}>新增</a>} />;
             ownersView = <List 
                 className="my-4"
                 header={header} items={owners}
@@ -76,7 +100,7 @@ export default class AdministorsPage extends React.Component<{}, null> {
             let header = <LMR 
                 className="px-3 small"
                 left="管理员" 
-                right={<a className="small" href='#' onClick={(e)=>{e.preventDefault();this.onNewAdmin(false, true)}}>新增</a>} />;
+                right={<a className="small" href='#' onClick={this.onNewAdmin}>新增</a>} />;
             adminsView = <List 
                 className='my-4' 
                 header={header} items={admins} 

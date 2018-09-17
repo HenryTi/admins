@@ -104,7 +104,7 @@ const logout = () => {
 
 interface ActionItem {
     main: string | JSX.Element;
-    right?: string;
+    right?: string | JSX.Element;
     icon: string|JSX.Element;
     page?: new (props:any) => React.Component;
     //onClick: () => nav.push(<Administors />),
@@ -119,6 +119,8 @@ interface DevItem<T extends DevModel.ObjBase> {
 }
 
 type Item = ActionItem|DevItem<DevModel.ObjBase>;
+
+const rArrow = <FA name="angle-right" />;
 
 @observer
 default class AdminPage extends React.Component {
@@ -138,14 +140,14 @@ default class AdminPage extends React.Component {
     }
 
     private appsAction:ActionItem = {
-        main: 'App设置',
-        right: '增减',
-        icon: 'cog',
+        main: '启停App',
+        right: rArrow, //'增减',
+        icon: 'play',
         page: AppsPage,
     };
     private usersAction:ActionItem = {
         main: '用户角色',
-        right: '权限',
+        right: rArrow,
         icon: 'users',
         page: Members,
     };
@@ -157,16 +159,18 @@ default class AdminPage extends React.Component {
         //page: Dev,
     };*/
     private adminsAction:ActionItem = {
-        main: '系统管理员',
-        right: '增减',
+        main: '管理员',
+        right: rArrow,
         icon: 'universal-access',
         page: Administors,
     };
+
+    private crOrganization = new CrOrganization;
     private organizeAction:ActionItem = {
-        main: '组织结构',
-        right: '调整',
-        icon: 'sitemap',
-        cr: new CrOrganization
+        main: this.crOrganization.label,
+        right: rArrow,
+        icon: this.crOrganization.icon,
+        cr: this.crOrganization
     };
 
     private noneAction:ActionItem = {
@@ -182,7 +186,7 @@ default class AdminPage extends React.Component {
             items.push(this.adminsAction);
         }
         if (isAdmin === 1) {
-            if ((type & 2) !== 0) {
+            if ((type & 2) !== 0 && unit.name !== '$$$') {
                 // unit
                 items.push(this.appsAction, this.usersAction, this.organizeAction);
             }
@@ -296,16 +300,14 @@ default class AdminPage extends React.Component {
         if (unit !== undefined) {
             let {name, nick, icon, discription} = unit;
             header = title + ' - ' + (unit.nick || unit.name);
-            top = <div className='row px-3 my-4 bg-white py-2 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}>
-                    <Col xs="auto">
-                        <img src={icon || appIcon} />
-                    </Col>
-                    <Col xs="auto">
-                        <h6 className='text-dark'>{name}</h6>
-                        <h6><small className='text-secondary'>{nick}</small></h6>
-                        <div className='text-info'>{discription}</div>
-                    </Col>
-                </div>;
+            top = <LMR className='px-3 my-4 bg-white py-2 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}
+                left={<div><img src={icon || appIcon} /></div>}>
+                <div className="px-3">
+                    <h6 className='text-dark'>{name}</h6>
+                    <h6><small className='text-secondary'>{nick}</small></h6>
+                    <div className='small text-info'>{discription}</div>
+                </div>
+            </LMR>;
         }
         return <Page header={header} logout={logout}>
             {top}

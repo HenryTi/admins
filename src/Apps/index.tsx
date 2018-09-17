@@ -21,11 +21,13 @@ export default class AppsPage extends React.Component {
         let ban;
         if (inUnit === 0)
             ban = <FA className="text-danger" name='ban' />;
-        return <LMR className="px-3 py-2"
+        return <LMR className="px-3 py-1"
             left={<Badge><img src={icon || appIcon} /></Badge>}
             right={ban}>
-            <div>{name}</div>
-            <small className="text-muted">{discription}</small>
+            <div className="px-3">
+                <div>{name}</div>
+                <small className="text-muted">{discription}</small>
+            </div>
         </LMR>;
     }
     private appClick(app:UnitApp) {

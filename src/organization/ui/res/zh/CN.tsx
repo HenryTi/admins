@@ -65,19 +65,19 @@ export default {
             }
         },
         sectionTeam: {
-            label: '大部设置',
+            label: '大部团队对照表',
         },
         teamPerson: {
-            label: '部门员工职位',
+            label: '员工岗位对照表',
             fields: {
             },
             confirmDelete: _.template('真的要删除${label}吗'),
         },
         teamOrganization: {
-            label: '部门机构对照表',
+            label: '团队机构对照表',
         },
         teamPosts: {
-            label: '部门职位',
+            label: '团队岗位对照表',
         },
         person: {
             label: '员工',
@@ -91,15 +91,21 @@ export default {
             }
         },
         organization: {
-            label: '组织结构',
+            label: '机构',
             arrs: {
                 post: {
-                    label: '职位',
+                    label: '岗位',
                 }
             }
         },
         user: {
             label: '用户'
+        },
+        team: {
+            label: '团队',
+        },
+        section: {
+            label: '大部',
         }
     }
 }

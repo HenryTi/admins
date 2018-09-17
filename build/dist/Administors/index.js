@@ -21,16 +21,71 @@ import { store } from '../store';
 import NewFellow from './NewFellow';
 import EditAdmin from './EditAdmin';
 import { LMR, Badge, List } from 'tonva-react-form';
-export class Row extends React.Component {
+/*
+export interface RowProps {
+    icon: string;
+    main: string;
+    vice: string;
+}
+
+export class Row extends React.Component<RowProps> {
     render() {
-        let { icon, main, vice } = this.props;
-        return React.createElement(LMR, { className: "py-1 px-2 align-items-stretch", left: React.createElement(Badge, { size: "sm" },
-                React.createElement("img", { src: icon })) },
-            React.createElement("b", null, main),
-            React.createElement("small", null, vice));
+        let {icon, main, vice} = this.props;
+        return <LMR className="py-1 px-3 align-items-stretch"
+            left={<Badge size="sm"><img src={icon} /></Badge>}>
+            <div className="px-3">
+                <b>{main}</b>
+                <small>{vice}</small>
+            </div>
+        </LMR>;
     }
 }
+*/
 let AdministorsPage = class AdministorsPage extends React.Component {
+    /*
+    export interface RowProps {
+        icon: string;
+        main: string;
+        vice: string;
+    }
+    
+    export class Row extends React.Component<RowProps> {
+        render() {
+            let {icon, main, vice} = this.props;
+            return <LMR className="py-1 px-3 align-items-stretch"
+                left={<Badge size="sm"><img src={icon} /></Badge>}>
+                <div className="px-3">
+                    <b>{main}</b>
+                    <small>{vice}</small>
+                </div>
+            </LMR>;
+        }
+    }
+    */
+    constructor() {
+        super(...arguments);
+        this.row = ({ icon, name, nick }) => {
+            let content;
+            if (nick === undefined) {
+                content = React.createElement("b", null, name);
+            }
+            else {
+                content = React.createElement(React.Fragment, null,
+                    React.createElement("b", null, nick),
+                    " \u00A0 ",
+                    React.createElement("small", { className: "text-muted" }, name));
+            }
+            return React.createElement(LMR, { className: "py-1 px-3 align-items-stretch", left: React.createElement(Badge, { size: "sm" },
+                    React.createElement("img", { src: icon || appItemIcon })) },
+                React.createElement("div", { className: "px-3" }, content));
+        };
+        this.onNewOwner = (evt) => {
+            this.newAdmin(evt, true, false);
+        };
+        this.onNewAdmin = (evt) => {
+            this.newAdmin(evt, false, true);
+        };
+    }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             yield store.admins.load();
@@ -43,10 +98,8 @@ let AdministorsPage = class AdministorsPage extends React.Component {
         store.admins.cur = ua;
         nav.push(React.createElement(EditAdmin, null));
     }
-    row(item) {
-        return React.createElement(Row, { icon: item.icon || appItemIcon, main: item.name, vice: item.nick });
-    }
-    onNewAdmin(isOwner, isAdmin) {
+    newAdmin(evt, isOwner, isAdmin) {
+        evt.preventDefault();
         nav.push(React.createElement(NewFellow, { isOwner: isOwner, isAdmin: isAdmin }));
     }
     render() {
@@ -66,11 +119,11 @@ let AdministorsPage = class AdministorsPage extends React.Component {
         if (unit.isOwner === 1)
             showAdmins = true;
         if (showOwners === true) {
-            let header = React.createElement(LMR, { className: "px-3 small", left: "\u9AD8\u7BA1", right: React.createElement("a", { className: "small", href: '#', onClick: (e) => { e.preventDefault(); this.onNewAdmin(true, false); } }, "\u65B0\u589E") });
+            let header = React.createElement(LMR, { className: "px-3 small", left: "\u9AD8\u7BA1", right: React.createElement("a", { className: "small", href: '#', onClick: this.onNewOwner }, "\u65B0\u589E") });
             ownersView = React.createElement(List, { className: "my-4", header: header, items: owners, none: "[\u65E0]", item: { onClick: this.onItemClick, render: this.row } });
         }
         if (showAdmins === true) {
-            let header = React.createElement(LMR, { className: "px-3 small", left: "\u7BA1\u7406\u5458", right: React.createElement("a", { className: "small", href: '#', onClick: (e) => { e.preventDefault(); this.onNewAdmin(false, true); } }, "\u65B0\u589E") });
+            let header = React.createElement(LMR, { className: "px-3 small", left: "\u7BA1\u7406\u5458", right: React.createElement("a", { className: "small", href: '#', onClick: this.onNewAdmin }, "\u65B0\u589E") });
             adminsView = React.createElement(List, { className: 'my-4', header: header, items: admins, none: '[\u65E0]', item: { onClick: this.onItemClick, render: this.row } });
         }
         /*

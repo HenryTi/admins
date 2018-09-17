@@ -39,7 +39,7 @@ export class NewRole extends React.Component {
     }
     render() {
         return React.createElement(Page, { header: "\u65B0\u5EFA\u89D2\u8272" },
-            React.createElement(TonvaForm, { ref: tf => this.form = tf, formRows: this.formRows, onSubmit: this.onSubmit }));
+            React.createElement(TonvaForm, { className: "m-3", ref: tf => this.form = tf, formRows: this.formRows, onSubmit: this.onSubmit }));
     }
 }
 //# sourceMappingURL=newRole.js.map

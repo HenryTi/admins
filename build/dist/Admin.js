@@ -13,7 +13,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import { Col } from 'reactstrap';
 import { observer } from 'mobx-react';
 import { nav, Page, meInFrame } from 'tonva-tools';
 import { List, LMR, FA, PropGrid } from 'tonva-react-form';
@@ -104,18 +103,19 @@ export class VmAdmin extends VmPage {
 const logout = () => {
     store.logout();
 };
+const rArrow = React.createElement(FA, { name: "angle-right" });
 let AdminPage = class AdminPage extends React.Component {
     constructor() {
         super(...arguments);
         this.appsAction = {
-            main: 'App设置',
-            right: '增减',
-            icon: 'cog',
+            main: '启停App',
+            right: rArrow,
+            icon: 'play',
             page: AppsPage,
         };
         this.usersAction = {
             main: '用户角色',
-            right: '权限',
+            right: rArrow,
             icon: 'users',
             page: Members,
         };
@@ -127,14 +127,14 @@ let AdminPage = class AdminPage extends React.Component {
             //page: Dev,
         };*/
         this.adminsAction = {
-            main: '系统管理员',
-            right: '增减',
+            main: '管理员',
+            right: rArrow,
             icon: 'universal-access',
             page: Administors,
         };
         this.organizeAction = {
             main: '组织结构',
-            right: '调整',
+            right: rArrow,
             icon: 'sitemap',
             cr: new CrOrganization
         };
@@ -202,7 +202,7 @@ let AdminPage = class AdminPage extends React.Component {
             items.push(this.adminsAction);
         }
         if (isAdmin === 1) {
-            if ((type & 2) !== 0) {
+            if ((type & 2) !== 0 && unit.name !== '$$$') {
                 // unit
                 items.push(this.appsAction, this.usersAction, this.organizeAction);
             }
@@ -278,14 +278,13 @@ let AdminPage = class AdminPage extends React.Component {
         if (unit !== undefined) {
             let { name, nick, icon, discription } = unit;
             header = title + ' - ' + (unit.nick || unit.name);
-            top = React.createElement("div", { className: 'row px-3 my-4 bg-white py-2 cursor-pointer', onClick: () => nav.push(React.createElement(UnitProps, null)) },
-                React.createElement(Col, { xs: "auto" },
-                    React.createElement("img", { src: icon || appIcon })),
-                React.createElement(Col, { xs: "auto" },
+            top = React.createElement(LMR, { className: 'px-3 my-4 bg-white py-2 cursor-pointer', onClick: () => nav.push(React.createElement(UnitProps, null)), left: React.createElement("div", null,
+                    React.createElement("img", { src: icon || appIcon })) },
+                React.createElement("div", { className: "px-3" },
                     React.createElement("h6", { className: 'text-dark' }, name),
                     React.createElement("h6", null,
                         React.createElement("small", { className: 'text-secondary' }, nick)),
-                    React.createElement("div", { className: 'text-info' }, discription)));
+                    React.createElement("div", { className: 'small text-info' }, discription)));
         }
         return React.createElement(Page, { header: header, logout: logout },
             top,

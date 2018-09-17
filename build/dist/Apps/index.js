@@ -32,10 +32,11 @@ let AppsPage = class AppsPage extends React.Component {
         let ban;
         if (inUnit === 0)
             ban = React.createElement(FA, { className: "text-danger", name: 'ban' });
-        return React.createElement(LMR, { className: "px-3 py-2", left: React.createElement(Badge, null,
+        return React.createElement(LMR, { className: "px-3 py-1", left: React.createElement(Badge, null,
                 React.createElement("img", { src: icon || appIcon })), right: ban },
-            React.createElement("div", null, name),
-            React.createElement("small", { className: "text-muted" }, discription));
+            React.createElement("div", { className: "px-3" },
+                React.createElement("div", null, name),
+                React.createElement("small", { className: "text-muted" }, discription)));
     }
     appClick(app) {
         nav.push(React.createElement(Page, { header: "App\u8BE6\u7EC6\u4FE1\u606F" },
