@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, meInFrame, Coordinator, VmPage} from  'tonva-tools'; 
+import {nav, Page, meInFrame, Controller, VPage} from  'tonva-tools'; 
 import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
 import {StringValueEdit} from './tools';
 import {appIcon, appItemIcon} from './consts';
@@ -11,13 +11,13 @@ import Administors from './Administors';
 import AppsPage from './Apps';
 import {Members} from './Members';
 import { mainApi } from 'api';
-import { CrOrganization } from 'organization';
+import { COrganization } from 'organization';
 import {
     ObjViewProps, ObjView,
     appsProps, usqsProps, busesProps, 
     serversProps, usqldbsProps, servicesProps} from './Dev';
 
-export class CrAdmin extends Coordinator {
+export class CrAdmin extends Controller {
     isProduction: boolean;
     adminUnits: UnitAdmin[]; // 仅仅为Admins调试用。从登录用户获取units
 
@@ -48,15 +48,15 @@ export class CrAdmin extends Coordinator {
             console.log('autorun login');
             await store.loadUnit();
         }
-        this.showVm(VmAdmin);
+        this.showVPage(VmAdmin);
     }
 }
 
-export class VmAdmin extends VmPage<CrAdmin> {
-    //protected coordinator: CrAdmin;
+export class VmAdmin extends VPage<CrAdmin> {
+    //protected controller: CrAdmin;
 
     async showEntry() {
-        let {isProduction, adminUnits} = this.coordinator;
+        let {isProduction, adminUnits} = this.controller;
         if (isProduction === false) {
             switch (adminUnits.length) {
                 default: this.openPage(this.selectUnitPage); return;
@@ -74,7 +74,7 @@ export class VmAdmin extends VmPage<CrAdmin> {
 
     private selectUnitPage = () => {
         return <Page header="选择小号" logout={logout}>
-            <List items={this.coordinator.adminUnits} item={{render: this.renderRow, onClick: this.onRowClick}}/>
+            <List items={this.controller.adminUnits} item={{render: this.renderRow, onClick: this.onRowClick}}/>
         </Page>;
     }
 
@@ -112,7 +112,7 @@ interface ActionItem {
     icon: string|JSX.Element;
     page?: new (props:any) => React.Component;
     //onClick: () => nav.push(<Administors />),
-    cr?: Coordinator;
+    cr?: Controller;
 }
 
 interface DevItem<T extends DevModel.ObjBase> {
@@ -169,7 +169,7 @@ default class AdminPage extends React.Component {
         page: Administors,
     };
 
-    private crOrganization = new CrOrganization;
+    private crOrganization = new COrganization;
     private organizeAction:ActionItem = {
         main: this.crOrganization.label,
         right: rArrow,

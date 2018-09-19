@@ -10,9 +10,9 @@ import { Page, meInFrame } from "tonva-tools";
 import React from "react";
 import { List, Muted, LMR, FA } from "tonva-react-form";
 import { VmOpBinding } from './vmOpBinding';
-import { Coordinator, entitiesRes, centerApi } from "tonva-react-usql";
+import { Controller, entitiesRes, centerApi } from "tonva-react-usql";
 // 单据跟操作的绑定设置
-export class CrOpBinding extends Coordinator {
+export class CrOpBinding extends Controller {
     constructor(unitxUsq) {
         super();
         this.icon = React.createElement(FA, { name: "map-o", className: "text-success", fixWidth: true });
@@ -65,7 +65,7 @@ export class CrOpBinding extends Coordinator {
                     section: this.sectionDict[section],
                 });
             }
-            this.showVm(VmOpBinding, { sheet: sheet, opTos: opTos });
+            this.showVPage(VmOpBinding, { sheet: sheet, opTos: opTos });
         });
         this.usqRender = (usq, index) => {
             let { name, tuids, actions, maps, books, queries, histories, sheets } = usq;

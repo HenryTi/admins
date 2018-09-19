@@ -1,13 +1,13 @@
 import React from "react";
-import { Page, Coordinator, meInFrame } from "tonva-tools";
+import { Page, Controller, meInFrame } from "tonva-tools";
 import { List, Muted, LMR, FA } from "tonva-react-form";
-import { VmOpBinding } from './vmOpBinding';
-import { CrAction, CrQuery, CrUsq, entitiesRes, centerApi } from "tonva-react-usql";
+import { VOpBinding } from './vOpBinding';
+import { CAction, CQuery, CUsq, entitiesRes, centerApi } from "tonva-react-usql";
 import { Organization, Team, Section, Post, Sheet, App, Usq, To } from "./model";
 
 // 单据跟操作的绑定设置
-export class CrOpBinding extends Coordinator {
-    constructor(unitxUsq: CrUsq) {
+export class COpBinding extends Controller {
+    constructor(unitxUsq: CUsq) {
         super();
         this.unitxUsq = unitxUsq;
     }
@@ -15,7 +15,7 @@ export class CrOpBinding extends Coordinator {
     icon = <FA name="map-o" className="text-success" fixWidth={true} />;
     label = '岗位权限 - USQ对象';
 
-    private unitxUsq: CrUsq;
+    private unitxUsq: CUsq;
     private apps: App[];
     organizations: Organization[];
     teams: Team[];
@@ -50,7 +50,7 @@ export class CrOpBinding extends Coordinator {
     }
 
     private async buildPosts() {
-        let queryAllTeams = this.unitxUsq.crFromName('query', 'allteams') as CrQuery;
+        let queryAllTeams = this.unitxUsq.crFromName('query', 'allteams') as CQuery;
         let ret:any[][] = await queryAllTeams.entity.query(undefined);
         this.teams = ret['teams'];
         this.organizations = ret['organization'];
@@ -155,7 +155,7 @@ export class CrOpBinding extends Coordinator {
     }
 
     async saveSheetStatePosts(sheet:Sheet, stateName:string, toArr:{post:number, team:number, section:number}[]) {
-        let actionSaveEntityOpPost = this.unitxUsq.crFromName('action', 'saveentityoppost') as CrAction;
+        let actionSaveEntityOpPost = this.unitxUsq.crFromName('action', 'saveentityoppost') as CAction;
         let {usq, name} = sheet;
         await actionSaveEntityOpPost.submit({
             usq: usq.id,
@@ -222,7 +222,7 @@ export class CrOpBinding extends Coordinator {
         alert(entityName);
     }
     private sheetClick = async (sheet:Sheet) => {
-        let entityPosts = this.unitxUsq.crFromName('query', 'getEntityPost') as CrQuery;
+        let entityPosts = this.unitxUsq.crFromName('query', 'getEntityPost') as CQuery;
         let ret = await entityPosts.entity.query({entityName: sheet.name});
         let opTos:{[op:string]:To[]} = {};
         for (let row of ret.ret) {
@@ -235,7 +235,7 @@ export class CrOpBinding extends Coordinator {
                 section: this.sectionDict[section],
             });
         }
-        this.showVm(VmOpBinding, {sheet:sheet, opTos:opTos});
+        this.showVPage(VOpBinding, {sheet:sheet, opTos:opTos});
     }
     private usqRender = (usq:Usq, index:number) => {
         let {name, tuids, actions, maps, books, queries, histories, sheets} = usq;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { IObservableValue, observable } from 'mobx';
-import { Page, VmPage } from 'tonva-tools';
+import { Page, VPage } from 'tonva-tools';
 import { Muted, LMR, FA, List } from 'tonva-react-form';
-import { CrOpBinding } from './crOpBinding';
+import { COpBinding } from './cOpBinding';
 import { StateTo, Sheet, Organization, Post, Team, Section, To } from './model';
 
 interface SelectablePost {
@@ -23,15 +23,15 @@ interface SelectableSection {
     selected: IObservableValue<boolean>;
 }
 
-export class VmOpBinding extends VmPage<CrOpBinding> {
-    //protected coordinator: CrOpBinding;
+export class VOpBinding extends VPage<COpBinding> {
+    //protected controller: CrOpBinding;
     private sheet: Sheet;
     private states: StateTo[];
     private selectablePosts:SelectablePost[];
     private sheetOpsChanged:boolean = false;
 
     private stateClick(state:StateTo) {
-        let {organizations, teams, sections, posts} = this.coordinator;
+        let {organizations, teams, sections, posts} = this.controller;
         let postTos:{[post:number]:To[]} = {};
         let {tos} = state;
         if (tos !== undefined) {
@@ -291,7 +291,7 @@ export class VmOpBinding extends VmPage<CrOpBinding> {
                 });
             }
         }
-        await this.coordinator.saveSheetStatePosts(this.sheet, stateToName, toArr);
+        await this.controller.saveSheetStatePosts(this.sheet, stateToName, toArr);
         let state = this.states.find(v => v.name === stateToName);
         state.tos = tos;
         let tosTexts = this.tosTexts(tos);

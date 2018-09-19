@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import React from 'react';
 import { Page } from 'tonva-tools';
 import { Muted, LMR, FA, List } from 'tonva-react-form';
-import { VmPage } from 'tonva-react-usql';
+import { VPage } from 'tonva-react-usql';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
-export class VmOpBinding extends VmPage {
+export class VmOpBinding extends VPage {
     constructor() {
         super(...arguments);
         this.sheetOpsChanged = false;
@@ -95,7 +95,7 @@ export class VmOpBinding extends VmPage {
         });
     }
     stateClick(state) {
-        let { organizations, teams, sections, posts } = this.coordinator;
+        let { organizations, teams, sections, posts } = this.controller;
         let postTos = {};
         let { tos } = state;
         if (tos !== undefined) {
@@ -348,7 +348,7 @@ export class VmOpBinding extends VmPage {
                     });
                 }
             }
-            yield this.coordinator.saveSheetStatePosts(this.sheet, stateToName, toArr);
+            yield this.controller.saveSheetStatePosts(this.sheet, stateToName, toArr);
             let state = this.states.find(v => v.name === stateToName);
             state.tos = tos;
             let tosTexts = this.tosTexts(tos);

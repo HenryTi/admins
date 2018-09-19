@@ -16,7 +16,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { nav, Page, meInFrame } from 'tonva-tools';
 import { List, LMR, FA, PropGrid } from 'tonva-react-form';
-import { Coordinator, VmPage } from 'tonva-react-usql';
+import { Controller, VPage } from 'tonva-react-usql';
 import { StringValueEdit } from './tools';
 import { appIcon } from './consts';
 import { store } from './store';
@@ -27,7 +27,7 @@ import { Members } from './Members';
 import { mainApi } from 'api';
 import { CrOrganization } from 'organization';
 import { ObjView, appsProps, usqsProps, busesProps, serversProps, usqldbsProps } from './Dev';
-export class CrAdmin extends Coordinator {
+export class CrAdmin extends Controller {
     loadAdminUnits() {
         return __awaiter(this, void 0, void 0, function* () {
             let ret = yield mainApi.userAdminUnits();
@@ -55,16 +55,16 @@ export class CrAdmin extends Coordinator {
                 console.log('autorun login');
                 yield store.loadUnit();
             }
-            this.showVm(VmAdmin);
+            this.showVPage(VmAdmin);
         });
     }
 }
-export class VmAdmin extends VmPage {
+export class VmAdmin extends VPage {
     constructor() {
         super(...arguments);
         this.selectUnitPage = () => {
             return React.createElement(Page, { header: "\u9009\u62E9\u5C0F\u53F7", logout: logout },
-                React.createElement(List, { items: this.coordinator.adminUnits, item: { render: this.renderRow, onClick: this.onRowClick } }));
+                React.createElement(List, { items: this.controller.adminUnits, item: { render: this.renderRow, onClick: this.onRowClick } }));
         };
         this.noUnitPage = () => {
             let { nick, name } = nav.user;
@@ -86,7 +86,7 @@ export class VmAdmin extends VmPage {
     }
     showEntry() {
         return __awaiter(this, void 0, void 0, function* () {
-            let { isProduction, adminUnits } = this.coordinator;
+            let { isProduction, adminUnits } = this.controller;
             if (isProduction === false) {
                 switch (adminUnits.length) {
                     default:

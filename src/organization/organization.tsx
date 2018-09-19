@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Page, VmPage } from 'tonva-tools';
+import { Page, VPage } from 'tonva-tools';
 import { List, FA } from 'tonva-react-form';
-import { CrUsq, Link, CrLink } from "tonva-react-usql";
+import { CUsq, Link, CLink } from "tonva-react-usql";
 import ui from './ui';
-import { CrOpBinding } from './op';
+import { COpBinding } from './op';
 
-export class CrOrganization extends CrUsq {
+export class COrganization extends CUsq {
     constructor() {
         super('$$$/$unitx', 0, 0, undefined, ui);
     }
@@ -23,7 +23,7 @@ export class CrOrganization extends CrUsq {
         await this.loadSchema();
         this.links= [
             '',
-            new CrLink(new CrOpBinding(this)),
+            new CLink(new COpBinding(this)),
             '',
             this.linkFromName('map', 'teamPerson'),
             this.linkFromName('map', 'sectionTeam'),
@@ -34,13 +34,13 @@ export class CrOrganization extends CrUsq {
             this.linkFromName('tuid', 'section'),
             this.linkFromName('tuid', 'organization'),
         ];
-        this.showVm(VmOrganization);
+        this.showVPage(VmOrganization);
     }
     
 }
 
-class VmOrganization extends VmPage<CrOrganization> {
-    //protected coordinator: CrOrganization;
+class VmOrganization extends VPage<COrganization> {
+    //protected controller: CrOrganization;
 
     async showEntry() {
         this.openPage(this.appPage);
@@ -51,7 +51,7 @@ class VmOrganization extends VmPage<CrOrganization> {
     }
 
     protected appPage = () => {
-        let {links, label} = this.coordinator;
+        let {links, label} = this.controller;
         return <Page header={label} logout={()=>{}}>
             <List items={links} item={{render: this.renderRow}} />
         </Page>;

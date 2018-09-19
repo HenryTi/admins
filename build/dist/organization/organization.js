@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 import { Page } from 'tonva-tools';
 import { List } from 'tonva-react-form';
-import { CrUsq, VmPage, CrLink } from "tonva-react-usql";
+import { CrUsq, VPage, CrLink } from "tonva-react-usql";
 import ui from './ui';
 import { CrOpBinding } from './op';
 export class CrOrganization extends CrUsq {
@@ -38,18 +38,18 @@ export class CrOrganization extends CrUsq {
                 this.linkFromName('tuid', 'section'),
                 this.linkFromName('tuid', 'organization'),
             ];
-            this.showVm(VmOrganization);
+            this.showVPage(VmOrganization);
         });
     }
 }
-class VmOrganization extends VmPage {
+class VmOrganization extends VPage {
     constructor() {
         super(...arguments);
         this.renderRow = (link, index) => {
             return link.render('bg-white');
         };
         this.appPage = () => {
-            let { links, label } = this.coordinator;
+            let { links, label } = this.controller;
             return React.createElement(Page, { header: label, logout: () => { } },
                 React.createElement(List, { items: links, item: { render: this.renderRow } }));
         };
