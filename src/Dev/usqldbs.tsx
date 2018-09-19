@@ -60,8 +60,8 @@ const usqldbsProps:ObjViewProps<DevModel.Usqldb> = {
             field: {name: 'cloud', type: 'string', maxLength: 20, required: true},
         },
         {
-            label: 'API', 
-            field: {name: 'api', type: 'number', required: true},
+            label: 'USQ', 
+            field: {name: 'usq', type: 'number', required: true},
             face: {
                 type: 'pick', 
                 content: ({id}:{id:number})=><ApiSpan id={id} isLink={false} />,

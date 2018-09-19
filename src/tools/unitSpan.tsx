@@ -40,11 +40,11 @@ export class UnitSpan extends React.Component<UnitLinkProps> {
         let content;
         let {name, nick, discription} = unit;
         let disc = discription && '- ' + discription;
-        if (nick !== undefined) {
-            content = <React.Fragment>{nick} &nbsp; <small className="text-muted">{name} {disc}</small></React.Fragment>;
+        if (nick) {
+            content = <>{nick} &nbsp; <small className="text-muted">{name} {disc}</small></>;
         }
-        else if (name !== undefined) {
-            content = <React.Fragment>{name} &nbsp; <small className="text-muted">{disc}</small></React.Fragment>;
+        else if (name) {
+            content = <>{name} &nbsp; <small className="text-muted">{disc}</small></>;
         }
         else {
             content = id;

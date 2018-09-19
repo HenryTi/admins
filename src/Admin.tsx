@@ -1,9 +1,7 @@
 import * as React from 'react';
-import {Container, Row, Col} from 'reactstrap';
 import {observer} from 'mobx-react';
-import {nav, Page, meInFrame} from  'tonva-tools'; 
+import {nav, Page, meInFrame, Coordinator, VmPage} from  'tonva-tools'; 
 import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
-import { Coordinator, VmPage } from 'tonva-react-usql';
 import {StringValueEdit} from './tools';
 import {appIcon, appItemIcon} from './consts';
 import {Unit, UnitApps, UnitAdmin, DevModel} from './model';
@@ -29,7 +27,6 @@ export class CrAdmin extends Coordinator {
         if (ret.length === 1) {
             meInFrame.unit = ret[0].id;
             await store.loadUnit();
-            let a:List
         }
     }
     protected async internalStart(param?:any):Promise<void> {
@@ -55,32 +52,39 @@ export class CrAdmin extends Coordinator {
     }
 }
 
-export class VmAdmin extends VmPage {
-    protected coordinator: CrAdmin;
+export class VmAdmin extends VmPage<CrAdmin> {
+    //protected coordinator: CrAdmin;
 
     async showEntry() {
         let {isProduction, adminUnits} = this.coordinator;
-        if (isProduction === false && adminUnits.length > 1) {
-            this.openPage(this.selectUnitPage);
+        if (isProduction === false) {
+            switch (adminUnits.length) {
+                default: this.openPage(this.selectUnitPage); return;
+                case 0: this.openPage(this.noUnitPage); return;
+                case 1: this.openPageElement(<AdminPage />); return;
+            }
         }
-        else {
-            this.openPageElement(<AdminPage />);
+
+        if (store.unit === undefined) {
+            this.openPage(this.noUnitPage);
+            return;
         }
-        /*
-        if (this.isProduction === true) return <AdminPage />;
-        let {adminUnits} = store;
-        if (adminUnits === undefined)
-            return <Page>loading ... </Page>;
-        if (adminUnits.length === 1)
-            return <AdminPage />;
-        return <SelectUnit />;
-        */
+        this.openPageElement(<AdminPage />);
     }
 
     private selectUnitPage = () => {
         return <Page header="选择小号" logout={logout}>
             <List items={this.coordinator.adminUnits} item={{render: this.renderRow, onClick: this.onRowClick}}/>
         </Page>;
+    }
+
+    private noUnitPage = () => {
+        let {nick, name} = nav.user;
+        return <Page header="没有小号" logout={logout}>
+            <div className="p-3 small text-info">
+                {nick || name}: 没有需要管理的小号
+            </div>
+        </Page>
     }
 
     protected get view() {return undefined}

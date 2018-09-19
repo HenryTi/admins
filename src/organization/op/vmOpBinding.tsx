@@ -1,11 +1,10 @@
 import React from 'react';
-import { Page } from 'tonva-tools';
-import { Muted, LMR, FA, List } from 'tonva-react-form';
-import { VmPage } from 'tonva-react-usql';
-import { CrOpBinding } from './crOpBinding';
-import { StateTo, Sheet, Organization, Post, Team, Section, To } from './model';
 import { observer } from 'mobx-react';
 import { IObservableValue, observable } from 'mobx';
+import { Page, VmPage } from 'tonva-tools';
+import { Muted, LMR, FA, List } from 'tonva-react-form';
+import { CrOpBinding } from './crOpBinding';
+import { StateTo, Sheet, Organization, Post, Team, Section, To } from './model';
 
 interface SelectablePost {
     post: Post;
@@ -24,8 +23,8 @@ interface SelectableSection {
     selected: IObservableValue<boolean>;
 }
 
-export class VmOpBinding extends VmPage {
-    protected coordinator: CrOpBinding;
+export class VmOpBinding extends VmPage<CrOpBinding> {
+    //protected coordinator: CrOpBinding;
     private sheet: Sheet;
     private states: StateTo[];
     private selectablePosts:SelectablePost[];

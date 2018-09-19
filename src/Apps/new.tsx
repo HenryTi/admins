@@ -65,8 +65,10 @@ export class NewApp extends React.Component {
         return <LMR className="px-3 py-2"
             left={<Badge><img src={icon || appIcon} /></Badge>}
             right={right}>
-            <div>{name}</div>
-            <small className="text-muted">{discription}</small>
+            <div className="px-3">
+                <div>{name}</div>
+                <small className="text-muted">{discription}</small>
+            </div>
         </LMR>;
     }
     render() {

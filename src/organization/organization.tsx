@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Page } from 'tonva-tools';
+import { Page, VmPage } from 'tonva-tools';
 import { List, FA } from 'tonva-react-form';
-import { CrUsq, VmPage, Link, CrLink } from "tonva-react-usql";
+import { CrUsq, Link, CrLink } from "tonva-react-usql";
 import ui from './ui';
 import { CrOpBinding } from './op';
 
@@ -39,8 +39,8 @@ export class CrOrganization extends CrUsq {
     
 }
 
-class VmOrganization extends VmPage {
-    protected coordinator: CrOrganization;
+class VmOrganization extends VmPage<CrOrganization> {
+    //protected coordinator: CrOrganization;
 
     async showEntry() {
         this.openPage(this.appPage);

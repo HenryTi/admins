@@ -16,7 +16,7 @@ import {NewService, ServiceInfo} from './servicePage';
 
 @observer
 class Info extends React.Component<DevModel.App> {
-    @observable private apis:ListProp = {label: '关联API', type: 'list', list: undefined, row: UsqRow};
+    @observable private apis:ListProp = {label: '关联Usq', type: 'list', list: undefined, row: UsqRow};
     componentWillMount() {
         store.dev.services.cur = undefined;
     }
@@ -133,7 +133,7 @@ const appsProps:ObjViewProps<DevModel.App> = {
     },
     info: Info,
     extraMenuActions: [
-        {icon:'cogs', caption:'设置关联API', action: ()=>nav.push(<AppUsqs />)}
+        {icon:'cogs', caption:'设置关联USQ', action: ()=>nav.push(<AppUsqs />)}
     ],
 };
 
