@@ -50,7 +50,7 @@ export class COpBinding extends Controller {
     }
 
     private async buildPosts() {
-        let queryAllTeams = this.unitxUsq.crFromName('query', 'allteams') as CQuery;
+        let queryAllTeams = this.unitxUsq.cFromName('query', 'allteams') as CQuery;
         let ret:any[][] = await queryAllTeams.entity.query(undefined);
         this.teams = ret['teams'];
         this.organizations = ret['organization'];
@@ -155,7 +155,7 @@ export class COpBinding extends Controller {
     }
 
     async saveSheetStatePosts(sheet:Sheet, stateName:string, toArr:{post:number, team:number, section:number}[]) {
-        let actionSaveEntityOpPost = this.unitxUsq.crFromName('action', 'saveentityoppost') as CAction;
+        let actionSaveEntityOpPost = this.unitxUsq.cFromName('action', 'saveentityoppost') as CAction;
         let {usq, name} = sheet;
         await actionSaveEntityOpPost.submit({
             usq: usq.id,
@@ -222,7 +222,7 @@ export class COpBinding extends Controller {
         alert(entityName);
     }
     private sheetClick = async (sheet:Sheet) => {
-        let entityPosts = this.unitxUsq.crFromName('query', 'getEntityPost') as CQuery;
+        let entityPosts = this.unitxUsq.cFromName('query', 'getEntityPost') as CQuery;
         let ret = await entityPosts.entity.query({entityName: sheet.name});
         let opTos:{[op:string]:To[]} = {};
         for (let row of ret.ret) {

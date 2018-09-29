@@ -24,7 +24,6 @@ interface SelectableSection {
 }
 
 export class VOpBinding extends VPage<COpBinding> {
-    //protected controller: CrOpBinding;
     private sheet: Sheet;
     private states: StateTo[];
     private selectablePosts:SelectablePost[];

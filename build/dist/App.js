@@ -9,15 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 import { nav, NavView } from 'tonva-tools';
 //import {StartPage} from './Admin';
-import { CrAdmin } from './Admin';
+import { CAdmin } from './Admin';
 import './App.css';
 class App extends React.Component {
     onLogined() {
         return __awaiter(this, void 0, void 0, function* () {
             nav.clear();
             //nav.push(<StartPage />);
-            let crAdmin = new CrAdmin();
-            yield crAdmin.start();
+            let cAdmin = new CAdmin();
+            yield cAdmin.start();
         });
     }
     render() {

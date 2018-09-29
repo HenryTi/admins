@@ -7,12 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import { Page } from 'tonva-tools';
+import { Page, VPage } from 'tonva-tools';
 import { List } from 'tonva-react-form';
-import { CrUsq, VPage, CrLink } from "tonva-react-usql";
+import { CUsq, CLink } from "tonva-react-usql";
 import ui from './ui';
-import { CrOpBinding } from './op';
-export class CrOrganization extends CrUsq {
+import { COpBinding } from './op';
+export class COrganization extends CUsq {
     constructor() {
         super('$$$/$unitx', 0, 0, undefined, ui);
         this.label = '岗位权限';
@@ -27,7 +27,7 @@ export class CrOrganization extends CrUsq {
             yield this.loadSchema();
             this.links = [
                 '',
-                new CrLink(new CrOpBinding(this)),
+                new CLink(new COpBinding(this)),
                 '',
                 this.linkFromName('map', 'teamPerson'),
                 this.linkFromName('map', 'sectionTeam'),
@@ -38,11 +38,11 @@ export class CrOrganization extends CrUsq {
                 this.linkFromName('tuid', 'section'),
                 this.linkFromName('tuid', 'organization'),
             ];
-            this.showVPage(VmOrganization);
+            this.showVPage(VOrganization);
         });
     }
 }
-class VmOrganization extends VPage {
+class VOrganization extends VPage {
     constructor() {
         super(...arguments);
         this.renderRow = (link, index) => {

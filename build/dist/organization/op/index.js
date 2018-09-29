@@ -1,2 +1,2 @@
-export { CrOpBinding } from './crOpBinding';
+export { COpBinding } from './cOpBinding';
 //# sourceMappingURL=index.js.map

@@ -13,7 +13,7 @@ class CMapTeamPerson extends CMap {
     }
 
     private async searchOnPost(param: any):Promise<number> {
-        let querySelect = this.crQuerySelect('teamPosts');
+        let querySelect = this.cQuerySelect('teamPosts');
         let val = await querySelect.call(param);
         return val['post'].id;
     }
@@ -23,9 +23,8 @@ class VMapTeamPerson extends VMapMain {
 }
 
 const ui:MapUI = {
-    CrMap: CMapTeamPerson,
+    CMap: CMapTeamPerson,
     //label: '部门员工对照表',
-    //main: VmMapTeamPerson,
     keys: [
         {
             content: ({name, id}:any) => <><Muted>{x.team}</Muted> {name}</>,

@@ -48,7 +48,7 @@ let AppsPage = class AppsPage extends React.Component {
     render() {
         let right = React.createElement(Button, { color: 'secondary', size: 'sm', onClick: () => this.newItem() },
             React.createElement(FA, { name: "plus" }));
-        return React.createElement(Page, { header: "App\u8BBE\u7F6E", right: right },
+        return React.createElement(Page, { header: "\u542F\u505CApp", right: right },
             React.createElement(List, { items: store.apps, item: { render: this.itemRender, onClick: this.appClick } }));
     }
 };

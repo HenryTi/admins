@@ -15,7 +15,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 import { Media, PropGrid, LMR, FA, List, Muted } from 'tonva-react-form';
 import { nav, Page } from 'tonva-tools';
-import { UnitSpan, IdDates, ApiSpan } from '../tools';
+import { UnitSpan, IdDates, UsqSpan } from '../tools';
 import { Row } from './row';
 import { appIcon, appItemIcon } from '../consts';
 import { store } from '../store';
@@ -38,7 +38,7 @@ class Info extends React.Component {
             { type: 'component', label: '所有者', component: React.createElement("div", { className: "py-2" },
                     React.createElement(UnitSpan, { id: unit, isLink: true })) },
             { type: 'component', label: 'API', component: React.createElement("div", { className: "py-2" },
-                    React.createElement(ApiSpan, { id: usq, isLink: true })) },
+                    React.createElement(UsqSpan, { id: usq, isLink: true })) },
             { type: 'string', label: '云服务', name: 'cloud' },
             { type: 'component', label: 'usql代码', component: React.createElement(LMR, { onClick: () => this.onUsql(), className: "w-100 py-2 cursor-pointer", left: "\u4E0A\u4F20\u7F16\u8BD1usql\u4EE3\u7801", right: React.createElement(FA, { className: "align-self-center", name: "chevron-right" }) })
             },
@@ -68,7 +68,7 @@ const usqldbsProps = {
             field: { name: 'usq', type: 'number', required: true },
             face: {
                 type: 'pick',
-                content: ({ id }) => React.createElement(ApiSpan, { id: id, isLink: false }),
+                content: ({ id }) => React.createElement(UsqSpan, { id: id, isLink: false }),
                 fromPicked: (item) => { return { id: item.id, caption: 'API' }; },
                 pick: (face, formProps, formValues) => __awaiter(this, void 0, void 0, function* () {
                     return new Promise((resolve, reject) => {

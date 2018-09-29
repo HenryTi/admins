@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { PropGrid, Media } from 'tonva-react-form';
-import { UnitSpan, IdDates, ServerSpan, ApiSpan, AppSpan } from '../tools';
+import { UnitSpan, IdDates, ServerSpan, UsqSpan, AppSpan } from '../tools';
 import { Row } from './row';
 import { appIcon, appItemIcon } from '../consts';
 import { store } from '../store';
@@ -25,7 +25,7 @@ class Info extends React.Component {
                     React.createElement(AppSpan, { id: app, isLink: true })) };
         else
             obj = { type: 'component', label: 'USQ', component: React.createElement("div", { className: "py-2" },
-                    React.createElement(ApiSpan, { id: usq, isLink: true })) };
+                    React.createElement(UsqSpan, { id: usq, isLink: true })) };
         let rows = [
             '',
             { type: 'component', component: React.createElement(Media, { icon: appIcon, main: discription, discription: url }) },

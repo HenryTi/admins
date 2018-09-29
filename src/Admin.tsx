@@ -17,7 +17,7 @@ import {
     appsProps, usqsProps, busesProps, 
     serversProps, usqldbsProps, servicesProps} from './Dev';
 
-export class CrAdmin extends Controller {
+export class CAdmin extends Controller {
     isProduction: boolean;
     adminUnits: UnitAdmin[]; // 仅仅为Admins调试用。从登录用户获取units
 
@@ -48,13 +48,11 @@ export class CrAdmin extends Controller {
             console.log('autorun login');
             await store.loadUnit();
         }
-        this.showVPage(VmAdmin);
+        this.showVPage(VAdmin);
     }
 }
 
-export class VmAdmin extends VPage<CrAdmin> {
-    //protected controller: CrAdmin;
-
+export class VAdmin extends VPage<CAdmin> {
     async showEntry() {
         let {isProduction, adminUnits} = this.controller;
         if (isProduction === false) {
@@ -112,7 +110,7 @@ interface ActionItem {
     icon: string|JSX.Element;
     page?: new (props:any) => React.Component;
     //onClick: () => nav.push(<Administors />),
-    cr?: Controller;
+    controller?: Controller;
 }
 
 interface DevItem<T extends DevModel.ObjBase> {
@@ -169,12 +167,12 @@ default class AdminPage extends React.Component {
         page: Administors,
     };
 
-    private crOrganization = new COrganization;
+    private cOrganization = new COrganization;
     private organizeAction:ActionItem = {
-        main: this.crOrganization.label,
+        main: this.cOrganization.label,
         right: rArrow,
-        icon: this.crOrganization.icon,
-        cr: this.crOrganization
+        icon: this.cOrganization.icon,
+        controller: this.cOrganization
     };
 
     private noneAction:ActionItem = {
@@ -273,18 +271,17 @@ default class AdminPage extends React.Component {
         </LMR>;
     }
     private rowClick = async (item:Item) => {
-        //let {vm, page} = item;
         let {title} = item as DevItem<DevModel.ObjBase>;
         if (title !== undefined) {
             let {objProps} = item as DevItem<DevModel.ObjBase>;
             return nav.push(<ObjView {...objProps} />);
         }
         else {
-            let {page:P, cr} = item as ActionItem;
+            let {page:P, controller} = item as ActionItem;
             if (P !== undefined)
                 nav.push(<P />);
             else {
-                await cr.start();
+                await controller.start();
             }
         }
     }

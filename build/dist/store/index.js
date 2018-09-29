@@ -28,7 +28,7 @@ export class Store {
         this.admins = new Admins(this);
         this.dev = new Dev(this);
         this.cacheUnits = new CacheUnits();
-        this.cacheApis = new CacheApis();
+        this.cacheUsqs = new CacheApis();
         this.cacheApps = new CacheApps();
         this.cacheServers = new CacheServers();
     }

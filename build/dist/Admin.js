@@ -14,9 +14,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { nav, Page, meInFrame } from 'tonva-tools';
+import { nav, Page, meInFrame, Controller, VPage } from 'tonva-tools';
 import { List, LMR, FA, PropGrid } from 'tonva-react-form';
-import { Controller, VPage } from 'tonva-react-usql';
 import { StringValueEdit } from './tools';
 import { appIcon } from './consts';
 import { store } from './store';
@@ -25,9 +24,9 @@ import Administors from './Administors';
 import AppsPage from './Apps';
 import { Members } from './Members';
 import { mainApi } from 'api';
-import { CrOrganization } from 'organization';
+import { COrganization } from 'organization';
 import { ObjView, appsProps, usqsProps, busesProps, serversProps, usqldbsProps } from './Dev';
-export class CrAdmin extends Controller {
+export class CAdmin extends Controller {
     loadAdminUnits() {
         return __awaiter(this, void 0, void 0, function* () {
             let ret = yield mainApi.userAdminUnits();
@@ -55,11 +54,11 @@ export class CrAdmin extends Controller {
                 console.log('autorun login');
                 yield store.loadUnit();
             }
-            this.showVPage(VmAdmin);
+            this.showVPage(VAdmin);
         });
     }
 }
-export class VmAdmin extends VPage {
+export class VAdmin extends VPage {
     constructor() {
         super(...arguments);
         this.selectUnitPage = () => {
@@ -141,12 +140,12 @@ let AdminPage = class AdminPage extends React.Component {
             icon: 'universal-access',
             page: Administors,
         };
-        this.crOrganization = new CrOrganization;
+        this.cOrganization = new COrganization;
         this.organizeAction = {
-            main: this.crOrganization.label,
+            main: this.cOrganization.label,
             right: rArrow,
-            icon: this.crOrganization.icon,
-            cr: this.crOrganization
+            icon: this.cOrganization.icon,
+            controller: this.cOrganization
         };
         this.noneAction = {
             main: '请耐心等待分配任务',
@@ -174,18 +173,17 @@ let AdminPage = class AdminPage extends React.Component {
                     React.createElement("b", null, mid)));
         };
         this.rowClick = (item) => __awaiter(this, void 0, void 0, function* () {
-            //let {vm, page} = item;
             let { title } = item;
             if (title !== undefined) {
                 let { objProps } = item;
                 return nav.push(React.createElement(ObjView, Object.assign({}, objProps)));
             }
             else {
-                let { page: P, cr } = item;
+                let { page: P, controller } = item;
                 if (P !== undefined)
                     nav.push(React.createElement(P, null));
                 else {
-                    yield cr.start();
+                    yield controller.start();
                 }
             }
         });

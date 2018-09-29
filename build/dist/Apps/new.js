@@ -69,8 +69,9 @@ let NewApp = class NewApp extends React.Component {
             right = React.createElement("small", null, "\u5DF2\u505C\u7528");
         return React.createElement(LMR, { className: "px-3 py-2", left: React.createElement(Badge, null,
                 React.createElement("img", { src: icon || appIcon })), right: right },
-            React.createElement("div", null, name),
-            React.createElement("small", { className: "text-muted" }, discription));
+            React.createElement("div", { className: "px-3" },
+                React.createElement("div", null, name),
+                React.createElement("small", { className: "text-muted" }, discription)));
     }
     render() {
         let center = React.createElement(SearchBox, { onSearch: this.onSearch, className: "w-100 mx-1", placeholder: "\u641C\u7D22App", maxLength: 100 });

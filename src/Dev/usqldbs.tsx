@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {EasyDate, Media, Prop, PropGrid, LMR, FA, PickFace, FormProps, List, Muted} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
-import {UnitSpan, IdDates, ApiSpan} from '../tools';
+import {UnitSpan, IdDates, UsqSpan} from '../tools';
 import {Row} from './row';
 import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
@@ -27,7 +27,7 @@ class Info extends React.Component<DevModel.Usqldb> {
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'component', label: 'API', component: <div className="py-2">
-                <ApiSpan id={usq} isLink={true} />
+                <UsqSpan id={usq} isLink={true} />
             </div>},
             {type: 'string', label: '云服务', name: 'cloud'},
             {type: 'component', label: 'usql代码', component: 
@@ -64,7 +64,7 @@ const usqldbsProps:ObjViewProps<DevModel.Usqldb> = {
             field: {name: 'usq', type: 'number', required: true},
             face: {
                 type: 'pick', 
-                content: ({id}:{id:number})=><ApiSpan id={id} isLink={false} />,
+                content: ({id}:{id:number})=><UsqSpan id={id} isLink={false} />,
                 fromPicked: (item:any) => {return {id:item.id, caption: 'API'} },
                 pick: async (face:PickFace, formProps:FormProps, formValues:any):Promise<any> => {
                     return new Promise<any>((resolve, reject) => {

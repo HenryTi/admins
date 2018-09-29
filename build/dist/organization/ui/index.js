@@ -1,16 +1,10 @@
-import { converUIKeyToLowercase } from 'tonva-react-usql';
-//import tuid from './tuid';
+import { convertUIKeyToLowercase } from 'tonva-react-usql';
 import map from './map';
-//import query from './query';
 import res from './res';
-//import { MyCrTuid } from './crTuid';
 const usqUI = {
-    //CrTuidMain: MyCrTuid,
-    //tuid: tuid,
     map: map,
-    //query: query,
     res: res,
 };
-converUIKeyToLowercase(usqUI);
+convertUIKeyToLowercase(usqUI);
 export default usqUI;
 //# sourceMappingURL=index.js.map

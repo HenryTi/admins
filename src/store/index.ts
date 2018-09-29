@@ -13,7 +13,7 @@ export class Store {
     admins:Admins;
     dev:Dev;
     cacheUnits: CacheUnits;
-    cacheApis: CacheApis;
+    cacheUsqs: CacheApis;
     cacheApps: CacheApps;
     cacheServers: CacheServers;
     usqlServer: string;
@@ -33,7 +33,7 @@ export class Store {
         this.admins = new Admins(this);
         this.dev = new Dev(this);
         this.cacheUnits = new CacheUnits();
-        this.cacheApis = new CacheApis();
+        this.cacheUsqs = new CacheApis();
         this.cacheApps = new CacheApps();
         this.cacheServers = new CacheServers();
     }

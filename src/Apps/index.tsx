@@ -40,7 +40,7 @@ export default class AppsPage extends React.Component {
     }
     render() {
         let right = <Button color='secondary' size='sm' onClick={()=>this.newItem()}><FA name="plus" /></Button>;
-        return <Page header="App设置" right={right}>
+        return <Page header="启停App" right={right}>
             <List items={store.apps} item={{render: this.itemRender, onClick: this.appClick}} />
         </Page>;
     }

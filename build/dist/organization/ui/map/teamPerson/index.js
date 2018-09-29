@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 import { Muted } from 'tonva-react-form';
 import { left0 } from 'tonva-tools';
-import { VmMapMain, CrMap } from 'tonva-react-usql';
+import { VMapMain, CMap } from 'tonva-react-usql';
 import { dictionary as x } from '../../res';
-class CrMapTeamPerson extends CrMap {
+class CMapTeamPerson extends CMap {
     searchOnKey(keyField, param) {
         const _super = name => super[name];
         return __awaiter(this, void 0, void 0, function* () {
@@ -23,18 +23,17 @@ class CrMapTeamPerson extends CrMap {
     }
     searchOnPost(param) {
         return __awaiter(this, void 0, void 0, function* () {
-            let querySelect = this.crQuerySelect('teamPosts');
+            let querySelect = this.cQuerySelect('teamPosts');
             let val = yield querySelect.call(param);
             return val['post'].id;
         });
     }
 }
-class VmMapTeamPerson extends VmMapMain {
+class VMapTeamPerson extends VMapMain {
 }
 const ui = {
-    CrMap: CrMapTeamPerson,
+    CMap: CMapTeamPerson,
     //label: '部门员工对照表',
-    //main: VmMapTeamPerson,
     keys: [
         {
             content: ({ name, id }) => React.createElement(React.Fragment, null,

@@ -34,14 +34,12 @@ export class COrganization extends CUsq {
             this.linkFromName('tuid', 'section'),
             this.linkFromName('tuid', 'organization'),
         ];
-        this.showVPage(VmOrganization);
+        this.showVPage(VOrganization);
     }
     
 }
 
-class VmOrganization extends VPage<COrganization> {
-    //protected controller: CrOrganization;
-
+class VOrganization extends VPage<COrganization> {
     async showEntry() {
         this.openPage(this.appPage);
     }

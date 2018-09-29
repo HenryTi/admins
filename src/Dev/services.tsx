@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Step, Field, Prop, PropGrid, Media} from 'tonva-react-form';
-import {UnitSpan, IdDates, ServerSpan, ApiSpan, AppSpan} from '../tools';
+import {UnitSpan, IdDates, ServerSpan, UsqSpan, AppSpan} from '../tools';
 import {Row} from './row';
 import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
@@ -21,7 +21,7 @@ class Info extends React.Component<DevModel.Service> {
         if (app !== undefined)
             obj = {type: 'component', label: 'APP', component: <div className="py-2"><AppSpan id={app} isLink={true} /></div> };
         else
-            obj = {type: 'component', label: 'USQ', component: <div className="py-2"><ApiSpan id={usq} isLink={true} /></div> };
+            obj = {type: 'component', label: 'USQ', component: <div className="py-2"><UsqSpan id={usq} isLink={true} /></div> };
 
         let rows:Prop[] = [
             '',

@@ -3,21 +3,21 @@ import {observer} from 'mobx-react';
 import * as classNames from 'classnames';
 import {Prop, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
-import {store} from '../store';
-import {DevModel} from '../model';
+import {appIcon, appItemIcon} from 'consts';
+import {store} from 'store';
+import {DevModel} from 'model';
 import {IdDates} from './idDates';
 import {span} from './span';
 import {UnitSpan} from './unitSpan';
 
-export interface ApiLinkProps {
+export interface UsqLinkProps {
     className?: string;
     id: number;
     isLink?: boolean;
 }
 
 @observer
-export class ApiSpan extends React.Component<ApiLinkProps> {
+export class UsqSpan extends React.Component<UsqLinkProps> {
     /*
     componentWillMount() {
         let {id} = this.props;
@@ -26,12 +26,12 @@ export class ApiSpan extends React.Component<ApiLinkProps> {
     */
     onClick = (evt) => {
         evt.preventDefault();
-        nav.push(<ApiInfo id={this.props.id} />);
+        nav.push(<UsqInfo id={this.props.id} />);
         return false;
     }
     render() {
         let {id, className, isLink} = this.props;
-        let api = store.cacheApis.get(id);
+        let api = store.cacheUsqs.get(id);
         let content;
         if (api === null) {
             content = id;
@@ -51,14 +51,14 @@ export class ApiSpan extends React.Component<ApiLinkProps> {
 }
 
 @observer
-class ApiInfo extends React.Component<ApiLinkProps> {
+class UsqInfo extends React.Component<UsqLinkProps> {
     private rows:Prop[];
     constructor(props:any) {
         super(props);
     }
     render() {
-        let api = store.cacheApis.get(this.props.id);
-        let {name, discription, unit, date_init, date_update} = api;
+        let usq = store.cacheUsqs.get(this.props.id);
+        let {name, discription, unit, date_init, date_update} = usq;
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
