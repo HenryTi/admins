@@ -37,15 +37,15 @@ export class MembersPage extends React.Component {
 const MemberRow = (member:RoleMember) => {
     let {nick, name, assigned, icon} = member;
     let content;
-    if (assigned !== undefined)
+    if (assigned)
         content = <><div><b>{assigned}</b> <Muted>{nick}</Muted></div><Muted>{name}</Muted></>;
-    else if (nick !== undefined)
+    else if (nick)
         content = <><div><b>{nick}</b></div><Muted>{name}</Muted></>;
     else
         content = <div><b>{name}</b></div>;
-    return <LMR className="py-1 px-2 align-items-stretch"
+    return <LMR className="py-2 px-3 align-items-stretch"
         left={<Badge size="sm"><img src={icon||appIcon} /></Badge>}>
-        {content}
+        <div className="px-3">{content}</div>
     </LMR>;
 };
 

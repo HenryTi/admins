@@ -77,7 +77,9 @@ export class COpBinding extends Controller {
         for (let post of this.posts) {
             this.postDict[post.id] = post;
             let organization = this.organizationDict[post.owner];
-            if (organization === undefined) continue;
+            if (organization === undefined) {
+                continue;
+            }
             post.organization = organization;
             organization.posts.push(post);
         }
@@ -111,6 +113,7 @@ export class COpBinding extends Controller {
                 case 'map': p = this.setNames(usq.maps = [], lns, i); break;
                 case 'book': p = this.setNames(usq.books = [], lns, i); break;
                 case 'history': p = this.setNames(usq.histories = [], lns, i); break;
+                case 'pending': p = this.setNames(usq.pendings = [], lns, i); break;
                 case 'query': p = this.setNames(usq.queries = [], lns, i); break;
                 case 'action': p = this.setNames(usq.actions = [], lns, i); break;
                 case 'sheet': p = this.setSheets(usq.sheets = [], lns, i, usq); break;
@@ -221,6 +224,9 @@ export class COpBinding extends Controller {
     private historyClick = (entityName:string) => {
         alert(entityName);
     }
+    private pendingClick = (entityName:string) => {
+        alert(entityName);
+    }
     private sheetClick = async (sheet:Sheet) => {
         let entityPosts = this.unitxUsq.cFromName('query', 'getEntityPost') as CQuery;
         let ret = await entityPosts.entity.query({entityName: sheet.name});
@@ -238,13 +244,14 @@ export class COpBinding extends Controller {
         this.showVPage(VOpBinding, {sheet:sheet, opTos:opTos});
     }
     private usqRender = (usq:Usq, index:number) => {
-        let {name, tuids, actions, maps, books, queries, histories, sheets} = usq;
+        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = usq;
         let nameRender = this.nameRender;
         function headerCaption(caption:string):JSX.Element {
             return <Muted className="px-3 pt-1 bg-light w-100">{caption}</Muted>
         }
         function itemList(items:any[], type:string, itemClick:(item:any)=>void, render:((item:any, icon:any)=>JSX.Element) = nameRender) {
-            let {caption, icon} = entitiesRes[type];
+            let res = entitiesRes;
+            let {caption, icon} = res[type];
             return items && 
                 <List className="mt-3"
                     header={headerCaption(caption)} 
@@ -254,12 +261,13 @@ export class COpBinding extends Controller {
         return <div key={name} className="my-2">
             <div className="px-3 font-weight-blid">{name}</div>
             {itemList(tuids, 'tuid', this.tuidClick)}
+            {itemList(sheets, 'sheet', this.sheetClick, this.sheetRender)}
             {itemList(actions, 'action', this.actionClick)}
             {itemList(maps, 'map', this.mapClick)}
             {itemList(books, 'book', this.bookClick)}
             {itemList(queries, 'query', this.queryClick)}
             {itemList(histories, 'history', this.historyClick)}
-            {itemList(sheets, 'sheet', this.sheetClick, this.sheetRender)}
+            {itemList(pendings, 'pending', this.pendingClick)}
         </div>;
     }
 

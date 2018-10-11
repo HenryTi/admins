@@ -96,8 +96,11 @@ export class VOpBinding extends VPage<COpBinding> {
             tto.push(to);
         }
         let sections:Section[] = [];
-        for (let team of post.organization.teams) {
-            if (team.sections !== undefined) sections.push(...team.sections);
+        let {organization} = post;
+        if (organization !== undefined && organization.teams !== undefined) {
+            for (let team of post.organization.teams) {
+                if (team.sections !== undefined) sections.push(...team.sections);
+            }
         }
         let teams:SelectableTeam[] = [];
         let teamTo0 = teamTos[0];
@@ -113,14 +116,16 @@ export class VOpBinding extends VPage<COpBinding> {
             selected: observable.box(teamTo0!==undefined), 
             sections: teamTo0Sections,
         });
-        post.organization.teams.forEach(v => {
-            let teamTo = teamTos[v.id];
-            teams.push({
-                team: v,
-                selected: observable.box(teamTo!==undefined),
-                sections: this.buildSelectableSections(sections, teamTo),
+        if (organization !== undefined && organization.teams !== undefined) {
+            post.organization.teams.forEach(v => {
+                let teamTo = teamTos[v.id];
+                teams.push({
+                    team: v,
+                    selected: observable.box(teamTo!==undefined),
+                    sections: this.buildSelectableSections(sections, teamTo),
+                });
             });
-        });
+        }
         if (hasAllTeams === true && tos.length === 1) {
             let selectableTeam0 = teams[0];
             let hasSection = false;
@@ -337,8 +342,11 @@ export class VOpBinding extends VPage<COpBinding> {
         let {post, selected} = item;
         if (checked === true) {
             let sections:Section[] = [];
-            for (let team of post.organization.teams) {
-                if (team.sections !== undefined) sections.push(...team.sections);
+            let {organization} = post;
+            if (organization !== undefined && organization.teams !== undefined) {
+                for (let team of post.organization.teams) {
+                    if (team.sections !== undefined) sections.push(...team.sections);
+                }
             }
             item.teams.push({
                 team: {
@@ -351,13 +359,15 @@ export class VOpBinding extends VPage<COpBinding> {
                 selected: observable.box(false), 
                 sections:[]
             });
-            post.organization.teams.forEach(v => {
-                item.teams.push({
-                    team: v,
-                    selected: observable.box(false),
-                    sections: []
+            if (organization !== undefined && organization.teams !== undefined) {
+                post.organization.teams.forEach(v => {
+                    item.teams.push({
+                        team: v,
+                        selected: observable.box(false),
+                        sections: []
+                    });
                 });
-            });
+            }
         }
         else {
             item.teams.splice(0);

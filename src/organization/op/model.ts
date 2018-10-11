@@ -35,6 +35,7 @@ export interface Usq {
     maps: string[];
     books: string[];
     histories: string[];
+    pendings: string[];
     queries: string[];
     actions: string[];
     sheets: Sheet[];

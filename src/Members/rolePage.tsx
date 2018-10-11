@@ -18,12 +18,12 @@ export class RolePage extends React.Component {
     private editRole() {
         nav.push(<EditRole />);
     }
-    private renderRoleApp(app:UnitApp, index:number) {
+    private renderRoleApp = (app:UnitApp, index:number) => {
         return <LMR className="py-2 px-3 align-items-center"
                 left={app.name}
                 right={<small className="text-muted">{app.discription}</small>} />
     }
-    private roleAppClick(app:UnitApp) {
+    private roleAppClick = (app:UnitApp) => {
         nav.push(<RoleApps />);
     }
     private addRoleApp() {

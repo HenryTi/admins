@@ -18,24 +18,24 @@ export class MemberPage extends React.Component {
     async onAssigned(value:any, orgValue:any):Promise<void> {
         await store.unitAssignMember(value);
     }
-    private renderMemberRole(role:Role) {
+    private renderMemberRole = (role:Role) => {
         let {name, discription} = role;
-        return <LMR className="py-1 px-2 align-items-center"
+        return <LMR className="py-2 px-3 align-items-center"
                 left={name}
                 right={<Muted>{discription}</Muted>} />
     }
     private roleClick(role:Role) {
         nav.push(<RoleApps role={role} />);
     }
-    private setRole() {
+    private setRole = () => {
         nav.push(<SetRole />);
     }
     render() {
         let roleUser = store.roleMember;
         let {nick, name, assigned, icon} = roleUser;
         let disp = <div>
-            <div><Muted>唯一名: </Muted>{name}</div>
-            <div><Muted>昵称: </Muted>{nick||<Muted>[无]</Muted>}</div>
+            <div><Muted>唯一名: </Muted> &nbsp; {name}</div>
+            <div><Muted>昵称: </Muted> &nbsp; {nick||<Muted>[无]</Muted>}</div>
         </div>;
         let rows:Prop[] = [
             '',
@@ -79,7 +79,7 @@ class SetRole extends React.Component {
         await store.loadMemberRoles();
     }
     private renderRole(role:Role, index:number) {
-        return <LMR className="py-1 px-2 align-items-center"
+        return <LMR className="py-2 px-3 align-items-center"
                 left={role.name}
                 right={<small className="text-muted">{role.discription}</small>} />
     }

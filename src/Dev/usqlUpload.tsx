@@ -66,8 +66,13 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
         evt.preventDefault();
         var files = (evt.target[0] as any).files;
         var data = new FormData();
+        /*
         for (let i in files) {
             data.append("file" + i, files[i]);
+        }
+        */
+        for (let file of files) {
+            data.append('files[]', file, file.name);
         }
   
         let url = store.usqlServer + 'usql-compile/' + this.props.id + '/debug/update';

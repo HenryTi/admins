@@ -10,7 +10,7 @@ import {NewRole} from './newRole';
 import {RolePage} from './rolePage';
 import {MembersPage} from './membersPage';
 
-const midClassName = classNames('d-flex', 'h-100', 'align-items-center', 'px-3', 'small', 'text-muted');
+const midClassName = classNames('d-flex', 'h-100', 'align-items-center', 'px-5', 'small', 'text-muted');
 
 @observer
 export class Members extends React.Component {
