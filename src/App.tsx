@@ -8,7 +8,7 @@ class App extends React.Component {
     async onLogined() {
         nav.clear();
         //nav.push(<StartPage />);
-        let cAdmin = new CAdmin();
+        let cAdmin = new CAdmin({});
         await cAdmin.start();
     }
     render() {

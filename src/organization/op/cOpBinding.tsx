@@ -2,13 +2,13 @@ import React from "react";
 import { Page, Controller, meInFrame } from "tonva-tools";
 import { List, Muted, LMR, FA } from "tonva-react-form";
 import { VOpBinding } from './vOpBinding';
-import { CAction, CQuery, CUsq, entitiesRes, centerApi } from "tonva-react-usql";
+import { CAction, CQuery, CUsq, centerApi, entityIcons } from "tonva-react-usql";
 import { Organization, Team, Section, Post, Sheet, App, Usq, To } from "./model";
 
 // 单据跟操作的绑定设置
 export class COpBinding extends Controller {
     constructor(unitxUsq: CUsq) {
-        super();
+        super({});
         this.unitxUsq = unitxUsq;
     }
 
@@ -250,11 +250,12 @@ export class COpBinding extends Controller {
             return <Muted className="px-3 pt-1 bg-light w-100">{caption}</Muted>
         }
         function itemList(items:any[], type:string, itemClick:(item:any)=>void, render:((item:any, icon:any)=>JSX.Element) = nameRender) {
-            let res = entitiesRes;
-            let {caption, icon} = res[type];
+            //let res = entitiesRes;
+            //let {caption, icon} = res[type];
+            let icon = entityIcons[type];
             return items && 
                 <List className="mt-3"
-                    header={headerCaption(caption)} 
+                    header={headerCaption(type)} 
                     items={items} 
                     item={{render:(item:any, index:number)=>render(item, icon), onClick: itemClick}} />;
         }

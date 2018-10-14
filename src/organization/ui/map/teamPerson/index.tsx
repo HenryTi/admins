@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Muted } from 'tonva-react-form';
 import { left0 } from 'tonva-tools';
 import { VMapMain, MapUI, Field, CMap }  from 'tonva-react-usql'; 
-import { dictionary as x } from '../../res';
 
 class CMapTeamPerson extends CMap {
     async searchOnKey(keyField:Field, param):Promise<number> {
@@ -27,15 +26,15 @@ const ui:MapUI = {
     //label: '部门员工对照表',
     keys: [
         {
-            content: ({name, id}:any) => <><Muted>{x.team}</Muted> {name}</>,
-            none: ()=>x.noStaff,
+            content: ({name, id}:any, x:any) => <><Muted>{x.team}</Muted> {name}</>,
+            none: (x:any)=>x.noStaff,
         },
         {
-            content: ({name, id}:any) => <><Muted>{x.staff}</Muted> {name} &nbsp; <Muted>{x.no} {left0(id, 4)}</Muted></>,
-            none: ()=>x.noPost,
+            content: ({name, id}:any, x:any) => <><Muted>{x.staff}</Muted> {name} &nbsp; <Muted>{x.no} {left0(id, 4)}</Muted></>,
+            none: (x:any)=>x.noPost,
         },
         {
-            content: ({title, id}:any) => <><Muted>{x.post}</Muted> {title}</>,
+            content: ({title, id}:any, x:any) => <><Muted>{x.post}</Muted> {title}</>,
             none: undefined,
         },
     ]

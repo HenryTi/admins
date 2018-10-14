@@ -12,7 +12,7 @@ export class COrganization extends CUsq {
 
     label = '岗位权限';
     icon = 'sitemap';
-    links: (Link|string)[];
+    links: (CLink|string)[];
 
     protected clearPrevPages() {
         // 保留回退按钮，所以，去掉下面这行
