@@ -12,18 +12,15 @@ interface State {
 }
 
 export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
-    private thoroughly:boolean = false;
+    private fileInput: HTMLInputElement;
+
     constructor(props) {
         super(props);
-        this.onSubmit = this.onSubmit.bind(this);
-        this.onFilesChange = this.onFilesChange.bind(this);
-        this.update = this.update.bind(this);
-        this.updateThoroughly = this.updateThoroughly.bind(this);
         this.state = {
             files: undefined,
         }
     }
-    onFilesChange(evt) {
+    private onFilesChange = (evt) => {
         let files:any[] = [];
         let len = evt.target.files.length;
         for (let i=0; i<len; i++) {
@@ -54,7 +51,7 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
             <div><Muted>修改日期: <EasyDate date={lastModifiedDate} /></Muted></div>
         </LMR>;
     }
-    fileClick(file) {
+    private fileClick = (file) => {
         let fr = new FileReader();
         fr.onload = function(f) {
             //alert(this.result);
@@ -62,21 +59,27 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
         }
         fr.readAsText(file, "utf8");
     }
-    async onSubmit(evt:React.FormEvent<any>) {        
+    private onSubmit = (evt:React.FormEvent<any>) => {
         evt.preventDefault();
-        var files = (evt.target[0] as any).files;
+    }
+
+    private async update(thoroughly:boolean) {
+        //var files = (evt.target[0] as any).files;
+        var files:FileList = this.fileInput.files;
         var data = new FormData();
         /*
         for (let i in files) {
             data.append("file" + i, files[i]);
         }
         */
-        for (let file of files) {
+        let len = files.length;
+        for (let i=0; i<len; i++) {
+            let file = files[i];
             data.append('files[]', file, file.name);
         }
   
-        let url = store.usqlServer + 'usql-compile/' + this.props.id + '/debug/update';
-        if (this.thoroughly === true) url += '-thoroughly';
+        let url = store.usqlServer + 'usql-compile/' + this.props.id + '/update';
+        if (thoroughly === true) url += '-thoroughly';
         try {
             let abortController = new AbortController();
             let res = await fetch(url, {
@@ -90,24 +93,30 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
             console.error('%s %s', url, e);
         }
     }
-    update() {
-        this.thoroughly = false;
+    private onUpdate = async () => {
+        let thoroughly = false;
+        await this.update(thoroughly);
     }
-    updateThoroughly() {
-        this.thoroughly = true;
+    private onUpdateThoroughly = async () => {
+        let thoroughly = true;
+        await this.update(thoroughly);
     }
     render() {
         let {files} = this.state;
         let fileList;
         if (files !== undefined) {
-            fileList = <List className="my-3" items={files} item={{render: this.fileRender, onClick: this.fileClick}}/>;
+            fileList = <List 
+                className="my-3" 
+                items={files} 
+                item={{render: this.fileRender, onClick: this.fileClick}}/>;
         }
         let button;
         if (files !== undefined && files.length > 0) {
             button = <div className="my-2 d-flex">
-                <Button type="submit" color="success" onClick={this.update}>优化编译</Button>
+                <Button type="submit" color="success" onClick={this.onUpdate}>优化编译</Button>
                 <div className="py-2 flex-grow-1" />
-                <Button type="submit" onClick={this.updateThoroughly} color="warning" outline={true}>完全编译</Button>
+                <Button type="submit" onClick={this.onUpdateThoroughly} 
+                    color="warning" outline={true}>完全编译</Button>
             </div>;
         }
         return <Page header="编译USQL">
@@ -115,7 +124,9 @@ export class UsqlUpload extends React.Component<DevModel.Usqldb, State> {
                 <div>请选择usql源代码文件</div>
                 <form className="my-1" encType="multipart/form-data" onSubmit={this.onSubmit}>
                     <div className="my-1">
-                        <input type="file" id="photo" className="w-100 form-control-file" name="files" multiple={true} onChange={this.onFilesChange} />
+                        <input ref={(fileInput) => this.fileInput=fileInput}type="file" id="photo" 
+                            className="w-100 form-control-file" name="files" multiple={true} 
+                            onChange={this.onFilesChange} />
                     </div>
                     {fileList}
                     {button}

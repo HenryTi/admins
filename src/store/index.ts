@@ -101,7 +101,7 @@ export class Store {
     }
 
     async restoreUnitApp(appId:number): Promise<void> {
-        await mainApi.unitDeleteApp(this.unit.id, appId, 0);
+        await mainApi.unitAddApp(this.unit.id, appId);
         let app = this.apps.find(v => v.id === appId);
         app.inUnit = 1;
     }
