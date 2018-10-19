@@ -1,6 +1,4 @@
 import * as React from 'react';
-import {observable} from 'mobx';
-import {observer} from 'mobx-react';
 import {Step, Field, Prop, PropGrid, Media} from 'tonva-react-form';
 import {UnitSpan, IdDates, ServerSpan, UsqSpan, AppSpan} from '../tools';
 import {Row} from './row';
