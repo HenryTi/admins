@@ -19,11 +19,16 @@ export class COrganization extends CUsq {
         //nav.clear();
     }
 
+    protected async loadEntites() {
+        // 只有赋Entity权限的地方，需要取全部的Entities，其它地方默认取user access，this.entities.loadAccess()
+        await this.entities.loadEntities();
+    }
+
     protected async internalStart() {
         await this.loadSchema();
         this.links= [
             '',
-            new CLink(new COpBinding(this)),
+            new CLink(new COpBinding(this, this.res)),
             '',
             this.linkFromName('map', 'teamPerson'),
             this.linkFromName('map', 'sectionTeam'),

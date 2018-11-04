@@ -4,7 +4,7 @@ import { IObservableValue, observable } from 'mobx';
 import { Page, VPage } from 'tonva-tools';
 import { Muted, LMR, FA, List } from 'tonva-react-form';
 import { COpBinding } from './cOpBinding';
-import { StateTo, Sheet, Organization, Post, Team, Section, To } from './model';
+import { StateTo, Sheet, Organization, Post, Team, Section, To, Entity } from './model';
 
 interface SelectablePost {
     post: Post;
@@ -206,9 +206,24 @@ export class VOpBinding extends VPage<COpBinding> {
         });
     }
 
-    async showEntry({sheet, opTos}:{sheet:Sheet, opTos:{[op:string]:To[]}}) {
-        this.sheet = sheet;
-        let {name, states} = sheet;
+    async showEntry({entity, opTos}:{entity:Entity, opTos:{[op:string]:To[]}}) {
+        this.sheet = entity;
+        let {name, states} = entity;
+        if (states === undefined) {
+            let tos = opTos['$'];
+            this.states = [{
+                name: '$',
+                caption: '允许岗位',
+                configable: true,
+                tos: tos,
+                tosText: observable.box<string[]>(this.tosTexts(tos)),
+            }];
+            this.openPageElement(<Page header={name + ' - 岗位'}>
+                {this.states.map(v => this.renderState(v))}
+            </Page>);
+            return;
+        }
+
         this.states = states.map(v => {
             let prefix = v.substr(0, 1);
             let caption: string | JSX.Element;
@@ -235,7 +250,7 @@ export class VOpBinding extends VPage<COpBinding> {
                 tos: tos,
                 tosText: observable.box<string[]>(this.tosTexts(tos)),
             };
-        })
+        });
         this.openPageElement(<Page header={'单据状态对应岗位 - ' + name} >
             {this.states.map(v => this.renderState(v))}
         </Page>);
@@ -317,10 +332,16 @@ export class VOpBinding extends VPage<COpBinding> {
         return <this.observablePostRow {...item} />;
     };
     private stateView: React.SFC<StateTo> = (state:StateTo) => {
-        let stateCaption = state.name;
-        if (stateCaption === '$') stateCaption = '[新开单]';
+        let {caption} = state;
+        /*
+        switch (state.name) {
+            case '-':  stateCaption = '允许岗位'; break;
+            case '$':  stateCaption = '[新开单]'; break;
+            default: stateCaption = state.name; break;
+        }
+        */
         let right = <button className="btn btn-sm btn-success" onClick={async ()=>await this.saveOps(state)}>保存</button>
-        return <Page header={`${this.sheet.name} - ${stateCaption}`}
+        return <Page header={`${this.sheet.name} - ${caption}`}
             back="close"
             right={right}>
             <div className="mx-3 my-2">

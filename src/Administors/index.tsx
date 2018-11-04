@@ -51,7 +51,7 @@ export default class AdministorsPage extends React.Component<{}, null> {
         else {
             content = <><b>{nick}</b> &nbsp; <small className="text-muted">{name}</small></>;
         }
-        return <LMR className="py-1 px-3 align-items-stretch"
+        return <LMR className="py-2 px-3 align-items-stretch"
             left={<Badge size="sm"><img src={icon|| appItemIcon} /></Badge>}>
             <div className="px-3">{content}</div>
         </LMR>;

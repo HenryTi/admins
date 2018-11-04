@@ -12,10 +12,15 @@ export interface App {
     usqs: Usq[];
 }
 
-export interface Sheet {
+export type EntityType = 'tuid' | 'sheet' | 'action' | 'map' | 'book' | 'query' | 'history' | 'pending';
+
+export interface Entity {
     usq: Usq;
     name: string;
-    states: string[];
+    states: string[];       // 非sheet的entity，只有一个state，is $
+}
+
+export interface Sheet extends Entity {
 }
 
 export interface Usq {
@@ -31,14 +36,21 @@ export interface Usq {
     date_init: Date;
     date_update: Date;
 
-    tuids: string[];
-    maps: string[];
-    books: string[];
-    histories: string[];
-    pendings: string[];
-    queries: string[];
-    actions: string[];
+    tuids: Entity[];
+    maps: Entity[];
+    books: Entity[];
+    histories: Entity[];
+    pendings: Entity[];
+    queries: Entity[];
+    actions: Entity[];
     sheets: Sheet[];
+}
+
+export interface EntityBlock {
+    items: Entity[];
+    type: EntityType;
+    itemClick?: (block:EntityBlock, entity:Entity) => Promise<void>;
+    itemRender?: ((item:any, icon:any)=>JSX.Element);
 }
 
 export interface Post {

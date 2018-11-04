@@ -23,18 +23,17 @@ class VMapTeamPerson extends VMapMain {
 
 const ui:MapUI = {
     CMap: CMapTeamPerson,
-    //label: '部门员工对照表',
     keys: [
         {
-            content: ({name, id}:any, x:any) => <><Muted>{x.team}</Muted> {name}</>,
+            content: ({name, id}:any, x:any) => <><Muted>{x.team} &nbsp; </Muted> {name}</>,
             none: (x:any)=>x.noStaff,
         },
         {
-            content: ({name, id}:any, x:any) => <><Muted>{x.staff}</Muted> {name} &nbsp; <Muted>{x.no} {left0(id, 4)}</Muted></>,
+            content: ({name, id}:any, x:any) => <><Muted>{x.staff} &nbsp; </Muted> {name} &nbsp; <Muted>{x.no} {left0(id, 4)}</Muted></>,
             none: (x:any)=>x.noPost,
         },
         {
-            content: ({title, id}:any, x:any) => <><Muted>{x.post}</Muted> {title}</>,
+            content: ({title, id}:any, x:any) => <><Muted>{x.post} &nbsp; </Muted> {title}</>,
             none: undefined,
         },
     ]

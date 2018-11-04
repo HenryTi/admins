@@ -1,21 +1,24 @@
 import React from "react";
-import { Page, Controller, meInFrame } from "tonva-tools";
+import { Page, Controller, meInFrame, VPage } from "tonva-tools";
 import { List, Muted, LMR, FA } from "tonva-react-form";
 import { VOpBinding } from './vOpBinding';
-import { CAction, CQuery, CUsq, centerApi, entityIcons } from "tonva-react-usql";
-import { Organization, Team, Section, Post, Sheet, App, Usq, To } from "./model";
+import { CAction, CQuery, CUsq, centerApi, entityIcons, ControllerUsq } from "tonva-react-usql";
+import { Organization, Team, Section, Post, Sheet, App, Usq, To, Entity, EntityBlock } from "./model";
+import { VAllPosts } from "./vAllPosts";
+import { VFullFunction } from "./vFullFunction";
 
 // 单据跟操作的绑定设置
-export class COpBinding extends Controller {
-    constructor(unitxUsq: CUsq) {
+export class COpBinding extends ControllerUsq {
+    /*
+    constructor(unitxUsq: CUsq, res:any) {
         super({});
         this.unitxUsq = unitxUsq;
-    }
+    }*/
 
     icon = <FA name="map-o" className="text-success" fixWidth={true} />;
     label = '岗位权限 - USQ对象';
 
-    private unitxUsq: CUsq;
+    //private unitxUsq: CUsq;
     private apps: App[];
     organizations: Organization[];
     teams: Team[];
@@ -50,7 +53,7 @@ export class COpBinding extends Controller {
     }
 
     private async buildPosts() {
-        let queryAllTeams = this.unitxUsq.cFromName('query', 'allteams') as CQuery;
+        let queryAllTeams = this.cUsq.cFromName('query', 'allteams') as CQuery;
         let ret:any[][] = await queryAllTeams.entity.query(undefined);
         this.teams = ret['teams'];
         this.organizations = ret['organization'];
@@ -109,13 +112,13 @@ export class COpBinding extends Controller {
         let p:number;
         for (let i=0; i<len;) {
             switch (lns[i]) {
-                case 'tuid': p = this.setNames(usq.tuids = [], lns, i); break;
-                case 'map': p = this.setNames(usq.maps = [], lns, i); break;
-                case 'book': p = this.setNames(usq.books = [], lns, i); break;
-                case 'history': p = this.setNames(usq.histories = [], lns, i); break;
-                case 'pending': p = this.setNames(usq.pendings = [], lns, i); break;
-                case 'query': p = this.setNames(usq.queries = [], lns, i); break;
-                case 'action': p = this.setNames(usq.actions = [], lns, i); break;
+                case 'tuid': p = this.setEntities(usq.tuids = [], lns, i, usq); break;
+                case 'map': p = this.setEntities(usq.maps = [], lns, i, usq); break;
+                case 'book': p = this.setEntities(usq.books = [], lns, i, usq); break;
+                case 'history': p = this.setEntities(usq.histories = [], lns, i, usq); break;
+                case 'pending': p = this.setEntities(usq.pendings = [], lns, i, usq); break;
+                case 'query': p = this.setEntities(usq.queries = [], lns, i, usq); break;
+                case 'action': p = this.setEntities(usq.actions = [], lns, i, usq); break;
                 case 'sheet': p = this.setSheets(usq.sheets = [], lns, i, usq); break;
                 default:
                     alert('unknown entity type: ' + lns[i]);
@@ -125,12 +128,19 @@ export class COpBinding extends Controller {
         }
     }
 
-    private setNames(names:string[], lines:string[], p:number):number {
+    private setEntities(entities:Entity[], lines:string[], p:number, usq:Usq):number {
         let len = lines.length;
         let i = p+1;
         for (; i<len; i++) {
             let ln = lines[i];
-            if (ln.length > 0) names.push(ln);
+            if (ln.length > 0) {
+                let name = ln;
+                entities.push({
+                    usq: usq,
+                    name: name,
+                    states: undefined
+                });
+            }
             else return i+1;
         }
         return i;
@@ -158,7 +168,7 @@ export class COpBinding extends Controller {
     }
 
     async saveSheetStatePosts(sheet:Sheet, stateName:string, toArr:{post:number, team:number, section:number}[]) {
-        let actionSaveEntityOpPost = this.unitxUsq.cFromName('action', 'saveentityoppost') as CAction;
+        let actionSaveEntityOpPost = this.cUsq.cFromName('action', 'saveentityoppost') as CAction;
         let {usq, name} = sheet;
         await actionSaveEntityOpPost.submit({
             usq: usq.id,
@@ -180,9 +190,9 @@ export class COpBinding extends Controller {
     }
 
     private appsView = () => <Page header={this.label}>
-        <div className="text-dark p-3 pl-5 small">
-            <div>说明</div>
-            <ol className="pl-0" style={{listStyleType: '1', lineHeight: '1.8'}}>
+        <div className="text-muted p-3 small">
+            <div style={{lineHeight:'1.8', fontWeight:'bold'}}>说明</div>
+            <ol className="pl-3" style={{listStyleType: '1', lineHeight: '1.8'}}>
                 <li >
                     下面是全部启用的APP。请选择
                 </li>
@@ -197,7 +207,8 @@ export class COpBinding extends Controller {
         <List items={this.apps} item={{render:this.appRender, onClick:this.appClick}} />
     </Page>;
 
-    private nameRender(name:string, icon:any) {
+    private entityRender(entity:Entity, icon:any) {
+        let {name} = entity;
         return <div className="px-3 py-2 align-items-center">{icon} &nbsp; {name}</div>
     }
     private sheetRender(sheet:Sheet, icon:any) {
@@ -206,6 +217,138 @@ export class COpBinding extends Controller {
             {icon} &nbsp; {name} <Muted> &nbsp; {sheet.states.join(', ')}</Muted>
         </div>
     }
+    private entityClick = async (block:EntityBlock, entity:Entity) => {
+        //alert('entity click');
+        let entityPosts = this.cUsq.cFromName('query', 'getEntityPost') as CQuery;
+        let ret = await entityPosts.entity.query({usq: entity.usq.id, entityName: entity.name});
+        let opTos:{[op:string]:To[]} = {};
+        for (let row of ret.ret) {
+            let {op, post, team, section} = row;
+            let opTo = opTos[op];
+            if (opTo === undefined) opTos[op] = opTo = [];
+            opTo.push({
+                post: this.postDict[post],
+                team: this.teamDict[team],
+                section: this.sectionDict[section],
+            });
+        }
+        this.showVPage(VOpBinding, {entity:entity, opTos:opTos});
+    }
+    private sheetClick = async (block:EntityBlock, sheet:Sheet) => {
+        this.sheetClickOld(sheet);
+    }
+
+    private sheetClickOld = async (sheet:Sheet) => {
+        let entityPosts = this.cUsq.cFromName('query', 'getEntityPost') as CQuery;
+        let ret = await entityPosts.entity.query({usq: sheet.usq.id, entityName: sheet.name});
+        let opTos:{[op:string]:To[]} = {};
+        for (let row of ret.ret) {
+            let {op, post, team, section} = row;
+            let opTo = opTos[op];
+            if (opTo === undefined) opTos[op] = opTo = [];
+            opTo.push({
+                post: this.postDict[post],
+                team: this.teamDict[team],
+                section: this.sectionDict[section],
+            });
+        }
+        this.showVPage(VOpBinding, {entity:sheet, opTos:opTos});
+    }
+
+    private renderSetting = (item:any, index:number) => {
+        let {icon, color, text} = item;
+        return <div className="px-3 py-2 align-items-center">
+            {<FA name={icon} fixWidth={true} className={color} />} &nbsp; {text}
+        </div>
+    }
+
+    private settingClick = (item:any, usq:Usq) => {
+        let {name} = item;
+        let V: new (coordinator) => VPage<COpBinding>;
+        switch (name) {
+            default: return;
+            case 'entity-by-all-post': V = VAllPosts; break;
+            case 'user-all-entities': V = VFullFunction; break;
+        }
+        this.showVPage(V, usq);
+    }
+    
+    private usqRender = (usq:Usq, index:number) => {
+        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = usq;
+        let nameRender = this.entityRender;
+        let blocks:EntityBlock[] = [
+            {items: tuids, type: 'tuid', itemClick: this.entityClick},
+            {items: sheets, type: 'sheet', itemClick: this.sheetClick, itemRender: this.sheetRender},
+            {items: actions, type: 'action', itemClick: this.entityClick},
+            {items: maps, type: 'map', itemClick: this.entityClick},
+            {items: books, type: 'book', itemClick: this.entityClick},
+            {items: queries, type: 'query', itemClick: this.entityClick},
+            {items: histories, type: 'history', itemClick: this.entityClick},
+            {items: pendings, type: 'pending', itemClick: this.entityClick},
+        ];
+
+        let settings:any[] = [
+            {name:'entity-by-all-post', icon: 'cog', color: 'text-success', text: '所有岗位可操作'},
+            {name: 'user-all-entities', icon: 'cog', color: 'text-success', text: '全功能用户'}
+        ];
+
+        // {icon} &nbsp; {name} <Muted> &nbsp; {sheet.states.join(', ')}</Muted>
+        return <div key={name} className="my-2">
+            <div className="px-3 font-weight-bold">{name}</div>
+            <List className="mt-3"
+                items={settings}
+                item={{
+                    key: (item:any)=>item.name, 
+                    render: this.renderSetting,
+                    onClick:(item:any)=>this.settingClick(item, usq) 
+                }}
+             />
+            {blocks.map(block => {
+                let {items, type, itemClick, itemRender} = block;
+                let icon = entityIcons[type];
+                return items && items.length>0 &&
+                    <List key={type} className="mt-3"
+                        header={<Muted className="px-3 pt-1 bg-light w-100">{this.res[type]||type}</Muted>} 
+                        items={items} 
+                        item={{
+                            key: (item:any)=>item.name, 
+                            render:(item:any, index:number)=>(itemRender || nameRender)(item, icon), 
+                            onClick: (item:Entity)=>itemClick(block, item)
+                        }} />;
+            })}
+        </div>;
+        /*
+        function headerCaption(caption:string):JSX.Element {
+            return <Muted className="px-3 pt-1 bg-light w-100">{caption}</Muted>
+        }
+        function itemList(items:any[], type:string, itemClick:(item:any)=>void, render:((item:any, icon:any)=>JSX.Element) = nameRender) {
+            //let res = entitiesRes;
+            //let {caption, icon} = res[type];
+            let icon = entityIcons[type];
+            return items && 
+                <List className="mt-3"
+                    header={headerCaption(type)} 
+                    items={items} 
+                    item={{render:(item:any, index:number)=>render(item, icon), onClick: itemClick}} />;
+        }
+            {itemList(tuids, 'tuid', this.tuidClick)}
+            {itemList(sheets, 'sheet', this.sheetClickOld, this.sheetRender)}
+            {itemList(actions, 'action', this.actionClick)}
+            {itemList(maps, 'map', this.mapClick)}
+            {itemList(books, 'book', this.bookClick)}
+            {itemList(queries, 'query', this.queryClick)}
+            {itemList(histories, 'history', this.historyClick)}
+            {itemList(pendings, 'pending', this.pendingClick)}
+        */
+    }
+
+    private appView = (app:App) => <Page header={app.name + '操作权限'}>
+        {
+            app.usqs.map((v, index) => this.usqRender(v, index))
+        }
+    </Page>;
+
+    /*
     private tuidClick = (entityName:string) => {
         alert(entityName);
     }
@@ -227,54 +370,5 @@ export class COpBinding extends Controller {
     private pendingClick = (entityName:string) => {
         alert(entityName);
     }
-    private sheetClick = async (sheet:Sheet) => {
-        let entityPosts = this.unitxUsq.cFromName('query', 'getEntityPost') as CQuery;
-        let ret = await entityPosts.entity.query({entityName: sheet.name});
-        let opTos:{[op:string]:To[]} = {};
-        for (let row of ret.ret) {
-            let {op, post, team, section} = row;
-            let opTo = opTos[op];
-            if (opTo === undefined) opTos[op] = opTo = [];
-            opTo.push({
-                post: this.postDict[post],
-                team: this.teamDict[team],
-                section: this.sectionDict[section],
-            });
-        }
-        this.showVPage(VOpBinding, {sheet:sheet, opTos:opTos});
-    }
-    private usqRender = (usq:Usq, index:number) => {
-        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = usq;
-        let nameRender = this.nameRender;
-        function headerCaption(caption:string):JSX.Element {
-            return <Muted className="px-3 pt-1 bg-light w-100">{caption}</Muted>
-        }
-        function itemList(items:any[], type:string, itemClick:(item:any)=>void, render:((item:any, icon:any)=>JSX.Element) = nameRender) {
-            //let res = entitiesRes;
-            //let {caption, icon} = res[type];
-            let icon = entityIcons[type];
-            return items && 
-                <List className="mt-3"
-                    header={headerCaption(type)} 
-                    items={items} 
-                    item={{render:(item:any, index:number)=>render(item, icon), onClick: itemClick}} />;
-        }
-        return <div key={name} className="my-2">
-            <div className="px-3 font-weight-blid">{name}</div>
-            {itemList(tuids, 'tuid', this.tuidClick)}
-            {itemList(sheets, 'sheet', this.sheetClick, this.sheetRender)}
-            {itemList(actions, 'action', this.actionClick)}
-            {itemList(maps, 'map', this.mapClick)}
-            {itemList(books, 'book', this.bookClick)}
-            {itemList(queries, 'query', this.queryClick)}
-            {itemList(histories, 'history', this.historyClick)}
-            {itemList(pendings, 'pending', this.pendingClick)}
-        </div>;
-    }
-
-    private appView = (app:App) => <Page header={app.name + '操作权限'}>
-        {
-            app.usqs.map((v, index) => this.usqRender(v, index))
-        }
-    </Page>;
+    */
 }

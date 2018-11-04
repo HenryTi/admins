@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid, FA} from 'tonva-react-form';
-import {nav, Page, PagedItems} from 'tonva-tools';
+import {nav, Page, PageItems} from 'tonva-tools';
 import {appIcon, appItemIcon} from '../consts';
 import {IdDates, UnitSpan} from '../tools';
 import {UnitApp} from '../model';

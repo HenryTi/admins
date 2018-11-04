@@ -6,7 +6,7 @@ import {Container, ButtonGroup,
     Row, Col, Button, Form, FormGroup, Label, Input, 
     FormText, FormFeedback} from 'reactstrap';
 import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid} from 'tonva-react-form';
-import {nav, Page, PagedItems} from 'tonva-tools';
+import {nav, Page, PageItems} from 'tonva-tools';
 import {appIcon, appItemIcon} from '../consts';
 import {IdDates, UnitSpan} from '../tools';
 import {mainApi} from '../api';
@@ -14,7 +14,7 @@ import {store} from '../store';
 import {UnitApp} from '../model';
 import {Info} from './info';
 
-class PagedApps extends PagedItems<UnitApp> {
+class PageApps extends PageItems<UnitApp> {
     private unitId:number;
     constructor(unitId:number) {
         super();
@@ -33,13 +33,13 @@ class PagedApps extends PagedItems<UnitApp> {
 
 @observer
 export class NewApp extends React.Component {
-    private apps: PagedApps;
+    private apps: PageApps;
     constructor(props) {
         super(props);
         this.onSearch = this.onSearch.bind(this);
         this.appClick = this.appClick.bind(this);
         this.appActed = this.appActed.bind(this);
-        this.apps = new PagedApps(store.unit.id);
+        this.apps = new PageApps(store.unit.id);
     }
     private async onSearch(key:string) {
         await this.apps.first(key);
