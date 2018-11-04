@@ -198,17 +198,3 @@ export class Store {
 };
 
 export const store = new Store();
-
-/*
-autorun(async () => {
-    let user = nav.user;
-    if (user === undefined) {
-        console.log('autorun: user has logged out');
-        return;
-    }
-
-    console.log('autorun login');
-    store.init();
-    await store.loadUnit();
-});
-*/
