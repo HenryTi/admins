@@ -70,15 +70,15 @@ export class VAllPosts extends VPage<COpBinding> {
     }
 
     private saveChange = async () => {
-        let checkedEntities:{entity:string}[] = [];
+        let entities:{entity:string}[] = [];
         for (let i in this.checked) {
             if (this.checked[i].checked !== true) continue;
-            checkedEntities.push({entity: i});
+            entities.push({entity: i});
         }
         let saveEntityOpForAll = this.controller.cUsq.cFromName('action', 'saveEntityOpForAll') as CAction;
         let ret = await saveEntityOpForAll.entity.submit({
             usq: this.usq.id,
-            entities: checkedEntities,
+            entities: entities,
         });
         this.ceasePage();
         this.openPageElement(<Page header="所有岗位可操作" back="close">
