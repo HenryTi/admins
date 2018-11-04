@@ -36,20 +36,17 @@ export class NewApp extends React.Component {
     private apps: PageApps;
     constructor(props) {
         super(props);
-        this.onSearch = this.onSearch.bind(this);
-        this.appClick = this.appClick.bind(this);
-        this.appActed = this.appActed.bind(this);
         this.apps = new PageApps(store.unit.id);
     }
-    private async onSearch(key:string) {
+    private onSearch = async (key:string) => {
         await this.apps.first(key);
     }
-    private appClick(app:UnitApp) {
+    private appClick = (app:UnitApp) => {
         nav.push(<Page header="App详细信息">
             <Info app={app} appActed={this.appActed}/>
         </Page>);
     }
-    private appActed(appId:number, inUnit:number) {
+    private appActed = (appId:number, inUnit:number) => {
         let apps = this.apps.items as IObservableArray<UnitApp>; //.replace .find(v => v.id === appId);
         let app = apps.find(v => v.id === appId);
         app.inUnit = inUnit;
@@ -72,13 +69,14 @@ export class NewApp extends React.Component {
         </LMR>;
     }
     render() {
+        let items = this.apps.items;
         let center = <SearchBox onSearch={this.onSearch} 
             className="w-100 mx-1" 
             placeholder="搜索App" 
             maxLength={100} />;
         return <Page header={center}>
             <List
-                items={this.apps.items} 
+                items={items}
                 item={{onClick:this.appClick, render:this.renderApp}}
                 before="搜索App名字" />
         </Page>;
