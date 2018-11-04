@@ -40,7 +40,9 @@ export class CAdmin extends Controller {
             this.showVPage(VAdmin);
             return;
         }
-        /*
+        await store.loadUnit();
+        this.showVPage(VAdmin);
+    /*
         let user = nav.user;
         if (user === undefined) {
             console.log('autorun: user has logged out');
@@ -49,6 +51,7 @@ export class CAdmin extends Controller {
     
         console.log('autorun login');
         */
+       /*
         setTimeout(async () => {
             // 等待 tonva-tools 里面的initSubWin的nav.user的赋值
             // 这个地方实际上有问题的，不应该这么写。程序逻辑顺序逻辑错误。
@@ -56,6 +59,7 @@ export class CAdmin extends Controller {
             await store.loadUnit();
             this.showVPage(VAdmin);
         }, 200);
+        */
     }
 }
 
