@@ -34,6 +34,15 @@ export class RolePage extends React.Component {
     }
     render() {
         let {name, discription, count} = store.role;
+        let onMembersClick, membersLeft, membersRight;
+        if (count===undefined || count===null || count===0) {
+            membersLeft = <small className="text-muted">无用户</small>;
+        }
+        else {
+            membersLeft = `共有 ${count} 用户`;
+            membersRight = <div><FA name="chevron-right" /></div>;
+            onMembersClick = this.members;
+        }
         let rows:Prop[] = [
             '',
             {
@@ -44,14 +53,8 @@ export class RolePage extends React.Component {
             '',
             {
                 type: 'component', 
-                component: <LMR className="py-2"
-                    left={
-                        count===undefined || count === 0 ?
-                            <small className="text-muted">无用户</small>:
-                            '共有 ' + count + ' 用户'
-                    }
-                    right={<div><FA name="chevron-right" /></div>} />,
-                onClick: this.members,
+                component: <LMR className="py-2" left={membersLeft} right={membersRight} />,
+                onClick: onMembersClick,
             },
             '=',
         ];
@@ -62,7 +65,7 @@ export class RolePage extends React.Component {
             <List
                 items={store.roleApps} 
                 item={{render: this.renderRoleApp, onClick:this.roleAppClick}}
-                none={<small className="text-muted">没有APP, 点击右上角按钮选择APP</small>} />
+                none={<small className="text-muted px-3 py-1">没有APP, 点击右上角按钮选择APP</small>} />
         </Page>
     }
 }

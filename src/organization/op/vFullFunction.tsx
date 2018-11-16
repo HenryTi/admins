@@ -5,8 +5,6 @@ import { Usq } from './model';
 import { List, FA, SearchBox } from 'tonva-react-form';
 import { observable } from 'mobx';
 import { CMap, CQuery, QueryPageItems, Query, Tuid, CTuid } from 'tonva-react-usql';
-import { observer } from 'mobx-react';
-
 
 export class PageUsers extends QueryPageItems {
     protected setPageStart(item:any) {
@@ -57,9 +55,13 @@ export class VFullFunction extends VPage<COpBinding> {
     private onCancelStop = () => this.closePage();
 
     private addClick = async () => {
+        let user = await this.controller.callSearchUser(this.usq);
+        this.onUserSelected(user);
+        /*
         let searchUser = this.controller.cUsq.cFromName('query', 'SearchUser') as CQuery;
         this.pageUsers = new PageUsers(searchUser.entity);
         this.openPage(this.usersView);
+        */
     }
 
     private renderUser = (item:any, index:number) => {
@@ -80,7 +82,7 @@ export class VFullFunction extends VPage<COpBinding> {
         this.closePage(2);
     }
     private onCancelFully = () => {this.backPage()}
-    private onUserClick = (item:any) => {
+    private onUserSelected = (item:any) => {
         this.openPageElement(<Page header="确认">
             <div className="p-3">
                 <div><b className="text-danger h4">{item.name}</b> 将设置为全功能用户。只有系统管理员或者测试人员才需要全功能，可以操作所有数据。<br/>请确认。</div>
@@ -100,7 +102,7 @@ export class VFullFunction extends VPage<COpBinding> {
             <List
                 before="搜索用户名"
                 items={this.pageUsers} 
-                item={{render: this.renderSelectUser, onClick:this.onUserClick}} />
+                item={{render: this.renderSelectUser, onClick:this.onUserSelected}} />
         </Page>;
     };
 }

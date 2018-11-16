@@ -6,6 +6,7 @@ import { CAction, CQuery, CUsq, centerApi, entityIcons, ControllerUsq } from "to
 import { Organization, Team, Section, Post, Sheet, App, Usq, To, Entity, EntityBlock } from "./model";
 import { VAllPosts } from "./vAllPosts";
 import { VFullFunction } from "./vFullFunction";
+import { VSearchUser } from "./vSearchUser";
 
 // 单据跟操作的绑定设置
 export class COpBinding extends ControllerUsq {
@@ -187,6 +188,11 @@ export class COpBinding extends ControllerUsq {
 
     private appClick = (app:App) => {
         this.openPage(<this.appView {...app} />)
+    }
+
+    async callSearchUser(usq:Usq): Promise<any> {
+        let user = await this.vCall(VSearchUser, meInFrame.unit);
+        return user;
     }
 
     private appsView = () => <Page header={this.label}>

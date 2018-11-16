@@ -69,19 +69,19 @@ export default {
             }
         },
         sectionTeam: {
-            label: '大部团队对照表',
+            label: '大部-团队对照表',
         },
         teamPerson: {
-            label: '员工岗位对照表',
+            label: '员工-岗位对照表',
             fields: {
             },
             confirmDelete: _.template('真的要删除${label}吗'),
         },
         teamOrganization: {
-            label: '团队机构对照表',
+            label: '团队-机构对照表',
         },
         teamPosts: {
-            label: '团队岗位对照表',
+            label: '团队-岗位对照表',
         },
         person: {
             label: '员工',
