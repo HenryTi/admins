@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { COpBinding } from "./cOpBinding";
 import { VPage, Page, PageItems } from "tonva-tools";
-import { Usq } from './model';
 import { SearchBox, List } from 'tonva-react-form';
 import { centerApi } from 'tonva-react-usql';
+import { COpBinding } from "./cOpBinding";
 
 export class VSearchUser extends VPage<COpBinding> {
     private unit:number;

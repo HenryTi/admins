@@ -61,8 +61,9 @@ class MainApi extends CenterApi {
         return await this.get('unit/apps', {unit:unit});
     }
 
-    async unitAddApp(unit:number, app:number):Promise<void> {
-        await this.post('unit/add-app', {unit:unit, app:app});
+    async unitAddApp(unit:number, app:number):Promise<number> {
+        let ret = await this.post('unit/add-app', {unit:unit, app:app});
+        return ret;
     }
 
     async unitDeleteApp(unit:number, app:number, deleted:number):Promise<void> {

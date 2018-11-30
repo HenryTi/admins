@@ -100,15 +100,19 @@ export class Store {
         app.inUnit = 0;
     }
 
-    async restoreUnitApp(appId:number): Promise<void> {
-        await mainApi.unitAddApp(this.unit.id, appId);
+    async restoreUnitApp(appId:number): Promise<number> {
+        let ret = await mainApi.unitAddApp(this.unit.id, appId);
+        if (ret <= 0) return ret;
         let app = this.apps.find(v => v.id === appId);
         app.inUnit = 1;
+        return 1;
     }
 
-    async addUnitApp(app:UnitApp): Promise<void> {
-        await mainApi.unitAddApp(this.unit.id, app.id);
+    async addUnitApp(app:UnitApp): Promise<number> {
+        let ret = await mainApi.unitAddApp(this.unit.id, app.id);
+        if (ret <= 0) return ret;
         this.apps.push(app);
+        return 1;
     }
 
     async loadRoles(): Promise<void> {

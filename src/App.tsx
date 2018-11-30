@@ -1,6 +1,5 @@
 import * as React from 'react';
-import {nav, NavView, Page, Action, DropdownActions, meInFrame} from 'tonva-tools';
-//import {StartPage} from './Admin';
+import { nav, NavView } from 'tonva-tools';
 import { CAdmin } from './Admin';
 import './App.css';
 

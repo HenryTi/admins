@@ -5,19 +5,15 @@ import {observer} from 'mobx-react';
 import {Step, Field, Prop, PropGrid, Media, 
     TonvaForm, FormRow, SubmitResult, Muted} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
-import {UnitSpan, IdDates, ServerSpan, UsqSpan, AppSpan} from '../tools';
-import {Row} from './row';
-import {appIcon, appItemIcon} from '../consts';
+import {ServerSpan} from '../tools';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {StringValueEdit} from '../tools';
-import {ObjViewProps} from './ObjView';
 import {createIdPick, IdPickProps} from '../createIdPick';
-import {devApi} from '../api';
 
 const ServerCaption = (item:DevModel.Server) => {
     let {discription, cloud, ip} = item;
-    return <>{item.discription} {item.cloud} {item.ip}</>;
+    return <>{discription} {cloud} {ip}</>;
 }
 
 const idPickServerProps: IdPickProps = {
@@ -31,7 +27,7 @@ const idPickServerProps: IdPickProps = {
         await store.dev.searchServer.more();
     },
     row: (item:DevModel.Server, index:number) => {
-        return <div><ServerCaption {...item} /></div>;
+        return <div className="px-3 py-2"><ServerCaption {...item} /></div>;
     },
 };
 

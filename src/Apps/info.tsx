@@ -66,7 +66,8 @@ export class Info extends React.Component<{app:UnitApp, appActed?:(appId:number,
         let {id, unit, inUnit} = app;
         let newInUnit:number = 1;
         if (inUnit === 0) {
-            await store.restoreUnitApp(id);
+            let ret = await store.restoreUnitApp(id);
+            if (ret <= 0) alert('app 或者 usq 没有定义 service');
         }
         else if (inUnit === 1) {
             await store.stopUnitApp(id);
@@ -76,7 +77,8 @@ export class Info extends React.Component<{app:UnitApp, appActed?:(appId:number,
             let newApp:UnitApp = _.clone(app);
             newApp.id = id;
             newApp.inUnit = 1;
-            await store.addUnitApp(newApp);
+            let ret = await store.addUnitApp(newApp);
+            if (ret <= 0) alert('app 或者 usq 没有定义 service');
         }
         if (appActed !== undefined) {
             appActed(id, newInUnit);

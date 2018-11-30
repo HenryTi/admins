@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Page, VPage } from 'tonva-tools';
 import { List, FA } from 'tonva-react-form';
-import { CUsq, Link, CLink } from "tonva-react-usql";
+import { CUsq, Link, CLink, CApp } from "tonva-react-usql";
 import ui from './ui';
 import { COpBinding } from './op';
 
 export class COrganization extends CUsq {
     constructor() {
-        super('$$$/$unitx', 0, 0, undefined, ui);
+        super(undefined, '$$$/$unitx', 0, 0, undefined, ui);
     }
 
     label = '岗位权限';
