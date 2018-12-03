@@ -131,6 +131,7 @@ class Apps extends ObjItems<DevModel.App> {
             return {id: id, access: [access]};
         });
         allUsqs.push(...usqs);
+        console.log('appBindUsq', allUsqs);
         //await devApi.appBindUsq(this.store.unit.id, this.cur.id, usqs);
         await devApi.appBindUsq(this.store.unit.id, this.cur.id, allUsqs);
         for (let usq of usqs) {
