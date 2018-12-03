@@ -16,14 +16,14 @@ import {NewService, ServiceInfo} from './servicePage';
 
 @observer
 class Info extends React.Component<DevModel.App> {
-    @observable private apis:ListProp = {label: '关联Usq', type: 'list', list: undefined, row: UsqRow};
+    @observable private usqs:ListProp = {label: '关联Usq', type: 'list', list: undefined, row: UsqRow};
     componentWillMount() {
         store.dev.services.cur = undefined;
     }
     async componentDidMount() {
         await store.dev.apps.loadCurApis();
         await store.dev.services.loadAppServices(this.props.id);
-        this.apis.list = store.dev.apps.usqs;
+        this.usqs.list = store.dev.apps.usqs;
     }
     render() {
         let {unit, name, discription, icon, date_init, date_update} = this.props;
@@ -36,7 +36,7 @@ class Info extends React.Component<DevModel.App> {
             {type: 'component', component: <Media icon={icon || appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
-            this.apis,
+            this.usqs,
             '',
             {
                 type: 'component', 
@@ -142,14 +142,7 @@ class AppUsqs extends React.Component {
     @observable anySelected: boolean = false;
     private _list: List;
 
-    constructor(props) {
-        super(props);
-        this.row = this.row.bind(this);
-        this.ref = this.ref.bind(this);
-        //this.removeBind = this.removeBind.bind(this);
-        this.onSelect = this.onSelect.bind(this);
-    }
-    ref(list:List) {
+    private ref = (list:List) => {
         this._list = list;
     }
     /*
@@ -157,10 +150,10 @@ class AppUsqs extends React.Component {
         let apiIds:number[] = this._list.selectedItems.map(v => v.id);
         await store.dev.apps.appBindApi(apiIds, false);
     }*/
-    onSelect(item: DevModel.App, isSelected:boolean, anySelected:boolean) {
+    private onSelect = (item: DevModel.App, isSelected:boolean, anySelected:boolean) => {
         this.anySelected = anySelected;
     }
-    row(item: DevModel.App) {
+    private row = (item: DevModel.App) => {
         return <LMR className="p-2" right={<small className="text-muted">{item.discription}</small>}>
             {item.name}
         </LMR>;

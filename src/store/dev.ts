@@ -126,7 +126,13 @@ class Apps extends ObjItems<DevModel.App> {
     }*/
     // if apis === undefined, then unbind
     public async appBindUsq(usqs:{id:number, access:string[]}[]) {
-        await devApi.appBindUsq(this.store.unit.id, this.cur.id, usqs);
+        let allUsqs:{id:number, access:string[]}[] = this.usqs.map(v => {
+            let {id, access} = v;
+            return {id: id, access: [access]};
+        });
+        allUsqs.push(...usqs);
+        //await devApi.appBindUsq(this.store.unit.id, this.cur.id, usqs);
+        await devApi.appBindUsq(this.store.unit.id, this.cur.id, allUsqs);
         for (let usq of usqs) {
             let index = this.usqs.findIndex(a => a.id === usq.id);
             if (index>=0) this.usqs.splice(index, 1);
