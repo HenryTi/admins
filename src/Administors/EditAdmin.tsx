@@ -1,16 +1,19 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {Container, Row, Col, Card, CardBody, CardTitle, CardSubtitle, CardText} from 'reactstrap';
-import {nav, Page, ValidForm, FormSchema, FormFields, Field} from 'tonva-tools';
+import {nav, Page, Schema, UiSchema, ItemSchema, UiCheckItem, UiButton, ButtonSchema, Form, Context} from 'tonva-tools';
 import {store} from '../store';
-import {mainApi} from '../api';
 import { UnitAdmin } from '../model/index';
+//import {mainApi} from '../api';
+//, ValidForm, FormSchema, FormFields, Field
 
 @observer
 export default class EditAdmin extends React.Component {
-    private schema:FormSchema;
-    private async onSubmit(values:any) {
-        let {isOwner, isAdmin} = values;
+    private schema:Schema;
+    private uiSchema: UiSchema;
+
+    private async onSubmit(name:string, context:Context) {
+        let {isOwner, isAdmin} = context.form.data;
         await store.admins.unitSetAdmin(isOwner, isAdmin);
         nav.pop();
     }
@@ -18,6 +21,20 @@ export default class EditAdmin extends React.Component {
         let {unit} = store;
         let {isRoot, isOwner, isAdmin} = unit;
         let unitAdmin = store.admins.cur;
+        let owner:ItemSchema = {name: 'isOwner', type: 'boolean'};
+        let admin:ItemSchema = {name: 'isAdmin', type: 'boolean'};
+        let submit:ButtonSchema = {name: 'submit', type: 'submit'};
+        if (isRoot === 1) this.schema = [owner, admin, submit];
+        else if (isOwner === 1) this.schema = [admin, submit];
+
+        this.uiSchema = {
+            items: {
+                'isOwner': {widget: 'checkbox', label: '高管', trueValue:1, falseValue:0} as UiCheckItem,
+                'isAdmin': {widget: 'checkbox', label: '管理员', trueValue:1, falseValue:0} as UiCheckItem,
+                'submit': {widget: 'button', label: '提交'} as UiButton,
+            }
+        };
+        /*
         let fields: Field[] = [];
         let ownerField: Field = {
             type: 'checkbox',
@@ -37,17 +54,18 @@ export default class EditAdmin extends React.Component {
         }
         else if (isOwner === 1) {
             fields.push(adminField);
-        }
+        }        
         this.schema = new FormSchema({
             fields: fields,
             onSumit: this.onSubmit.bind(this),
             submitText: '提交'
         });
+        */
     }
     render() {
         return <Page header='权限'>
             <Fellow {...store.admins.cur} />
-            <ValidForm formSchema={this.schema} />
+            <Form schema={this.schema} uiSchema={this.uiSchema} onButtonClick={this.onSubmit} />
         </Page>;
     }
 }

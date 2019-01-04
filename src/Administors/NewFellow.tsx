@@ -1,17 +1,28 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {Card, CardHeader, CardBody, CardText, CardTitle, Button,
-    Container, Row, Col} from 'reactstrap';
-import {nav, Page, FormSchema, SubmitReturn, ValidForm, InputSchema} from 'tonva-tools';
-import {TonvaForm, FormRow, SubmitResult} from 'tonva-react-form';
-import {appIcon, appItemIcon} from '../consts';
-import {UnitApps, UnitAdmin} from '../model';
+//import {//Card, CardHeader, CardBody, CardText, CardTitle, Button,
+    //Container, Row, Col} from 'reactstrap';
+import {nav, Page, Context, Form, Schema, UiSchema, UiTextItem} from 'tonva-tools';
+//import {TonvaForm, FormRow, SubmitResult} from 'tonva-react-form';
+//import {appIcon, appItemIcon} from '../consts';
+//import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
-import {mainApi} from '../api';
+//import {mainApi} from '../api';
 
 @observer
 export default class NewFellowPage extends React.Component<{isOwner:boolean, isAdmin:boolean}> {
-    private form: TonvaForm;
+    //private form: TonvaForm;
+    private schema: Schema = [
+        {name:'user', type:'string', required:true},
+        {name:'submit', type:'submit'}
+    ]
+    private uiSchema: UiSchema = {
+        items: {
+            user: {widget:'text', maxLength: 100, placeholder: '用户名', label: '邀请成员'} as UiTextItem,
+            submit: {widget:'button', label: '邀请'}
+        }
+    }
+    /*
     private formRows:FormRow[] = [
         {
             label: '用户名',
@@ -40,21 +51,16 @@ export default class NewFellowPage extends React.Component<{isOwner:boolean, isA
         onSumit: this.onSendInvitation,
         submitText: '邀请'
     });
-    constructor(props) {
-        super(props);
-        this.onSendInvitation = this.onSendInvitation.bind(this);
-    }
-    private async onSendInvitation(values:any): Promise<SubmitResult | undefined> {
+    */
+    private onSendInvitation = async (name:string, context:Context): Promise<string> => {
         let {isOwner, isAdmin} = this.props;
-        let user = values['user'];
+        let user = context.form.data['user'];
         let ret = await store.admins.addNew(user, isOwner?1:0, isAdmin?1:0);
         if (ret !== undefined) {
             nav.pop();
+            return;
         }
-        else {
-            this.form.formView.setError('user', user + '没有关注小号');
-        }
-        return;
+        return user + '没有关注小号';
         /*
         let msg = {a: 1, b: 'ddd'};
         let toName = values['user'];
@@ -79,15 +85,14 @@ export default class NewFellowPage extends React.Component<{isOwner:boolean, isA
         let {isOwner, isAdmin} = this.props;
         let caption = isOwner? "高管" : "管理员";
         return <Page header={'新增' + caption}>
-            <Container>
-                <Row>
-                    <Col className='my-4 text-info'>
-                        只有关注本小号的用户，才能成为{caption}
-                    </Col>
-                </Row>
-                <TonvaForm ref={f=>this.form=f} formRows={this.formRows} onSubmit={this.onSendInvitation} />
-            </Container>
+            <div className="container">
+                <div className='my-4 text-info'>
+                    只有关注本小号的用户，才能成为{caption}
+                </div>
+                <Form schema={this.schema} uiSchema={this.uiSchema} onButtonClick={this.onSendInvitation}/>
+            </div>
         </Page>;
     }
 }
 // <ValidForm formSchema={this.schema} />
+//<TonvaForm ref={f=>this.form=f} formRows={this.formRows} onSubmit={this.onSendInvitation} />

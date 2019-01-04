@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button} from 'reactstrap';
-import {nav, Page, ValidForm, Field, FormFields, FormSchema} from 'tonva-tools';
+import {nav, Page} from 'tonva-tools';
 import {FormRow, FormView, TonvaForm, Step, MultiStep, DropdownActions, Action, List, FA, SubmitResult} from 'tonva-react-form';
 import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
@@ -23,10 +23,6 @@ export interface ObjViewProps<T extends DevModel.ObjBase> {
 
 @observer
 export default class DevObjs<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
-    constructor(props) {
-        super(props);
-        this.itemClick = this.itemClick.bind(this);
-    }
     async componentDidMount() {
         await this.props.items().load();
     }
@@ -37,7 +33,7 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
         this.props.items().cur = undefined;
         nav.push(<New {...this.props} />);
     }
-    itemClick(item:T) {
+    itemClick = (item:T) => {
         this.props.items().cur = observable(item);
         nav.push(<Info {...this.props} />);
     }
