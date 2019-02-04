@@ -1,10 +1,6 @@
 import * as React from 'react';
 import {IObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
-import {Container, ButtonGroup,
-    ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem,
-    Row, Col, Button, Form, FormGroup, Label, Input, 
-    FormText, FormFeedback} from 'reactstrap';
 import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid} from 'tonva-react-form';
 import {nav, Page, PageItems} from 'tonva-tools';
 import {appIcon, appItemIcon} from '../consts';

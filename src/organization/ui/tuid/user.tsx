@@ -19,7 +19,7 @@ class CUserSelect extends CTuidSelect {
 
 const ui:TuidUI = {
     CTuidSelect: CUserSelect,
-    inputContent: (item:any) => {return <>{item.name}</>},
+    content: (item:any) => {return <>{item.name}</>},
 }
 
 export default ui;

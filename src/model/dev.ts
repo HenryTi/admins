@@ -7,7 +7,7 @@ export namespace DevModel {
         date_update: Date;
     }
 
-    export interface Usq extends ObjBase {
+    export interface UQ extends ObjBase {
         name: string;
         discription: string;
         access: string;
@@ -32,7 +32,7 @@ export namespace DevModel {
         ip: string;
     }
 
-    export interface Usqldb extends ObjBase {
+    export interface Uqdb extends ObjBase {
         name: string;
         dbtype: string;
         usq: number;

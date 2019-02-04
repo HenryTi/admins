@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {Button} from 'reactstrap';
 import {List, Media, LMR, FA, PropGrid, Prop} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
 import {StringValueEdit} from '../tools';
@@ -57,7 +56,7 @@ export class RolePage extends React.Component {
             },
             '=',
         ];
-        let right = <Button color='success' size='sm' onClick={()=>this.addRoleApp()}><FA name="plus" /> APP</Button>;
+        let right = <button className="btn btn-success btn-sm" onClick={()=>this.addRoleApp()}><FA name="plus" /> APP</button>;
         return <Page header="角色" right={right}>
             <PropGrid rows={rows} values={{}} />
             <div className="px-3 py-1"><small><FA name="angle-double-right" /> 可用APP列表</small></div>
@@ -134,7 +133,7 @@ class RoleApps extends React.Component {
         nav.pop();
     }
     render() {
-        let right = <Button color="success" size="sm" onClick={this.submit}>保存</Button>;
+        let right = <button className="btn btn-success btn-sm" onClick={this.submit}>保存</button>;
         let apps = store.apps;
         let roleApps = store.roleApps;
         return <Page header="选择APP" right={right}>

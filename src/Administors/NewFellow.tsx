@@ -1,13 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-//import {//Card, CardHeader, CardBody, CardText, CardTitle, Button,
-    //Container, Row, Col} from 'reactstrap';
 import {nav, Page, Context, Form, Schema, UiSchema, UiTextItem} from 'tonva-tools';
-//import {TonvaForm, FormRow, SubmitResult} from 'tonva-react-form';
-//import {appIcon, appItemIcon} from '../consts';
-//import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
-//import {mainApi} from '../api';
 
 @observer
 export default class NewFellowPage extends React.Component<{isOwner:boolean, isAdmin:boolean}> {

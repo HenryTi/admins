@@ -1,6 +1,4 @@
 import * as React from 'react';
-import {observer} from 'mobx-react';
-import {Button} from 'reactstrap';
 import {List, LMR, FA, TonvaForm, SubmitResult, FormRow} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
 import {Role} from '../model';

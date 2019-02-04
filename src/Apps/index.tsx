@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {Button} from 'reactstrap';
 import {FormRow, FormView, TonvaForm, Step, MultiStep, DropdownActions, 
     Action, List, FA, SubmitResult, LMR, Badge} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
@@ -39,7 +38,9 @@ export default class AppsPage extends React.Component {
         nav.push(<NewApp {...this.props} />);
     }
     render() {
-        let right = <Button color='secondary' size='sm' onClick={()=>this.newItem()}><FA name="plus" /></Button>;
+        let right = <button 
+            className='btn btn-secondary btn-sm' 
+            onClick={()=>this.newItem()}><FA name="plus" /></button>;
         return <Page header="启停App" right={right}>
             <List items={store.apps} item={{render: this.itemRender, onClick: this.appClick}} />
         </Page>;

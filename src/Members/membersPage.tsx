@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {Button} from 'reactstrap';
 import {List, LMR, Badge, FA, TonvaForm, SubmitResult, FormRow, Muted, SearchBox} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
 import {Role, RoleMember} from '../model';
@@ -27,7 +26,7 @@ export class MembersPage extends React.Component {
         nav.push(<MemberSearch roleId={roleId} />);
     }
     render() {
-        let right = <Button onClick={this.onSearch} size="sm"><FA name="search" /></Button>;
+        let right = <button className="btn btn-sm" onClick={this.onSearch}><FA name="search" /></button>;
         return <Page header="用户" right={right}>
             <List items={store.roleMembers} item={{render: this.renderMember, onClick: this.userClick}} />
         </Page>

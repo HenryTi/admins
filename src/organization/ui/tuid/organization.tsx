@@ -4,7 +4,7 @@ import { TuidUI } from "tonva-react-usql";
 const ui:TuidUI = {
     divs: {
         post: {
-            inputContent: (item:any) => {
+            content: (item:any) => {
                 let {title} = item;
                 return <>{title}</>;
             },

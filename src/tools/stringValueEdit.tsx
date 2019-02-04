@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
 
 interface StringValueEditProps {
@@ -55,14 +54,13 @@ export class StringValueEdit extends React.Component<StringValueEditProps, Strin
     render() {
         let {title, onChanged, buttonText, info, value} = this.props;
         let {disabled, error} = this.state;
-        let right = <Button
-            color="success"
-            size="sm"
+        let right = <button
+            className="btn btn-success btn-sm"
             disabled={disabled}
             onClick={this.onSubmit}
         >
             {buttonText||'保存'}
-        </Button>;
+        </button>;
         let errorDiv;
         if (error !== undefined) errorDiv = <div className='text-danger'>{error}</div>;
         return <Page header={title} right={right}>

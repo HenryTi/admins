@@ -1,4 +1,3 @@
-import {observable, computed} from 'mobx';
 import {CacheIds} from 'tonva-tools';
 import {Id, Unit, DevModel} from '../model';
 import {mainApi, devApi} from '../api';
@@ -12,12 +11,12 @@ export class CacheUnits extends CacheIds<Unit> {
     }
 }
 
-export class CacheApis extends CacheIds<DevModel.Usq> {
-    protected async _loadIds(ids:number[]):Promise<DevModel.Usq[]> {
+export class CacheUqs extends CacheIds<DevModel.UQ> {
+    protected async _loadIds(ids:number[]):Promise<DevModel.UQ[]> {
         return;
     }
-    protected async _loadId(id:number):Promise<DevModel.Usq> {
-        return await devApi.usq(id);
+    protected async _loadId(id:number):Promise<DevModel.UQ> {
+        return await devApi.uq(id);
     }
 }
 

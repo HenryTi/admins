@@ -5,12 +5,12 @@ import {DevModel, Unit} from '../model';
 import {Store} from './index';
 
 interface Counts {
-    usq: number;
+    uq: number;
     app: number;
     bus: number;
     server: number;
     service: number;
-    usqldb: number;
+    uqdb: number;
 }
 
 export abstract class ObjItems<T extends DevModel.ObjBase> {
@@ -81,8 +81,8 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
 }
 
 class Apps extends ObjItems<DevModel.App> {
-    @observable usqs: DevModel.Usq[] = undefined;
-    @observable searchedApis: DevModel.Usq[] = undefined;
+    @observable uqs: DevModel.UQ[] = undefined;
+    @observable searchedApis: DevModel.UQ[] = undefined;
     //@observable service: DevModel.Service = null;
     protected async _load() {
         return await devApi.apps(this.store.unit.id);
@@ -98,7 +98,7 @@ class Apps extends ObjItems<DevModel.App> {
 
     public async loadCurApis() {
         let ret = await devApi.loadAppUsqs(this.cur.id);
-        this.usqs = ret;
+        this.uqs = ret;
     }
     /*
     public async loadService() {
@@ -124,44 +124,44 @@ class Apps extends ObjItems<DevModel.App> {
         }
     }*/
     // if apis === undefined, then unbind
-    public async appBindUsq(usqs:{id:number, access:string[]}[]) {
-        let allUsqs:{id:number, access:string[]}[] = this.usqs.map(v => {
+    public async appBindUq(usqs:{id:number, access:string[]}[]) {
+        let allUsqs:{id:number, access:string[]}[] = this.uqs.map(v => {
             let {id, access} = v;
             return {id: id, access: [access]};
         });
         allUsqs.push(...usqs);
         console.log('appBindUsq', allUsqs);
         //await devApi.appBindUsq(this.store.unit.id, this.cur.id, usqs);
-        await devApi.appBindUsq(this.store.unit.id, this.cur.id, allUsqs);
+        await devApi.appBindUq(this.store.unit.id, this.cur.id, allUsqs);
         for (let usq of usqs) {
-            let index = this.usqs.findIndex(a => a.id === usq.id);
-            if (index>=0) this.usqs.splice(index, 1);
+            let index = this.uqs.findIndex(a => a.id === usq.id);
+            if (index>=0) this.uqs.splice(index, 1);
             if (this.searchedApis !== undefined) {
                 let find = this.searchedApis.find(a => a.id === usq.id);
-                if (find !== undefined) this.usqs.unshift(find);
+                if (find !== undefined) this.uqs.unshift(find);
             }
         }
     }
 }
 
-class Usqs extends ObjItems<DevModel.Usq> {
+class Uqs extends ObjItems<DevModel.UQ> {
     //@observable services: DevModel.Service[];
     protected async _load() {
         let ret = await devApi.usqs(this.store.unit.id);
         return ret;
     }
-    protected async _save(item:DevModel.Usq):Promise<number> {
+    protected async _save(item:DevModel.UQ):Promise<number> {
         let {access} = item;
         if (!access) access = "*";
         let parts = access.split(',').map(v => v.trim()).filter(v => v!=='');
         item.access = parts.join(',');
         return await devApi.saveUsq(item);
     }
-    protected async _del(item:DevModel.Usq):Promise<void> {
+    protected async _del(item:DevModel.UQ):Promise<void> {
         await devApi.delUsq(this.store.unit.id, item.id);
     }
-    protected _inc() { this.dev.counts.usq++; }
-    protected _dec() { this.dev.counts.usq--; }
+    protected _inc() { this.dev.counts.uq++; }
+    protected _dec() { this.dev.counts.uq--; }
     /*
     public async loadServices() {
         this.services = await devApi.loadAppIdServices(this.store.unit.id, this.cur.id);
@@ -197,18 +197,18 @@ class Servers extends ObjItems<DevModel.Server> {
     protected _dec() { this.dev.counts.server--; }
 }
 
-class Usqldbs extends ObjItems<DevModel.Usqldb> {
+class Uqdbs extends ObjItems<DevModel.Uqdb> {
     protected async _load() {
-        return await devApi.usqldbs(this.store.unit.id);
+        return await devApi.uqdbs(this.store.unit.id);
     }
-    protected async _save(item:DevModel.Usqldb):Promise<number> {
-        return await devApi.saveUsqldb(item);
+    protected async _save(item:DevModel.Uqdb):Promise<number> {
+        return await devApi.saveUqdb(item);
     }
-    protected async _del(item:DevModel.Usqldb):Promise<void> {
-        await devApi.delUsqldb(this.store.unit.id, item.id);
+    protected async _del(item:DevModel.Uqdb):Promise<void> {
+        await devApi.delUqdb(this.store.unit.id, item.id);
     }
-    protected _inc() { this.dev.counts.usqldb++; }
-    protected _dec() { this.dev.counts.usqldb--; }
+    protected _inc() { this.dev.counts.uqdb++; }
+    protected _dec() { this.dev.counts.uqdb--; }
 }
 
 class Services extends ObjItems<DevModel.Service> {
@@ -231,8 +231,8 @@ class Services extends ObjItems<DevModel.Service> {
         }
         return ret;
     }
-    async loadApiServices(api:number):Promise<void> {
-        this.items = await devApi.loadUsqServices(this.store.unit.id, api);
+    async loadUqServices(api:number):Promise<void> {
+        this.items = await devApi.loadUqServices(this.store.unit.id, api);
     }
     async loadAppServices(app:number) {
         this.items = await devApi.loadAppServices(this.store.unit.id, app);
@@ -297,28 +297,28 @@ export class Dev {
     constructor(store:Store) {
         this.store = store;
         this.apps = new Apps(store, this);
-        this.usqs = new Usqs(store, this);
+        this.uqs = new Uqs(store, this);
         this.buses = new Buses(store, this);
         this.servers = new Servers(store, this);
-        this.usqldbs = new Usqldbs(store, this);
+        this.uqdbs = new Uqdbs(store, this);
         this.services = new Services(store, this);
         this.searchApp = new SearchItems<DevModel.App>(store, this, devApi.searchApp.bind(devApi));
-        this.searchUsq = new SearchItems<DevModel.Usq>(store, this, devApi.searchUsq.bind(devApi));
+        this.searchUsq = new SearchItems<DevModel.UQ>(store, this, devApi.searchUsq.bind(devApi));
         this.searchServer = new SearchItems<DevModel.Server>(store, this, devApi.searchServer.bind(devApi));
     }
 
     @observable counts:Counts = undefined;
     apps:Apps = undefined;
-    usqs:Usqs = undefined;
+    uqs:Uqs = undefined;
     buses:Buses = undefined;
     servers:Servers = undefined;
-    usqldbs:Usqldbs = undefined;
+    uqdbs:Uqdbs = undefined;
     services:Services = undefined;
 
     searchApp:SearchItems<DevModel.App> = undefined;
-    searchUsq:SearchItems<DevModel.Usq> = undefined;
+    searchUsq:SearchItems<DevModel.UQ> = undefined;
     searchServer:SearchItems<DevModel.Server> = undefined;
-    searchUsqldb:SearchItems<DevModel.Usqldb> = undefined;
+    searchUsqldb:SearchItems<DevModel.Uqdb> = undefined;
     
     async loadCounts(): Promise<void> {
         let {unit} = this.store;

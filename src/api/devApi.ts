@@ -11,7 +11,7 @@ class DevApi extends CenterApi {
     async app(id:number):Promise<any> {
         return await this.get('app', {id:id});
     }
-    async usq(id:number):Promise<any> {
+    async uq(id:number):Promise<any> {
         return await this.get('usq', {id:id});
     }
     async server(id:number):Promise<any> {
@@ -32,7 +32,7 @@ class DevApi extends CenterApi {
     async servers(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('servers', {unit:unit, pageSize: pageSize});
     }
-    async usqldbs(unit:number, pageSize:number=30):Promise<any[]> {
+    async uqdbs(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('usqldbs', {unit:unit, pageSize: pageSize});
     }
     async services(unit:number, pageSize:number=30):Promise<any[]> {
@@ -50,7 +50,7 @@ class DevApi extends CenterApi {
     async saveServer(values:any):Promise<number> {
         return await this.post('server-save', values);
     }
-    async saveUsqldb(values:any):Promise<number> {
+    async saveUqdb(values:any):Promise<number> {
         return await this.post('usqldb-save', values);
     }
     async saveService(values:any):Promise<number> {
@@ -68,7 +68,7 @@ class DevApi extends CenterApi {
     async delServer(unit:number,id:number):Promise<void> {
         return await this.post('server-del', {unit:unit, id:id});
     }
-    async delUsqldb(unit:number,id:number):Promise<void> {
+    async delUqdb(unit:number,id:number):Promise<void> {
         return await this.post('usqldb-del', {unit:unit, id:id});
     }
     async delService(unit:number,id:number):Promise<void> {
@@ -77,7 +77,7 @@ class DevApi extends CenterApi {
     async loadAppUsqs(app:number):Promise<any[]> {
         return await this.get('app-usqs', {app: app});
     }
-    async appBindUsq(unit:number,app:number,usqs:{id:number, access:string[]}[]):Promise<void> {
+    async appBindUq(unit:number,app:number,usqs:{id:number, access:string[]}[]):Promise<void> {
         let usqsText:string;
         if (usqs !== undefined) {
             usqsText = usqs.map(v => String(v.id)+'|'+v.access.join(',')).join(';');
@@ -99,7 +99,7 @@ class DevApi extends CenterApi {
     async loadAppServices(unit:number, app:number):Promise<any[]> {
         return await this.get('app-services', {unit:unit, app:app});
     }
-    async loadUsqServices(unit:number, usq:number):Promise<any[]> {
+    async loadUqServices(unit:number, usq:number):Promise<any[]> {
         return await this.get('usq-services', {unit:unit, usq:usq});
     }
     async changeServiceProp(unit:number, service:number, prop:string, value:any):Promise<number> {

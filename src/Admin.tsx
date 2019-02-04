@@ -14,8 +14,8 @@ import { mainApi } from 'api';
 import { COrganization } from 'organization';
 import {
     ObjViewProps, ObjView,
-    appsProps, usqsProps, busesProps, 
-    serversProps, usqldbsProps, servicesProps} from './Dev';
+    appsProps, uqsProps, busesProps, 
+    serversProps, uqdbsProps, servicesProps} from './Dev';
 
 export class CAdmin extends Controller {
     isProduction: boolean;
@@ -217,11 +217,11 @@ default class AdminPage extends React.Component {
                         objProps: appsProps
                     },
                     {
-                        title: 'USQ', 
-                        count: counts.usq, 
+                        title: 'UQ', 
+                        count: counts.uq, 
                         icon: 'cogs', 
                         //items: store.dev.apis, 
-                        objProps: usqsProps,
+                        objProps: uqsProps,
                         //page: <ObjView {...apisProps} items={store.dev.apis} />
                     },
                     {
@@ -248,10 +248,10 @@ default class AdminPage extends React.Component {
                         objProps: servicesProps,
                     },*/
                     {
-                        title: 'UsqlDB', 
-                        count: counts.usqldb, 
+                        title: 'uqDB', 
+                        count: counts.uqdb, 
                         icon: 'database', 
-                        objProps: usqldbsProps,
+                        objProps: uqdbsProps,
                     },
                     ];
                     items.push(...devItems);

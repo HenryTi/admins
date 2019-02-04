@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {Button} from 'reactstrap';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Step, Field, Prop, PropGrid, Media, 
@@ -145,7 +144,7 @@ export class ServiceInfo extends React.Component {
             case 2: typeName = 'APP'; break;
             case 3: typeName = 'API'; break;
         }
-        let right = <Button onClick={this.onDeleteClick} color="success">删除</Button>;
+        let right = <button onClick={this.onDeleteClick} className="btn btn-success">删除</button>;
         return <Page header={typeName + ' Service'} right={right}>
             <PropGrid rows={rows} values={cur} />
         </Page>

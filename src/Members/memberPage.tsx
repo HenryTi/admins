@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {Button} from 'reactstrap';
 import {List, LMR, FA, TonvaForm, SubmitResult, FormRow, Media, Muted, PropGrid, Prop} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
 import {Role} from '../model';
@@ -56,7 +55,7 @@ export class MemberPage extends React.Component {
             },
             '',
         ];
-        let right = <Button color="success" size="sm" onClick={this.setRole}>修改角色</Button>;
+        let right = <button className="btn btn-success btn-sm" onClick={this.setRole}>修改角色</button>;
         return <Page header="用户详情" right={right}>
             <PropGrid rows={rows} values={roleUser} />
             <div className="px-3 py-1"><small><FA name="angle-double-right" /> 所属角色</small></div>
@@ -90,7 +89,7 @@ class SetRole extends React.Component {
         nav.pop();
     }
     render() {
-        let right = <Button color="success" size="sm" onClick={this.submit}>保存</Button>;
+        let right = <button className="btn btn-success btn-sm" onClick={this.submit}>保存</button>;
         let roles = store.roles;
         let memberRoles = store.memberRoles;
         return <Page header="修改角色" right={right}>

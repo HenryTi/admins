@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
 import {FormRow, FormView, TonvaForm, Step, MultiStep, DropdownActions, Action, List, FA, SubmitResult} from 'tonva-react-form';
 import {appIcon, appItemIcon} from '../consts';
@@ -39,7 +38,7 @@ export default class DevObjs<T extends DevModel.ObjBase> extends React.Component
     }
     render() {
         let {title, items} = this.props;
-        let right = <Button color='secondary' size='sm' onClick={()=>this.newItem()}><FA name="plus" /></Button>;
+        let right = <button className='btn btn-secondary btn-sm' onClick={()=>this.newItem()}><FA name="plus" /></button>;
         return <Page header={title} right={right}>
             <List items={items().items}
                 item={{render: this.props.row, onClick: this.itemClick}}

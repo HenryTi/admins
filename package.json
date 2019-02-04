@@ -9,8 +9,7 @@
     "mobx": "^5.5.2",
     "mobx-react": "^5.3.6",
     "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "reactstrap": "^5.0.0"
+    "react-dom": "^16.5.2"
   },
   "scripts": {
     "start": "set PORT=3101 && react-scripts-ts start",
@@ -25,8 +24,7 @@
     "@types/node": "^8.0.53",
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.7",
-    "@types/reactstrap": "^5.0.21",
-    "react-scripts-ts": "^2.17.0",
+    "react-scripts-ts": "^4.0.8",
     "typescript": "^3.0.3"
   }
 }

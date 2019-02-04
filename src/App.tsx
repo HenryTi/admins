@@ -5,6 +5,7 @@ import './App.css';
 
 class App extends React.Component {
     async onLogined() {
+        let loc = document.location;
         nav.clear();
         //nav.push(<StartPage />);
         let cAdmin = new CAdmin({});

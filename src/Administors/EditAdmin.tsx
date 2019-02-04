@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {Container, Row, Col, Card, CardBody, CardTitle, CardSubtitle, CardText} from 'reactstrap';
 import {nav, Page, Schema, UiSchema, ItemSchema, UiCheckItem, UiButton, ButtonSchema, Form, Context} from 'tonva-tools';
 import {store} from '../store';
 import { UnitAdmin } from '../model/index';
@@ -72,17 +71,17 @@ export default class EditAdmin extends React.Component {
 
 const Fellow = (props:UnitAdmin) => {
     let {name, nick, icon} = props;
-    return <Container>
-        <Row className='my-4'>
-            <Col xs={2} className='d-flex justify-content-end align-items-start'>
+    return <div className="container">
+        <div className='row my-4'>
+            <div className="col-xs-2 d-flex justify-content-end align-items-start">
                 <img className='w-75' src={icon || process.env.REACT_APP_DEFAULT_ICON} />
-            </Col>
-            <Col xs="auto">
+            </div>
+            <div className="col-xs-auto">
                 <h4 className='text-dark'>{name}</h4>
                 <h6><small className='text-secondary'>{nick}</small></h6>
                 <div className='text-info'>设置成员权限</div>
-            </Col>
-        </Row>
+            </div>
+        </div>
         <hr className='mb-4' />
-    </Container>;
+    </div>;
 }

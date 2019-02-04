@@ -75,7 +75,7 @@ const idPickApiProps: IdPickProps = {
     moreCandidates: async () => {
         await store.dev.searchUsq.more();
     },
-    row: (item:DevModel.Usq, index:number) => {
+    row: (item:DevModel.UQ, index:number) => {
         return <div>{item.name + ' ' + item.discription}</div>;
     },
 };
@@ -178,7 +178,7 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
                         type: 'pick-id', 
                         initCaption: '请选择API', 
                         pick: createIdPick(idPickApiProps), //this.idPick,
-                        fromPickedItem: (item:DevModel.Usq)=>{
+                        fromPickedItem: (item:DevModel.UQ)=>{
                             return {id: item.id, caption: item.name + ' ' + item.discription}
                         },
                     },

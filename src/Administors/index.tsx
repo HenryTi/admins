@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {Card, CardHeader, CardBody, CardText, CardTitle, Button} from 'reactstrap';
 import {nav, Page} from 'tonva-tools';
 import {appIcon, appItemIcon} from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
@@ -8,27 +7,6 @@ import {store} from '../store';
 import NewFellow from './NewFellow';
 import EditAdmin from './EditAdmin';
 import {LMR, Badge, List} from 'tonva-react-form';
-
-/*
-export interface RowProps {
-    icon: string;
-    main: string;
-    vice: string;
-}
-
-export class Row extends React.Component<RowProps> {
-    render() {
-        let {icon, main, vice} = this.props;
-        return <LMR className="py-1 px-3 align-items-stretch"
-            left={<Badge size="sm"><img src={icon} /></Badge>}>
-            <div className="px-3">
-                <b>{main}</b>
-                <small>{vice}</small>
-            </div>
-        </LMR>;
-    }
-}
-*/
 
 @observer
 export default class AdministorsPage extends React.Component<{}, null> {
@@ -75,7 +53,7 @@ export default class AdministorsPage extends React.Component<{}, null> {
         let {unit} = store;
         if (unit === undefined) return;
         let {owners, admins, fellows} = store.admins;
-        let right = <Button color="success" size="sm" onClick={this.onNewFellow}>新增成员</Button>;
+        let right = <button className="btn btn-success btn-sm" onClick={this.onNewFellow}>新增成员</button>;
 
         let showOwners = false, showAdmins = false;
         let ownersView, adminsView, fellowsView;
@@ -108,28 +86,20 @@ export default class AdministorsPage extends React.Component<{}, null> {
                 item={{onClick: this.onItemClick, render: this.row}}
             />;
         }
-        /*
-        fellowsView = <List
-            className='my-4' 
-            header='成员' items={fellows} 
-            none='[ 无普通成员 ]'
-            item={{onClick: this.onItemClick, render: this.row}}
-        />*/
-        return <Page header={"管理员"} right={right}>
+        return <Page header="管理员" right={right}>
             {ownersView}
             {adminsView}
-            {/*fellowsView*/}
-            <Card className='mx-1 my-4'>
-                <CardHeader>说明</CardHeader>
-                <CardBody>
+            <div className="card mx-1 my-4">
+                <div className="card-title">说明</div>
+                <div className="card-body">
                     <ul style={{paddingLeft:'1em'}}>
-                        <li><CardText>管理组包括主人、高管、管理员</CardText></li>
-                        <li><CardText>小号主人可以增减高管</CardText></li>
-                        <li><CardText>高管可以增减管理员</CardText></li>
-                        <li><CardText>管理员可以管理小号，程序的开发，以及用户</CardText></li>
+                        <li><div className="card-text">管理组包括主人、高管、管理员</div></li>
+                        <li><div className="card-text">小号主人可以增减高管</div></li>
+                        <li><div className="card-text">高管可以增减管理员</div></li>
+                        <li><div className="card-text">管理员可以管理小号，程序的开发，以及用户</div></li>
                     </ul>
-                </CardBody>
-            </Card>
+                </div>
+            </div>
         </Page>;
     }
 }

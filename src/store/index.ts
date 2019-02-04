@@ -1,19 +1,19 @@
 import {observable, autorun} from 'mobx';
-import * as _ from 'lodash';
+import _ from 'lodash';
 //import {appIcon, appItemIcon} from './consts';
-import {nav, meInFrame, getUrlOrDebug} from 'tonva-tools';
+import {meInFrame, host} from 'tonva-tools';
 import {mainApi, devApi} from '../api';
 import {Unit, UnitApps, App, Api, UnitAdmin, UnitApp, Role, RoleMember} from '../model';
 import {Admins} from './admins';
 import {Dev} from './dev';
-import {CacheUnits, CacheApis, CacheApps, CacheServers} from './cacheIds';
+import {CacheUnits, CacheUqs, CacheApps, CacheServers} from './cacheIds';
 
 export class Store {
     private get unitId():number {return meInFrame.unit;};
     admins:Admins;
     dev:Dev;
     cacheUnits: CacheUnits;
-    cacheUsqs: CacheApis;
+    cacheUsqs: CacheUqs;
     cacheApps: CacheApps;
     cacheServers: CacheServers;
     usqlServer: string;
@@ -33,7 +33,7 @@ export class Store {
         this.admins = new Admins(this);
         this.dev = new Dev(this);
         this.cacheUnits = new CacheUnits();
-        this.cacheUsqs = new CacheApis();
+        this.cacheUsqs = new CacheUqs();
         this.cacheApps = new CacheApps();
         this.cacheServers = new CacheServers();
     }
@@ -90,7 +90,7 @@ export class Store {
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
         let usqlServer = await devApi.usqlServer();
         let {url, urlDebug} = usqlServer;
-        this.usqlServer = await getUrlOrDebug(url, urlDebug);
+        this.usqlServer = host.getUrlOrDebug(url, urlDebug);
         console.log("usql-server: %s", JSON.stringify(this.usqlServer));
     }
 

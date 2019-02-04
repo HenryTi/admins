@@ -8,23 +8,6 @@ import {store} from '../store';
 import {ObjViewProps} from './ObjView';
 
 class Info extends React.Component<DevModel.Server> {
-    /*
-    private rows:Prop[];
-    constructor(props:any) {
-        super(props);
-        let {discription, cloud, ip, unit, date_init, date_update} = this.props;
-        let disp = <div>
-            <div>{discription}</div>
-            <IdDates date_update={date_update} date_init={date_init} />
-        </div>;
-        this.rows = [
-            '',
-            {type: 'component', component: <Media icon={appIcon} main={discription} discription={ip} />},
-            '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
-            {type: 'string', label: '云服务', name: 'cloud'},
-        ];
-    }*/
     render() {
         let {discription, cloud, ip, unit, date_init, date_update} = this.props;
         let disp = <div>
@@ -35,7 +18,7 @@ class Info extends React.Component<DevModel.Server> {
             '',
             {type: 'component', component: <Media icon={appIcon} main={discription} discription={ip} />},
             '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
+            {type: 'component', label: '开发号', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'string', label: '云服务', name: 'cloud'},
         ];
         return <div>

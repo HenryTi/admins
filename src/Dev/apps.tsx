@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {observable, computed} from 'mobx';
 import {observer} from 'mobx-react';
-import * as _ from 'lodash';
-import {Button} from 'reactstrap';
+import _ from 'lodash';
+import classNames from 'classnames';
 import {nav, Page} from 'tonva-tools';
 import {FormRow, EasyDate, Media, 
     Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva-react-form';
@@ -16,14 +16,14 @@ import {NewService, ServiceInfo} from './servicePage';
 
 @observer
 class Info extends React.Component<DevModel.App> {
-    @observable private usqs:ListProp = {label: '关联Usq', type: 'list', list: undefined, row: UsqRow};
+    @observable private usqs:ListProp = {label: '关联UQ', type: 'list', list: undefined, row: UsqRow};
     componentWillMount() {
         store.dev.services.cur = undefined;
     }
     async componentDidMount() {
         await store.dev.apps.loadCurApis();
         await store.dev.services.loadAppServices(this.props.id);
-        this.usqs.list = store.dev.apps.usqs;
+        this.usqs.list = store.dev.apps.uqs;
     }
     render() {
         let {unit, name, discription, icon, date_init, date_update} = this.props;
@@ -35,7 +35,7 @@ class Info extends React.Component<DevModel.App> {
             '',
             {type: 'component', component: <Media icon={icon || appIcon} main={name} discription={disp} />},
             '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
+            {type: 'component', label: '开发号', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             this.usqs,
             '',
             {
@@ -133,12 +133,12 @@ const appsProps:ObjViewProps<DevModel.App> = {
     },
     info: Info,
     extraMenuActions: [
-        {icon:'cogs', caption:'设置关联USQ', action: ()=>nav.push(<AppUsqs />)}
+        {icon:'cogs', caption:'设置关联UQ', action: ()=>nav.push(<AppUqs />)}
     ],
 };
 
 @observer
-class AppUsqs extends React.Component {
+class AppUqs extends React.Component {
     @observable anySelected: boolean = false;
     private _list: List;
 
@@ -167,14 +167,14 @@ class AppUsqs extends React.Component {
         let btnProps = this.anySelected?
             {color:'danger', /*onClick:this.removeBind, */icon:'trash', text:'取消'}:
             {color:'primary', onClick:()=>nav.push(<Usqs/>), icon:'plus', text:'新增'};
-        let btn = (p)=><Button outline={true} color={p.color} size="sm" onClick={p.onClick}>
+        let btn = (p)=><button className={classNames('btn', 'btn-outline-'+p.color, 'btn-sm')} onClick={p.onClick}>
             <i className={"fa fa-" + p.icon} /> {p.text}关联
-        </Button>;
+        </button>;
         let listHeader = <div className="va-row py-1 justify-content-center">{btn(btnProps)}</div>;
-        return <Page header="关联USQ">
+        return <Page header="关联UQ">
             <List ref={this.ref}
                 header={listHeader}
-                items={store.dev.apps.usqs}
+                items={store.dev.apps.uqs}
                 item={{render: this.row, onSelect: this.onSelect}} />
         </Page>;
     }
@@ -185,32 +185,32 @@ class Usqs extends React.Component {
     onSearch = async (key:string) => {
         await store.dev.apps.searchApi(key);
     }
-    onBind(api: DevModel.Usq, bind: boolean) {
-        store.dev.apps.appBindUsq([{id:api.id, access:['*']}]);
+    onBind(api: DevModel.UQ, bind: boolean) {
+        store.dev.apps.appBindUq([{id:api.id, access:['*']}]);
     }
-    row = (usq: DevModel.Usq) => {
-        let isConnected = store.dev.apps.usqs.find(a => a.id === usq.id) !== undefined;
-        let btnProps = {
-            outline:true,
-            size:'sm'
-        } as any, btnContent:any;
+    row = (usq: DevModel.UQ) => {
+        let isConnected = store.dev.apps.uqs.find(a => a.id === usq.id) !== undefined;
+        let cn = ['btn', 'btn-sm'];
+        let btnContent:any, onClick:any;
         if (isConnected) {
-            _.assign(btnProps, {onClick:()=>this.onBind(usq, false), color:'success'});
+            cn.push('btn-success');
+            onClick = ()=>this.onBind(usq, false);
             btnContent = "已关联";
         }
         else {
-            _.assign(btnProps, {onClick:()=>this.onBind(usq, true), color:'primary'});
+            cn.push('btn-primary');
+            onClick = ()=>this.onBind(usq, true);
             btnContent = <span><i className="fa fa-check"/> 关联</span>;
         }
         return <div className="d-flex justify-content-start py-1 px-3">
             <div className="align-self-center">{usq.name + ' - ' + usq.discription}</div>
-            <footer className="ml-auto"><Button {...btnProps}>{btnContent}</Button></footer>
+            <footer className="ml-auto"><button className={classNames(cn)} onClick={onClick}>{btnContent}</button></footer>
         </div>
     }
     render() {
         let header = <SearchBox className="w-100 mx-1" 
             onSearch={this.onSearch} 
-            placeholder="搜索USQ名字" 
+            placeholder="搜索UQ名字" 
             maxLength={100} />;
         return <Page back="close" header={header}>
             <List items={store.dev.apps.searchedApis} item={{render: this.row}} loading={null} />
