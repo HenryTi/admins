@@ -17,7 +17,7 @@ export interface UsqLinkProps {
 }
 
 @observer
-export class UsqSpan extends React.Component<UsqLinkProps> {
+export class UqSpan extends React.Component<UsqLinkProps> {
     /*
     componentWillMount() {
         let {id} = this.props;
@@ -26,7 +26,7 @@ export class UsqSpan extends React.Component<UsqLinkProps> {
     */
     onClick = (evt) => {
         evt.preventDefault();
-        nav.push(<UsqInfo id={this.props.id} />);
+        nav.push(<UqInfo id={this.props.id} />);
         return false;
     }
     render() {
@@ -51,7 +51,7 @@ export class UsqSpan extends React.Component<UsqLinkProps> {
 }
 
 @observer
-class UsqInfo extends React.Component<UsqLinkProps> {
+class UqInfo extends React.Component<UsqLinkProps> {
     private rows:Prop[];
     constructor(props:any) {
         super(props);
@@ -69,7 +69,7 @@ class UsqInfo extends React.Component<UsqLinkProps> {
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
         ];
-        return <Page header={'API - 详细资料'}>
+        return <Page header={'UQ - 详细资料'}>
             <PropGrid rows={this.rows} values={this.props} />
         </Page>;
     }

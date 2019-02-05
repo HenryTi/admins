@@ -96,34 +96,13 @@ class Apps extends ObjItems<DevModel.App> {
     protected _inc() { this.dev.counts.app++; }
     protected _dec() { this.dev.counts.app--; }
 
-    public async loadCurApis() {
-        let ret = await devApi.loadAppUsqs(this.cur.id);
+    public async loadCurUqs() {
+        let ret = await devApi.loadAppUqs(this.cur.id);
         this.uqs = ret;
     }
-    /*
-    public async loadService() {
-        this.service = await devApi.loadAppServices(this.store.unit.id, this.cur.id);
-    }*/
     public async searchApi(key:string) {
         this.searchedApis = await devApi.searchUsq(this.store.unit.id, key, 0, searchPageSize);
     }
-    /*
-    public async appBindApi(apiIds:number[], bind:boolean) {
-        await devApi.appBindApi(this.store.unit.id, this.cur.id, apiIds, bind? 1:0);
-        for (let api of apiIds) {
-            if (bind) {
-                if (this.searchedApis !== undefined) {
-                    let find = this.searchedApis.find(a => a.id === api);
-                    if (find !== undefined) this.apis.unshift(find);
-                }
-            }
-            else {
-                let index = this.apis.findIndex(a => a.id === api);
-                if (index>=0) this.apis.splice(index, 1);
-            }
-        }
-    }*/
-    // if apis === undefined, then unbind
     public async appBindUq(usqs:{id:number, access:string[]}[]) {
         let allUsqs:{id:number, access:string[]}[] = this.uqs.map(v => {
             let {id, access} = v;
@@ -147,7 +126,7 @@ class Apps extends ObjItems<DevModel.App> {
 class Uqs extends ObjItems<DevModel.UQ> {
     //@observable services: DevModel.Service[];
     protected async _load() {
-        let ret = await devApi.usqs(this.store.unit.id);
+        let ret = await devApi.uqs(this.store.unit.id);
         return ret;
     }
     protected async _save(item:DevModel.UQ):Promise<number> {
@@ -162,10 +141,6 @@ class Uqs extends ObjItems<DevModel.UQ> {
     }
     protected _inc() { this.dev.counts.uq++; }
     protected _dec() { this.dev.counts.uq--; }
-    /*
-    public async loadServices() {
-        this.services = await devApi.loadAppIdServices(this.store.unit.id, this.cur.id);
-    }*/
 }
 
 class Buses extends ObjItems<DevModel.Bus> {
@@ -228,11 +203,15 @@ class Services extends ObjItems<DevModel.Service> {
         switch (prop) {
             case 'url': this.cur.url = value; break;
             case 'server': this.cur.server = value; break;
+            case 'db': this.cur.db = value; break;
+            case 'db_type': this.cur.db_type = value; break;
+            case 'connection': this.cur.connection = value; break;
         }
         return ret;
     }
-    async loadUqServices(api:number):Promise<void> {
-        this.items = await devApi.loadUqServices(this.store.unit.id, api);
+    async loadUqServices(uq:number):Promise<void> {
+        let ret = await devApi.loadUqServices(this.store.unit.id, uq);
+        this.items = ret[0];
     }
     async loadAppServices(app:number) {
         this.items = await devApi.loadAppServices(this.store.unit.id, app);

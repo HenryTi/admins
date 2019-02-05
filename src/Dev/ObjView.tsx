@@ -2,26 +2,12 @@ import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {nav, Page} from 'tonva-tools';
-import {FormRow, FormView, TonvaForm, Step, MultiStep, DropdownActions, Action, List, FA, SubmitResult} from 'tonva-react-form';
-import {appIcon, appItemIcon} from '../consts';
-import {store} from '../store';
+import {FormRow, TonvaForm, Step, MultiStep, DropdownActions, Action, List, FA, SubmitResult} from 'tonva-react-form';
 import {DevModel} from '../model';
-import {ObjItems} from '../store/dev';
-
-export interface ObjViewProps<T extends DevModel.ObjBase> {
-    title: string;
-    row: (item:T)=>JSX.Element;
-    items: ()=>ObjItems<T>;
-    repeated: {name:string; err:string};
-    info: new (props:any) => React.Component;
-    extraMenuActions?: Action[];
-    formRows?: FormRow[];
-    steps?: {[step:string]: Step};
-    stepHeader?: (step:Step, num:number)=>JSX.Element;
-}
+import { ObjViewProps } from './ObjViewProps';
 
 @observer
-export default class DevObjs<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
+export class ObjView<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
     async componentDidMount() {
         await this.props.items().load();
     }

@@ -1,18 +1,19 @@
 import * as React from 'react';
 import {EasyDate, Media, Prop, PropGrid, LMR, FA, PickFace, FormProps, List, Muted} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
-import {UnitSpan, IdDates, UsqSpan} from '../tools';
+import {UnitSpan, IdDates, UqSpan} from '../tools';
 import {Row} from './row';
 import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
-import {ObjViewProps} from './ObjView';
-import {UsqlUpload} from './uqUpload';
+import {ObjViewProps} from './ObjViewProps';
+import {UqUpload} from './uqUpload';
 import { observer } from 'mobx-react';
 
 class Info extends React.Component<DevModel.Uqdb> {
-    onUsql() {
-        nav.push(<UsqlUpload {...this.props} />);
+    onUq() {
+        alert('moved to uq');
+        //nav.push(<UqUpload {...this.props} />);
     }
     render() {
         let {dbname, discription, usq, cloud, connection, unit, date_init, date_update} = this.props;
@@ -27,11 +28,11 @@ class Info extends React.Component<DevModel.Uqdb> {
             '',
             {type: 'component', label: '开发号', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'component', label: 'UQ', component: <div className="py-2">
-                <UsqSpan id={usq} isLink={true} />
+                <UqSpan id={usq} isLink={true} />
             </div>},
             {type: 'string', label: '云服务', name: 'cloud'},
             {type: 'component', label: 'uq代码', component: 
-                <LMR onClick={()=>this.onUsql()} className="w-100 py-2 cursor-pointer" 
+                <LMR onClick={()=>this.onUq()} className="w-100 py-2 cursor-pointer" 
                     left="上传编译uq代码" right={
                         <FA className="align-self-center" name="chevron-right" />
                 } />
@@ -64,7 +65,7 @@ const uqdbsProps:ObjViewProps<DevModel.Uqdb> = {
             field: {name: 'usq', type: 'number', required: true},
             face: {
                 type: 'pick', 
-                content: ({id}:{id:number})=><UsqSpan id={id} isLink={false} />,
+                content: ({id}:{id:number})=><UqSpan id={id} isLink={false} />,
                 fromPicked: (item:any) => {return {id:item.id, caption: 'API'} },
                 pick: async (face:PickFace, formProps:FormProps, formValues:any):Promise<any> => {
                     return new Promise<any>((resolve, reject) => {

@@ -10,7 +10,12 @@ interface State {
     text?: string;
 }
 
-export class UsqlUpload extends React.Component<DevModel.Uqdb, State> {
+export interface UpUploadProps {
+    uq: DevModel.UQ;
+    services: DevModel.Service[];
+}
+
+export class UqUpload extends React.Component<UpUploadProps, State> {
     private fileInput: HTMLInputElement;
 
     constructor(props) {
@@ -54,7 +59,7 @@ export class UsqlUpload extends React.Component<DevModel.Uqdb, State> {
         let fr = new FileReader();
         fr.onload = function(f) {
             //alert(this.result);
-            nav.push(<UsqlPage name={file.name} content={this.result} />)
+            nav.push(<UqPage name={file.name} content={this.result} />)
         }
         fr.readAsText(file, "utf8");
     }
@@ -77,7 +82,7 @@ export class UsqlUpload extends React.Component<DevModel.Uqdb, State> {
             data.append('files[]', file, file.name);
         }
   
-        let url = store.usqlServer + 'usql-compile/' + this.props.id + '/update';
+        let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/update';
         if (thoroughly === true) url += '-thoroughly';
         try {
             let abortController = new AbortController();
@@ -86,7 +91,7 @@ export class UsqlUpload extends React.Component<DevModel.Uqdb, State> {
                 body: data,
                 signal: abortController.signal,
             });
-            nav.push(<CompileResult res={res} abortController={abortController} />);
+            nav.push(<CompileResult {...this.props} res={res} abortController={abortController} />);
         }
         catch (e) {
             console.error('%s %s', url, e);
@@ -102,14 +107,14 @@ export class UsqlUpload extends React.Component<DevModel.Uqdb, State> {
     }
     render() {
         let {files} = this.state;
-        let fileList;
+        let fileList:any;
         if (files !== undefined) {
             fileList = <List 
                 className="my-3" 
                 items={files} 
                 item={{render: this.fileRender, onClick: this.fileClick}}/>;
         }
-        let button;
+        let button:any;
         if (files !== undefined && files.length > 0) {
             button = <div className="my-2 d-flex">
                 <button className="btn btn-success" type="submit" onClick={this.onUpdate}>优化编译</button>
@@ -118,9 +123,9 @@ export class UsqlUpload extends React.Component<DevModel.Uqdb, State> {
                     type="submit" onClick={this.onUpdateThoroughly}>完全编译</button>
             </div>;
         }
-        return <Page header="编译USQL">
+        return <Page header={"编译 - " + this.props.uq.name}>
             <div className="py-2 px-3">
-                <div>请选择usql源代码文件</div>
+                <div>请选择UQ源代码文件</div>
                 <form className="my-1" encType="multipart/form-data" onSubmit={this.onSubmit}>
                     <div className="my-1">
                         <input ref={(fileInput) => this.fileInput=fileInput}type="file" id="photo" 
@@ -137,11 +142,11 @@ export class UsqlUpload extends React.Component<DevModel.Uqdb, State> {
     }
 }
 
-interface UsqlPgeProps {
+interface UqPgeProps {
     name: string;
     content: string|ArrayBuffer;
 }
-class UsqlPage extends React.Component<UsqlPgeProps> {
+class UqPage extends React.Component<UqPgeProps> {
     render() {
         return <Page header={this.props.name}>
             <pre className="px-3 py-2">{this.props.content}</pre>
@@ -167,14 +172,13 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             texts: this.texts,
             seconds: -1,
         }
-        this.doubleClick = this.doubleClick.bind(this);
     }
     componentWillMount() {
         nav.regConfirmClose(async ():Promise<boolean>=>{
             if (this.state.seconds>=0) return true;
             return new Promise<boolean>((resolve, reject) => {
                 try {
-                    if (confirm('正在编译usql，真的要中止吗？') === true) {
+                    if (confirm('正在编译中，真的要中止吗？') === true) {
                         try {
                             this.props.abortController.abort();
                         }
@@ -242,7 +246,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         (last as HTMLElement).scrollIntoView();
         */
     }
-    private doubleClick() {
+    private doubleClick = () => {
         var pane = document.getElementById('scrollDiv');
         let main = this.getParent(pane);
         if (!main) return;

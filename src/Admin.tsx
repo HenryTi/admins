@@ -247,12 +247,14 @@ default class AdminPage extends React.Component {
                         //page: <ObjView {...servicesProps} items={store.dev.services} />
                         objProps: servicesProps,
                     },*/
+                    /*
                     {
                         title: 'uqDB', 
                         count: counts.uqdb, 
                         icon: 'database', 
                         objProps: uqdbsProps,
                     },
+                    */
                     ];
                     items.push(...devItems);
                 }

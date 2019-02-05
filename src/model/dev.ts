@@ -11,6 +11,7 @@ export namespace DevModel {
         name: string;
         discription: string;
         access: string;
+        service_count: number;
     }
 
     export interface App extends ObjBase {
@@ -50,5 +51,10 @@ export namespace DevModel {
         server: number;
         app: number;
         usq: number;
+
+        db: string;
+        db_type: string;
+        connection: string;
+        compile_time: Date;
     }
 }

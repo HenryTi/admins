@@ -16,7 +16,7 @@ export class Store {
     cacheUsqs: CacheUqs;
     cacheApps: CacheApps;
     cacheServers: CacheServers;
-    usqlServer: string;
+    uqServer: string;
 
     @observable unit: Unit;
     @observable memberCount: number;
@@ -88,10 +88,10 @@ export class Store {
         this.unit = ret;
         console.log("loadUnit unit=%s", JSON.stringify(ret));
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
-        let usqlServer = await devApi.usqlServer();
-        let {url, urlDebug} = usqlServer;
-        this.usqlServer = host.getUrlOrDebug(url, urlDebug);
-        console.log("usql-server: %s", JSON.stringify(this.usqlServer));
+        let uqServer = await devApi.uqServer();
+        let {url, urlDebug} = uqServer;
+        this.uqServer = host.getUrlOrDebug(url, urlDebug);
+        console.log("uq-build: %s", JSON.stringify(this.uqServer));
     }
 
     async stopUnitApp(appId:number): Promise<void> {

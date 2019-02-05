@@ -14,33 +14,33 @@ interface StringValueEditState {
 }
 
 export class StringValueEdit extends React.Component<StringValueEditProps, StringValueEditState> {
-    private input:HTMLInputElement;
+    //private input:HTMLInputElement;
+    protected value: string;
     constructor(props) {
         super(props);
         this.state = {
             disabled: true,
         };
-        this.ref = this.ref.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
     }
-    private ref(input:HTMLInputElement) {
+    /*
+    private ref = (input:HTMLInputElement) => {
         if (!input) return;
         input.value = this.props.value || '';
         this.input = input;
-    }
-    private onChange(evt:React.FormEvent<HTMLInputElement>) {
+    }*/
+    private onChange = (evt:React.FormEvent<HTMLInputElement>) => {
         let val = this.props.value;
         let org = val && val.trim();
-        let v = evt.currentTarget.value.trim();
+        this.value = evt.currentTarget.value.trim();
         this.setState({
-            disabled: org === v
-        })
+            disabled: org === this.value
+        });
+        
     }
-    private async onSubmit() {
+    protected onSubmit = async () => {
         let val = this.props.value;
         let org = val && val.trim();
-        let v = this.input.value.trim();
+        let v = this.value; // this.input.value.trim();
         let onChanged = this.props.onChanged;
         if (onChanged !== undefined) {
             let ret = await onChanged(v, org);
@@ -50,6 +50,12 @@ export class StringValueEdit extends React.Component<StringValueEditProps, Strin
             }
             nav.pop();
         }
+    }
+    protected renderControl() {
+        return <input className="form-control w-100" type="text"
+            // ref={this.ref}
+            defaultValue={this.props.value}
+            onChange={this.onChange} />
     }
     render() {
         let {title, onChanged, buttonText, info, value} = this.props;
@@ -64,13 +70,36 @@ export class StringValueEdit extends React.Component<StringValueEditProps, Strin
         let errorDiv;
         if (error !== undefined) errorDiv = <div className='text-danger'>{error}</div>;
         return <Page header={title} right={right}>
-            <div className="m-4">
-                <input className="form-control w-100" type="text"
-                    ref={this.ref}
-                    onChange={this.onChange} />
+            <div className="my-4 mx-3">
+                {this.renderControl()}
                 {errorDiv}
                 <small className="d-block mt-2 text-muted">{info}</small>
             </div>
         </Page>;
+    }
+}
+
+export class TextValueEdit extends StringValueEdit {
+    /*
+    private textArea:HTMLTextAreaElement;
+    private refTextArea = (textArea:HTMLTextAreaElement) => {
+        if (!textArea) return;
+        textArea.value = this.props.value || '';
+        this.textArea = textArea;
+    }
+    */
+    private onTextAreaChange = (evt:React.FormEvent<HTMLTextAreaElement>) => {
+        let val = this.props.value;
+        let org = val && val.trim();
+        this.value = evt.currentTarget.value.trim();
+        this.setState({
+            disabled: org === this.value
+        })
+    }
+    protected renderControl() {
+        return <textarea className="form-control w-100" rows={8}
+            // ref={this.refTextArea}
+            defaultValue={this.props.value}
+            onChange={this.onTextAreaChange} />
     }
 }

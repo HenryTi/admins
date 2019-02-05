@@ -9,7 +9,7 @@ import EditAdmin from './EditAdmin';
 import {LMR, Badge, List} from 'tonva-react-form';
 
 @observer
-export default class AdministorsPage extends React.Component<{}, null> {
+export default class AdministorsPage extends React.Component {
     async componentDidMount() {
         await store.admins.load();
     }

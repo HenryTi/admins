@@ -1,8 +1,8 @@
 import {CenterApi} from 'tonva-tools';
 
 class DevApi extends CenterApi {
-    async usqlServer():Promise<any> {
-        let ret = await this.get('usql-server', undefined);
+    async uqServer():Promise<any> {
+        let ret = await this.get('uq-server', undefined);
         return ret;
     }    
     async counts(unit:number):Promise<any> {
@@ -17,14 +17,14 @@ class DevApi extends CenterApi {
     async server(id:number):Promise<any> {
         return await this.get('server', {id:id});
     }
-    async usqldb(id:number):Promise<any> {
-        return await this.get('usqldb', {id:id});
+    async uqdb(id:number):Promise<any> {
+        return await this.get('uqdb', {id:id});
     }
     async apps(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('apps', {unit:unit, pageSize: pageSize});
     }
-    async usqs(unit:number, pageSize:number=30):Promise<any[]> {
-        return await this.get('usqs', {unit:unit, pageSize: pageSize});
+    async uqs(unit:number, pageSize:number=30):Promise<any[]> {
+        return await this.get('uqs', {unit:unit, pageSize: pageSize});
     }
     async buses(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('buses', {unit:unit, pageSize: pageSize});
@@ -33,7 +33,7 @@ class DevApi extends CenterApi {
         return await this.get('servers', {unit:unit, pageSize: pageSize});
     }
     async uqdbs(unit:number, pageSize:number=30):Promise<any[]> {
-        return await this.get('usqldbs', {unit:unit, pageSize: pageSize});
+        return await this.get('uqdbs', {unit:unit, pageSize: pageSize});
     }
     async services(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('services', {unit:unit, pageSize: pageSize});
@@ -51,7 +51,7 @@ class DevApi extends CenterApi {
         return await this.post('server-save', values);
     }
     async saveUqdb(values:any):Promise<number> {
-        return await this.post('usqldb-save', values);
+        return await this.post('uqdb-save', values);
     }
     async saveService(values:any):Promise<number> {
         return await this.post('service-save', values);
@@ -69,12 +69,12 @@ class DevApi extends CenterApi {
         return await this.post('server-del', {unit:unit, id:id});
     }
     async delUqdb(unit:number,id:number):Promise<void> {
-        return await this.post('usqldb-del', {unit:unit, id:id});
+        return await this.post('uqdb-del', {unit:unit, id:id});
     }
     async delService(unit:number,id:number):Promise<void> {
         return await this.post('service-del', {unit:unit, id:id});
     }
-    async loadAppUsqs(app:number):Promise<any[]> {
+    async loadAppUqs(app:number):Promise<any[]> {
         return await this.get('app-usqs', {app: app});
     }
     async appBindUq(unit:number,app:number,usqs:{id:number, access:string[]}[]):Promise<void> {
@@ -93,14 +93,14 @@ class DevApi extends CenterApi {
     async searchServer(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('server-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
-    async searchUsqldb(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
-        return await this.get('usqldb-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
+    async searchUqdb(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
+        return await this.get('uqdb-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
     async loadAppServices(unit:number, app:number):Promise<any[]> {
         return await this.get('app-services', {unit:unit, app:app});
     }
-    async loadUqServices(unit:number, usq:number):Promise<any[]> {
-        return await this.get('usq-services', {unit:unit, usq:usq});
+    async loadUqServices(unit:number, uq:number):Promise<any[]> {
+        return await this.get('uq-services', {unit:unit, uq:uq});
     }
     async changeServiceProp(unit:number, service:number, prop:string, value:any):Promise<number> {
         return await this.post('service-change-prop', {unit:unit, service:service, prop:prop, value:value});

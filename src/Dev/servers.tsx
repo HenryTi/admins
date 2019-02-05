@@ -5,7 +5,7 @@ import {Row} from './row';
 import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
-import {ObjViewProps} from './ObjView';
+import {ObjViewProps} from './ObjViewProps';
 
 class Info extends React.Component<DevModel.Server> {
     render() {

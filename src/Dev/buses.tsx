@@ -10,7 +10,7 @@ import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {Row} from './row';
-import {ObjViewProps} from './ObjView';
+import {ObjViewProps} from './ObjViewProps';
 
 @observer
 class Info extends React.Component<DevModel.Bus> {

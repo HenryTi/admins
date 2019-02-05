@@ -1,17 +1,16 @@
 import * as React from 'react';
-import {observable, computed} from 'mobx';
+import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import _ from 'lodash';
 import classNames from 'classnames';
 import {nav, Page} from 'tonva-tools';
-import {FormRow, EasyDate, Media, 
-    Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva-react-form';
+import {Media, Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva-react-form';
 import {UnitSpan, IdDates, ServerSpan} from '../tools';
 import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {Row} from './row';
-import {ObjViewProps} from './ObjView';
+import {ObjViewProps} from './ObjViewProps';
 import {NewService, ServiceInfo} from './servicePage';
 
 @observer
@@ -21,7 +20,7 @@ class Info extends React.Component<DevModel.App> {
         store.dev.services.cur = undefined;
     }
     async componentDidMount() {
-        await store.dev.apps.loadCurApis();
+        await store.dev.apps.loadCurUqs();
         await store.dev.services.loadAppServices(this.props.id);
         this.usqs.list = store.dev.apps.uqs;
     }
@@ -133,7 +132,7 @@ const appsProps:ObjViewProps<DevModel.App> = {
     },
     info: Info,
     extraMenuActions: [
-        {icon:'cogs', caption:'设置关联UQ', action: ()=>nav.push(<AppUqs />)}
+        {icon: 'cogs', caption:'设置关联UQ', action: ()=>nav.push(<AppUqs />)}
     ],
 };
 
