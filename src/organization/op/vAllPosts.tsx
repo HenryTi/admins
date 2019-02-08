@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { VPage, Page } from "tonva-tools";
 import { COpBinding } from "./cOpBinding";
-import { Entity, EntityBlock, Usq } from './model';
-import { entityIcons, CAction, CQuery } from 'tonva-react-usql';
+import { Entity, EntityBlock, Uq } from './model';
+import { entityIcons, CAction, CQuery } from 'tonva-react-uq';
 import { List, Muted, LMR, FA } from 'tonva-react-form';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
@@ -13,14 +13,14 @@ interface Checked {
 }
 
 export class VAllPosts extends VPage<COpBinding> {
-    private usq: Usq;
+    private uq: Uq;
     private blocks:EntityBlock[];
     private checked:{[entity:string]:Checked} = {};
 
     @observable private isChanged:boolean = false;
-    async showEntry(usq: Usq) {
-        this.usq = usq;
-        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = this.usq;
+    async showEntry(uq: Uq) {
+        this.uq = uq;
+        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = this.uq;
         this.blocks = [
             {items: tuids, type: 'tuid'},
             {items: sheets, type: 'sheet'},
@@ -31,8 +31,8 @@ export class VAllPosts extends VPage<COpBinding> {
             {items: histories, type: 'history'},
             {items: pendings, type: 'pending'},
         ];
-        let getEntityOpForAll = this.controller.cUsq.cFromName('query', 'getEntityOpForAll') as CQuery;
-        let entityOpForAllResult = await getEntityOpForAll.entity.query({usq: this.usq.id});
+        let getEntityOpForAll = this.controller.cUq.cFromName('query', 'getEntityOpForAll') as CQuery;
+        let entityOpForAllResult = await getEntityOpForAll.entity.query({uq: this.uq.id});
         let entityOpForAll:{[entity:string]:boolean} = {};
         for (let eaa of entityOpForAllResult.ret) {
             entityOpForAll[eaa.entity] = true;
@@ -75,9 +75,9 @@ export class VAllPosts extends VPage<COpBinding> {
             if (this.checked[i].checked !== true) continue;
             entities.push({entity: i});
         }
-        let saveEntityOpForAll = this.controller.cUsq.cFromName('action', 'saveEntityOpForAll') as CAction;
+        let saveEntityOpForAll = this.controller.cUq.cFromName('action', 'saveEntityOpForAll') as CAction;
         let ret = await saveEntityOpForAll.entity.submit({
-            usq: this.usq.id,
+            uq: this.uq.id,
             entities: entities,
         });
         this.ceasePage();
@@ -104,7 +104,7 @@ export class VAllPosts extends VPage<COpBinding> {
 
     private pageRender = observer(() => {
         /*
-        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = this.usq;
+        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = this.uq;
         let blocks:EntityBlock[] = [
             {items: tuids, type: 'tuid'},
             {items: sheets, type: 'sheet'},

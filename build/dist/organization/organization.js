@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 import { Page, VPage } from 'tonva-tools';
 import { List } from 'tonva-react-form';
-import { CUsq, CLink } from "tonva-react-usql";
+import { CUq, CLink } from "tonva-react-uq";
 import ui from './ui';
 import { COpBinding } from './op';
-export class COrganization extends CUsq {
+export class COrganization extends CUq {
     constructor() {
         super(undefined, '$$$/$unitx', 0, 0, undefined, ui);
         this.label = '岗位权限';

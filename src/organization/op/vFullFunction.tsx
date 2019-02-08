@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { VPage, Page, nav } from "tonva-tools";
 import { COpBinding } from "./cOpBinding";
-import { Usq } from './model';
+import { Uq } from './model';
 import { List, FA, SearchBox } from 'tonva-react-form';
 import { observable } from 'mobx';
-import { CMap, CQuery, QueryPageItems, Query, Tuid, CTuid } from 'tonva-react-usql';
+import { CMap, CQuery, QueryPageItems, Query, Tuid, CTuid } from 'tonva-react-uq';
 
 export class PageUsers extends QueryPageItems {
     protected setPageStart(item:any) {
@@ -13,17 +13,17 @@ export class PageUsers extends QueryPageItems {
 }
 
 export class VFullFunction extends VPage<COpBinding> {
-    private usq: Usq;
+    private uq: Uq;
     @observable private users: any[] = [];
     private entityOpUserFully:CMap;
     private pageUsers: PageUsers;
     private tuidUser: CTuid<Tuid>;
-    async showEntry(usq: Usq) {
-        this.usq = usq;
-        this.entityOpUserFully = this.controller.cUsq.cFromName('map', 'entityOpUserFully') as CMap;
-        this.tuidUser = this.controller.cUsq.cFromName('tuid', 'user') as CTuid<Tuid>;
+    async showEntry(uq: Uq) {
+        this.uq = uq;
+        this.entityOpUserFully = this.controller.cUq.cFromName('map', 'entityOpUserFully') as CMap;
+        this.tuidUser = this.controller.cUq.cFromName('tuid', 'user') as CTuid<Tuid>;
         await this.entityOpUserFully.entity.loadSchema();
-        let all = await this.entityOpUserFully.entity.queries.all.query({_usq: this.usq.id});
+        let all = await this.entityOpUserFully.entity.queries.all.query({_uq: this.uq.id});
         let right = <button className="btn btn-sm btn-success" onClick={this.addClick}><FA name="plus" /></button>;
         this.users.push(...all.ret);
         this.openPageElement(<Page header={'全功能用户'} right={right}>
@@ -45,7 +45,7 @@ export class VFullFunction extends VPage<COpBinding> {
     }
 
     private onSumitStopFully = async (item:any) => {
-        let data = {_usq: this.usq.id, arr1:[{_user: item.user.id}]};
+        let data = {_uq: this.uq.id, arr1:[{_user: item.user.id}]};
         await this.entityOpUserFully.entity.actions.del.submit(data);
         let index = this.users.findIndex(v => v === item);
         if (index >= 0) this.users.splice(index, 1);
@@ -55,10 +55,10 @@ export class VFullFunction extends VPage<COpBinding> {
     private onCancelStop = () => this.closePage();
 
     private addClick = async () => {
-        let user = await this.controller.callSearchUser(this.usq);
+        let user = await this.controller.callSearchUser(this.uq);
         this.onUserSelected(user);
         /*
-        let searchUser = this.controller.cUsq.cFromName('query', 'SearchUser') as CQuery;
+        let searchUser = this.controller.cUq.cFromName('query', 'SearchUser') as CQuery;
         this.pageUsers = new PageUsers(searchUser.entity);
         this.openPage(this.usersView);
         */
@@ -72,10 +72,10 @@ export class VFullFunction extends VPage<COpBinding> {
         await this.pageUsers.first({key: key});
     }
     private onSetFully = async (item:any) => {
-        await this.entityOpUserFully.entity.actions.add.submit({_usq: this.usq.id, arr1:[{_user: item.id}]});
+        await this.entityOpUserFully.entity.actions.add.submit({_uq: this.uq.id, arr1:[{_user: item.id}]});
         this.tuidUser.entity.useId(item.id);
         let row = {
-            usq: this.usq.id,
+            uq: this.uq.id,
             user: this.tuidUser.entity.boxId(item.id),
         }
         this.users.push(row);

@@ -11,32 +11,24 @@ import { nav, Page } from 'tonva-tools';
 export class StringValueEdit extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            disabled: true,
-        };
-        this.ref = this.ref.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-    }
-    ref(input) {
-        if (!input)
-            return;
-        input.value = this.props.value || '';
-        this.input = input;
-    }
-    onChange(evt) {
-        let val = this.props.value;
-        let org = val && val.trim();
-        let v = evt.currentTarget.value.trim();
-        this.setState({
-            disabled: org === v
-        });
-    }
-    onSubmit() {
-        return __awaiter(this, void 0, void 0, function* () {
+        /*
+        private ref = (input:HTMLInputElement) => {
+            if (!input) return;
+            input.value = this.props.value || '';
+            this.input = input;
+        }*/
+        this.onChange = (evt) => {
             let val = this.props.value;
             let org = val && val.trim();
-            let v = this.input.value.trim();
+            this.value = evt.currentTarget.value.trim();
+            this.setState({
+                disabled: org === this.value
+            });
+        };
+        this.onSubmit = () => __awaiter(this, void 0, void 0, function* () {
+            let val = this.props.value;
+            let org = val && val.trim();
+            let v = this.value; // this.input.value.trim();
             let onChanged = this.props.onChanged;
             if (onChanged !== undefined) {
                 let ret = yield onChanged(v, org);
@@ -47,6 +39,14 @@ export class StringValueEdit extends React.Component {
                 nav.pop();
             }
         });
+        this.state = {
+            disabled: true,
+        };
+    }
+    renderControl() {
+        return React.createElement("input", { className: "form-control w-100", type: "text", 
+            // ref={this.ref}
+            defaultValue: this.props.value, onChange: this.onChange });
     }
     render() {
         let { title, onChanged, buttonText, info, value } = this.props;
@@ -56,10 +56,36 @@ export class StringValueEdit extends React.Component {
         if (error !== undefined)
             errorDiv = React.createElement("div", { className: 'text-danger' }, error);
         return React.createElement(Page, { header: title, right: right },
-            React.createElement("div", { className: "m-4" },
-                React.createElement("input", { className: "form-control w-100", type: "text", ref: this.ref, onChange: this.onChange }),
+            React.createElement("div", { className: "my-4 mx-3" },
+                this.renderControl(),
                 errorDiv,
                 React.createElement("small", { className: "d-block mt-2 text-muted" }, info)));
+    }
+}
+export class TextValueEdit extends StringValueEdit {
+    constructor() {
+        super(...arguments);
+        /*
+        private textArea:HTMLTextAreaElement;
+        private refTextArea = (textArea:HTMLTextAreaElement) => {
+            if (!textArea) return;
+            textArea.value = this.props.value || '';
+            this.textArea = textArea;
+        }
+        */
+        this.onTextAreaChange = (evt) => {
+            let val = this.props.value;
+            let org = val && val.trim();
+            this.value = evt.currentTarget.value.trim();
+            this.setState({
+                disabled: org === this.value
+            });
+        };
+    }
+    renderControl() {
+        return React.createElement("textarea", { className: "form-control w-100", rows: 8, 
+            // ref={this.refTextArea}
+            defaultValue: this.props.value, onChange: this.onTextAreaChange });
     }
 }
 //# sourceMappingURL=stringValueEdit.js.map

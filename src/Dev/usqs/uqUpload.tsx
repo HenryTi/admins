@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {nav, Page} from 'tonva-tools';
 import {List, EasyDate, LMR, Muted} from 'tonva-react-form';
-import {DevModel} from '../model';
-import {store} from '../store';
+import {DevModel} from '../../model';
+import {store} from '../../store';
 
 interface State {
     files: any[];

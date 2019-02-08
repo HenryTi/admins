@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 import { Muted } from 'tonva-react-form';
 import { left0 } from 'tonva-tools';
-import { VMapMain, CMap } from 'tonva-react-usql';
+import { VMapMain, CMap } from 'tonva-react-uq';
 class CMapTeamPerson extends CMap {
     searchOnKey(keyField, param) {
         const _super = Object.create(null, {

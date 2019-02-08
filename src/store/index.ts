@@ -13,7 +13,7 @@ export class Store {
     admins:Admins;
     dev:Dev;
     cacheUnits: CacheUnits;
-    cacheUsqs: CacheUqs;
+    cacheUqs: CacheUqs;
     cacheApps: CacheApps;
     cacheServers: CacheServers;
     uqServer: string;
@@ -33,7 +33,7 @@ export class Store {
         this.admins = new Admins(this);
         this.dev = new Dev(this);
         this.cacheUnits = new CacheUnits();
-        this.cacheUsqs = new CacheUqs();
+        this.cacheUqs = new CacheUqs();
         this.cacheApps = new CacheApps();
         this.cacheServers = new CacheServers();
     }
@@ -88,7 +88,7 @@ export class Store {
         this.unit = ret;
         console.log("loadUnit unit=%s", JSON.stringify(ret));
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
-        let uqServer = await devApi.uqServer();
+        let uqServer = await devApi.uqBuilderUrl();
         let {url, urlDebug} = uqServer;
         this.uqServer = host.getUrlOrDebug(url, urlDebug);
         console.log("uq-build: %s", JSON.stringify(this.uqServer));

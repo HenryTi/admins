@@ -17,7 +17,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { nav, Page } from 'tonva-tools';
 import { TonvaForm, MultiStep, DropdownActions, List, FA } from 'tonva-react-form';
-let DevObjs = class DevObjs extends React.Component {
+let ObjView = class ObjView extends React.Component {
     constructor() {
         super(...arguments);
         this.itemClick = (item) => {
@@ -45,10 +45,10 @@ let DevObjs = class DevObjs extends React.Component {
             React.createElement(List, { items: items().items, item: { render: this.props.row, onClick: this.itemClick } }));
     }
 };
-DevObjs = __decorate([
+ObjView = __decorate([
     observer
-], DevObjs);
-export default DevObjs;
+], ObjView);
+export { ObjView };
 class New extends React.Component {
     constructor(props) {
         super(props);

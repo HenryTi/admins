@@ -14,8 +14,8 @@ import { mainApi } from 'api';
 import { COrganization } from 'organization';
 import {
     ObjViewProps, ObjView,
-    appsProps, uqsProps, busesProps, 
-    serversProps, uqdbsProps, servicesProps} from './Dev';
+    appsProps, busesProps, 
+    serversProps, /*uqdbsProps, */servicesProps, UQController} from './Dev';
 
 export class CAdmin extends Controller {
     isProduction: boolean;
@@ -128,12 +128,13 @@ interface DevItem<T extends DevModel.ObjBase> {
     title: string;
     count: number;
     icon: string;
-    objProps: ObjViewProps<T>
+    objProps?: ObjViewProps<T>;
+    onClick?: ()=>void;
 }
 
 type Item = ActionItem|DevItem<DevModel.ObjBase>;
 
-const rArrow = <FA name="angle-right" />;
+const rArrow = <FA name="chevron-right" />;
 
 @observer
 default class AdminPage extends React.Component {
@@ -220,8 +221,9 @@ default class AdminPage extends React.Component {
                         title: 'UQ', 
                         count: counts.uq, 
                         icon: 'cogs', 
+                        onClick: () => new UQController(undefined).start(unit.id),
                         //items: store.dev.apis, 
-                        objProps: uqsProps,
+                        //objProps: uqsProps,
                         //page: <ObjView {...apisProps} items={store.dev.apis} />
                     },
                     {
@@ -264,12 +266,12 @@ default class AdminPage extends React.Component {
     }
     private row = (item:Item, index:number):JSX.Element => {
         let {title} = item as DevItem<DevModel.ObjBase>;
-        let left, mid, r;
+        let left:any, mid:any, r:any;
         if (title !== undefined) {
             let {icon, count} = item as DevItem<DevModel.ObjBase>;
             left = <FA className="text-primary" name={icon} fixWidth={true} size="lg" />;
             mid = title;
-            r = count>0 && <small className="text-muted">{count}</small>;
+            r = count>0 && <span>{count}</span>;
         }
         else {
             let {right, main, icon} = item as ActionItem;
@@ -277,7 +279,7 @@ default class AdminPage extends React.Component {
                 <FA className="text-primary" name={icon} fixWidth={true} size="lg" /> :
                 item.icon;
             mid = main;
-            r = <small className="text-muted">{right}</small>;
+            r = <span>{right}</span>;
         }
         return <LMR className="px-3 py-2 align-items-center" left={left} right={r}>
             <div className="px-3"><b>{mid}</b></div>
@@ -286,8 +288,13 @@ default class AdminPage extends React.Component {
     private rowClick = async (item:Item) => {
         let {title} = item as DevItem<DevModel.ObjBase>;
         if (title !== undefined) {
-            let {objProps} = item as DevItem<DevModel.ObjBase>;
-            return nav.push(<ObjView {...objProps} />);
+            let {objProps, onClick} = item as DevItem<DevModel.ObjBase>;
+            if (objProps !== undefined)
+                return nav.push(<ObjView {...objProps} />);
+            else {
+                onClick();
+                return;
+            }
         }
         else {
             let {page:P, controller} = item as ActionItem;

@@ -79,7 +79,7 @@ let AppInfo = class AppInfo extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.apis.list = yield devApi.loadAppUsqs(this.props.id);
+            this.apis.list = yield devApi.loadAppUqs(this.props.id);
         });
     }
     render() {

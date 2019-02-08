@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Page, VPage } from 'tonva-tools';
 import { List, FA } from 'tonva-react-form';
-import { CUsq, Link, CLink, CApp } from "tonva-react-usql";
+import { CUq, Link, CLink, CApp } from "tonva-react-uq";
 import ui from './ui';
 import { COpBinding } from './op';
 
-export class COrganization extends CUsq {
+export class COrganization extends CUq {
     constructor() {
         super(undefined, '$$$/$unitx', 0, 0, undefined, ui);
     }

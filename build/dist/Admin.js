@@ -25,7 +25,7 @@ import AppsPage from './Apps';
 import { Members } from './Members';
 import { mainApi } from 'api';
 import { COrganization } from 'organization';
-import { ObjView, appsProps, uqsProps, busesProps, serversProps, uqdbsProps } from './Dev';
+import { ObjView, appsProps, uqsProps, busesProps, serversProps } from './Dev';
 export class CAdmin extends Controller {
     loadAdminUnits() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -259,21 +259,6 @@ let AdminPage = class AdminPage extends React.Component {
                             //items: store.dev.servers, 
                             //page: <ObjView {...serversProps} items={store.dev.servers} />
                             objProps: serversProps,
-                        },
-                        /*
-                        {
-                            title: 'Service',
-                            count: counts.service,
-                            icon: 'microchip',
-                            //items: store.dev.services,
-                            //page: <ObjView {...servicesProps} items={store.dev.services} />
-                            objProps: servicesProps,
-                        },*/
-                        {
-                            title: 'uqDB',
-                            count: counts.uqdb,
-                            icon: 'database',
-                            objProps: uqdbsProps,
                         },
                     ];
                     items.push(...devItems);

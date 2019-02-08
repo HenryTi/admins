@@ -15,15 +15,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as React from 'react';
 import { Media, PropGrid, LMR, FA, List, Muted } from 'tonva-react-form';
 import { nav, Page } from 'tonva-tools';
-import { UnitSpan, IdDates, UsqSpan } from '../tools';
+import { UnitSpan, IdDates, UqSpan } from '../tools';
 import { Row } from './row';
 import { appIcon, appItemIcon } from '../consts';
 import { store } from '../store';
-import { UsqlUpload } from './uqUpload';
 import { observer } from 'mobx-react';
 class Info extends React.Component {
-    onUsql() {
-        nav.push(React.createElement(UsqlUpload, Object.assign({}, this.props)));
+    onUq() {
+        alert('moved to uq');
+        //nav.push(<UqUpload {...this.props} />);
     }
     render() {
         let { dbname, discription, usq, cloud, connection, unit, date_init, date_update } = this.props;
@@ -38,9 +38,9 @@ class Info extends React.Component {
             { type: 'component', label: '开发号', component: React.createElement("div", { className: "py-2" },
                     React.createElement(UnitSpan, { id: unit, isLink: true })) },
             { type: 'component', label: 'UQ', component: React.createElement("div", { className: "py-2" },
-                    React.createElement(UsqSpan, { id: usq, isLink: true })) },
+                    React.createElement(UqSpan, { id: usq, isLink: true })) },
             { type: 'string', label: '云服务', name: 'cloud' },
-            { type: 'component', label: 'uq代码', component: React.createElement(LMR, { onClick: () => this.onUsql(), className: "w-100 py-2 cursor-pointer", left: "\u4E0A\u4F20\u7F16\u8BD1uq\u4EE3\u7801", right: React.createElement(FA, { className: "align-self-center", name: "chevron-right" }) })
+            { type: 'component', label: 'uq代码', component: React.createElement(LMR, { onClick: () => this.onUq(), className: "w-100 py-2 cursor-pointer", left: "\u4E0A\u4F20\u7F16\u8BD1uq\u4EE3\u7801", right: React.createElement(FA, { className: "align-self-center", name: "chevron-right" }) })
             },
         ];
         return React.createElement("div", null,
@@ -68,7 +68,7 @@ const uqdbsProps = {
             field: { name: 'usq', type: 'number', required: true },
             face: {
                 type: 'pick',
-                content: ({ id }) => React.createElement(UsqSpan, { id: id, isLink: false }),
+                content: ({ id }) => React.createElement(UqSpan, { id: id, isLink: false }),
                 fromPicked: (item) => { return { id: item.id, caption: 'API' }; },
                 pick: (face, formProps, formValues) => __awaiter(this, void 0, void 0, function* () {
                     return new Promise((resolve, reject) => {

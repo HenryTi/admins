@@ -33,7 +33,7 @@ let Info = class Info extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield store.dev.apps.loadCurApis();
+            yield store.dev.apps.loadCurUqs();
             yield store.dev.services.loadAppServices(this.props.id);
             this.usqs.list = store.dev.apps.uqs;
         });

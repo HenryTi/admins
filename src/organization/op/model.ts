@@ -9,13 +9,13 @@ export interface App {
     inUnit: number;
     date_init: Date;
     date_update: Date;
-    usqs: Usq[];
+    uqs: Uq[];
 }
 
 export type EntityType = 'tuid' | 'sheet' | 'action' | 'map' | 'book' | 'query' | 'history' | 'pending';
 
 export interface Entity {
-    usq: Usq;
+    uq: Uq;
     name: string;
     states: string[];       // 非sheet的entity，只有一个state，is $
 }
@@ -23,7 +23,7 @@ export interface Entity {
 export interface Sheet extends Entity {
 }
 
-export interface Usq {
+export interface Uq {
     app: number;
     id: number;
     unit: number;

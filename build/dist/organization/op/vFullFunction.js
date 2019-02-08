@@ -16,7 +16,7 @@ import * as React from 'react';
 import { VPage, Page } from "tonva-tools";
 import { List, FA, SearchBox } from 'tonva-react-form';
 import { observable } from 'mobx';
-import { QueryPageItems } from 'tonva-react-usql';
+import { QueryPageItems } from 'tonva-react-uq';
 export class PageUsers extends QueryPageItems {
     setPageStart(item) {
         this.pageStart = item === undefined ? 0 : item.id;
@@ -97,8 +97,8 @@ export class VFullFunction extends VPage {
     showEntry(usq) {
         return __awaiter(this, void 0, void 0, function* () {
             this.usq = usq;
-            this.entityOpUserFully = this.controller.cUsq.cFromName('map', 'entityOpUserFully');
-            this.tuidUser = this.controller.cUsq.cFromName('tuid', 'user');
+            this.entityOpUserFully = this.controller.cUq.cFromName('map', 'entityOpUserFully');
+            this.tuidUser = this.controller.cUq.cFromName('tuid', 'user');
             yield this.entityOpUserFully.entity.loadSchema();
             let all = yield this.entityOpUserFully.entity.queries.all.query({ _usq: this.usq.id });
             let right = React.createElement("button", { className: "btn btn-sm btn-success", onClick: this.addClick },

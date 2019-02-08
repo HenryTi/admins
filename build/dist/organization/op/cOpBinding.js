@@ -10,12 +10,12 @@ import React from "react";
 import { Page, meInFrame } from "tonva-tools";
 import { List, Muted, LMR, FA } from "tonva-react-form";
 import { VOpBinding } from './vOpBinding';
-import { centerApi, entityIcons, ControllerUsq } from "tonva-react-usql";
+import { centerApi, entityIcons, ControllerUq } from "tonva-react-uq";
 import { VAllPosts } from "./vAllPosts";
 import { VFullFunction } from "./vFullFunction";
 import { VSearchUser } from "./vSearchUser";
 // 单据跟操作的绑定设置
-export class COpBinding extends ControllerUsq {
+export class COpBinding extends ControllerUq {
     constructor() {
         /*
         constructor(unitxUsq: CUsq, res:any) {
@@ -42,7 +42,7 @@ export class COpBinding extends ControllerUsq {
             React.createElement(List, { items: this.apps, item: { render: this.appRender, onClick: this.appClick } }));
         this.entityClick = (block, entity) => __awaiter(this, void 0, void 0, function* () {
             //alert('entity click');
-            let entityPosts = this.cUsq.cFromName('query', 'getEntityPost');
+            let entityPosts = this.cUq.cFromName('query', 'getEntityPost');
             let ret = yield entityPosts.entity.query({ usq: entity.usq.id, entityName: entity.name });
             let opTos = {};
             for (let row of ret.ret) {
@@ -62,7 +62,7 @@ export class COpBinding extends ControllerUsq {
             this.sheetClickOld(sheet);
         });
         this.sheetClickOld = (sheet) => __awaiter(this, void 0, void 0, function* () {
-            let entityPosts = this.cUsq.cFromName('query', 'getEntityPost');
+            let entityPosts = this.cUq.cFromName('query', 'getEntityPost');
             let ret = yield entityPosts.entity.query({ usq: sheet.usq.id, entityName: sheet.name });
             let opTos = {};
             for (let row of ret.ret) {
@@ -210,7 +210,7 @@ export class COpBinding extends ControllerUsq {
     }
     buildPosts() {
         return __awaiter(this, void 0, void 0, function* () {
-            let queryAllTeams = this.cUsq.cFromName('query', 'allteams');
+            let queryAllTeams = this.cUq.cFromName('query', 'allteams');
             let ret = yield queryAllTeams.entity.query(undefined);
             this.teams = ret['teams'];
             this.organizations = ret['organization'];
@@ -342,7 +342,7 @@ export class COpBinding extends ControllerUsq {
     }
     saveSheetStatePosts(sheet, stateName, toArr) {
         return __awaiter(this, void 0, void 0, function* () {
-            let actionSaveEntityOpPost = this.cUsq.cFromName('action', 'saveentityoppost');
+            let actionSaveEntityOpPost = this.cUq.cFromName('action', 'saveentityoppost');
             let { usq, name } = sheet;
             yield actionSaveEntityOpPost.submit({
                 usq: usq.id,

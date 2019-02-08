@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { CenterApi } from 'tonva-tools';
 class DevApi extends CenterApi {
-    usqlServer() {
+    uqServer() {
         return __awaiter(this, void 0, void 0, function* () {
-            let ret = yield this.get('usql-server', undefined);
+            let ret = yield this.get('uq-server', undefined);
             return ret;
         });
     }
@@ -34,9 +34,9 @@ class DevApi extends CenterApi {
             return yield this.get('server', { id: id });
         });
     }
-    usqldb(id) {
+    uqdb(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('usqldb', { id: id });
+            return yield this.get('uqdb', { id: id });
         });
     }
     apps(unit, pageSize = 30) {
@@ -44,9 +44,9 @@ class DevApi extends CenterApi {
             return yield this.get('apps', { unit: unit, pageSize: pageSize });
         });
     }
-    usqs(unit, pageSize = 30) {
+    uqs(unit, pageSize = 30) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('usqs', { unit: unit, pageSize: pageSize });
+            return yield this.get('uqs', { unit: unit, pageSize: pageSize });
         });
     }
     buses(unit, pageSize = 30) {
@@ -61,7 +61,7 @@ class DevApi extends CenterApi {
     }
     uqdbs(unit, pageSize = 30) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('usqldbs', { unit: unit, pageSize: pageSize });
+            return yield this.get('uqdbs', { unit: unit, pageSize: pageSize });
         });
     }
     services(unit, pageSize = 30) {
@@ -91,7 +91,7 @@ class DevApi extends CenterApi {
     }
     saveUqdb(values) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.post('usqldb-save', values);
+            return yield this.post('uqdb-save', values);
         });
     }
     saveService(values) {
@@ -121,7 +121,7 @@ class DevApi extends CenterApi {
     }
     delUqdb(unit, id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.post('usqldb-del', { unit: unit, id: id });
+            return yield this.post('uqdb-del', { unit: unit, id: id });
         });
     }
     delService(unit, id) {
@@ -129,7 +129,7 @@ class DevApi extends CenterApi {
             return yield this.post('service-del', { unit: unit, id: id });
         });
     }
-    loadAppUsqs(app) {
+    loadAppUqs(app) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.get('app-usqs', { app: app });
         });
@@ -158,9 +158,9 @@ class DevApi extends CenterApi {
             return yield this.get('server-search', { unit: unit, key: key, pageStart: pageStart, pageSize: pageSize });
         });
     }
-    searchUsqldb(unit, key, pageStart, pageSize) {
+    searchUqdb(unit, key, pageStart, pageSize) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('usqldb-search', { unit: unit, key: key, pageStart: pageStart, pageSize: pageSize });
+            return yield this.get('uqdb-search', { unit: unit, key: key, pageStart: pageStart, pageSize: pageSize });
         });
     }
     loadAppServices(unit, app) {
@@ -168,9 +168,9 @@ class DevApi extends CenterApi {
             return yield this.get('app-services', { unit: unit, app: app });
         });
     }
-    loadUqServices(unit, usq) {
+    loadUqServices(unit, uq) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.get('usq-services', { unit: unit, usq: usq });
+            return yield this.get('uq-services', { unit: unit, uq: uq });
         });
     }
     changeServiceProp(unit, service, prop, value) {

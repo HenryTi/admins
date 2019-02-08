@@ -1,17 +1,12 @@
-import * as React from 'react';
-import {observer} from 'mobx-react';
-import {EasyDate, Media, Prop, PropGrid, Muted, List, LMR, Badge, FA} from 'tonva-react-form';
-import {nav, Page} from 'tonva-tools';
-import {UnitSpan, IdDates, ServerSpan} from 'tools';
-import {appIcon, appItemIcon} from 'consts';
-import {store} from '../store';
-import {DevModel} from '../model';
-import {ObjViewProps} from './ObjViewProps';
-import {NewService, ServiceInfo} from './uq-servicePage';
-import { UqUpload, UpUploadProps } from './uqUpload';
 
+/*
 @observer
 class Info extends React.Component<DevModel.UQ> {
+    private access: string;
+    private entities: string;
+    private services: DevModel.Service[];
+    private buses: DevModel.Bus[];
+
     componentWillMount() {
         store.dev.services.items = undefined;
     }
@@ -49,20 +44,27 @@ class Info extends React.Component<DevModel.UQ> {
         </div>;
         let rows:Prop[] = [
             '',
-            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
-            '',
-            {type: 'component', label: '开发号', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
-            {type: 'component', label: '入口', component: <div className="py-2">{
-                access? 
-                    access.split(',').join(', ')
-                    : <Muted>(全)</Muted>
-            }</div> },
             {
+                type: 'component', 
+                component: <Media icon={appIcon} main={name} discription={disp} />
+            },
+            {
+                type: 'component', 
+                label: '开发号', 
+                component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> 
+            },
+           '',
+           {
                 type: 'component', 
                 label: '编译代码', 
                 component: <LMR onClick={()=>this.onUq()} className="w-100 py-2 cursor-pointer" 
                     left="上传编译uq代码" right={<FA className="align-self-center" name="chevron-right" />} />
             },
+            //{type: 'component', label: 'ACCESS', component: <div className="py-2">{
+            //    access? 
+            //        access.split(',').join(', ')
+            //        : <Muted>(全)</Muted>
+            //}</div> },
         ];
         let services = store.dev.services.items;
         return <div>
@@ -93,11 +95,11 @@ const uqsProps:ObjViewProps<DevModel.UQ> = {
             field: {name: 'discription', type: 'string', maxLength: 250},
             face: {type: 'textarea'}
         },
-        {
-            label: '入口',
-            field: {name: 'access', type: 'string', maxLength: 250},
-            face: {type: 'textarea', placeholder: '逗号分隔的入口名'}
-        },
+        //{
+        //    label: '入口',
+        //    field: {name: 'access', type: 'string', maxLength: 250},
+        //    face: {type: 'textarea', placeholder: '逗号分隔的入口名'}
+        //},
     ],
     row: (item:DevModel.UQ):JSX.Element => {
         let {name, discription, service_count} = item;
@@ -120,3 +122,4 @@ const uqsProps:ObjViewProps<DevModel.UQ> = {
 };
 
 export default uqsProps;
+*/

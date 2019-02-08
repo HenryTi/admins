@@ -208,4 +208,4 @@ const servicesProps = {
     }
 };
 export default servicesProps;
-//# sourceMappingURL=services.js.map
+//# sourceMappingURL=uq-service.js.map

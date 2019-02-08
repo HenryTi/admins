@@ -16,7 +16,7 @@ export default {
         },
         c: ()=><span className="text-danger">ccc</span>,
     },
-    usq: '$UNITX',
+    uq: '$UNITX',
     tuid: '基础档案',
     map: '对照表',
     sheet: '单据',

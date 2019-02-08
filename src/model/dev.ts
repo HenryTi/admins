@@ -19,6 +19,8 @@ export namespace DevModel {
         discription: string;
         icon: string;
         "public": number;
+        server: number;
+        url: string;
     }
 
     export interface Bus extends ObjBase {
@@ -36,7 +38,7 @@ export namespace DevModel {
     export interface Uqdb extends ObjBase {
         name: string;
         dbtype: string;
-        usq: number;
+        uq: number;
         dbname: string;
         discription: string;
         cloud: string;
@@ -50,7 +52,7 @@ export namespace DevModel {
         discription: string;
         server: number;
         app: number;
-        usq: number;
+        uq: number;
 
         db: string;
         db_type: string;

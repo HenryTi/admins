@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { TuidUI, CTuidSelect, CQuery, QueryPageItems } from "tonva-react-usql";
+import { TuidUI, CTuidSelect, CQuery, QueryPageItems } from "tonva-react-uq";
 import { PageItems } from "tonva-tools";
 
 class CUserSelect extends CTuidSelect {
     protected buildPageItems():PageItems<any> {
-        let query:CQuery = this.cUsq.cFromName('query', 'SearchUser') as CQuery;
+        let query:CQuery = this.cUq.cFromName('query', 'SearchUser') as CQuery;
         return new QueryPageItems(query.entity);
     }
     idFromItem(item:any) {return item.id;}

@@ -1,14 +1,14 @@
-import { UsqUI } from 'tonva-react-usql';
+import { UqUI } from 'tonva-react-uq';
 import map from './map';
 import tuid from './tuid';
 import query from './query';
 import res from './res';
 
-const usqUI:UsqUI = {
+const uqUI:UqUI = {
     map: map,
     tuid: tuid,
     query: query,
     res: res,
 }
 
-export default usqUI;
+export default uqUI;

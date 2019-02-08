@@ -113,38 +113,17 @@ class Apps extends ObjItems {
     }
     _inc() { this.dev.counts.app++; }
     _dec() { this.dev.counts.app--; }
-    loadCurApis() {
+    loadCurUqs() {
         return __awaiter(this, void 0, void 0, function* () {
-            let ret = yield devApi.loadAppUsqs(this.cur.id);
+            let ret = yield devApi.loadAppUqs(this.cur.id);
             this.uqs = ret;
         });
     }
-    /*
-    public async loadService() {
-        this.service = await devApi.loadAppServices(this.store.unit.id, this.cur.id);
-    }*/
     searchApi(key) {
         return __awaiter(this, void 0, void 0, function* () {
             this.searchedApis = yield devApi.searchUsq(this.store.unit.id, key, 0, searchPageSize);
         });
     }
-    /*
-    public async appBindApi(apiIds:number[], bind:boolean) {
-        await devApi.appBindApi(this.store.unit.id, this.cur.id, apiIds, bind? 1:0);
-        for (let api of apiIds) {
-            if (bind) {
-                if (this.searchedApis !== undefined) {
-                    let find = this.searchedApis.find(a => a.id === api);
-                    if (find !== undefined) this.apis.unshift(find);
-                }
-            }
-            else {
-                let index = this.apis.findIndex(a => a.id === api);
-                if (index>=0) this.apis.splice(index, 1);
-            }
-        }
-    }*/
-    // if apis === undefined, then unbind
     appBindUq(usqs) {
         return __awaiter(this, void 0, void 0, function* () {
             let allUsqs = this.uqs.map(v => {
@@ -178,7 +157,7 @@ class Uqs extends ObjItems {
     //@observable services: DevModel.Service[];
     _load() {
         return __awaiter(this, void 0, void 0, function* () {
-            let ret = yield devApi.usqs(this.store.unit.id);
+            let ret = yield devApi.uqs(this.store.unit.id);
             return ret;
         });
     }
@@ -286,13 +265,23 @@ class Services extends ObjItems {
                 case 'server':
                     this.cur.server = value;
                     break;
+                case 'db':
+                    this.cur.db = value;
+                    break;
+                case 'db_type':
+                    this.cur.db_type = value;
+                    break;
+                case 'connection':
+                    this.cur.connection = value;
+                    break;
             }
             return ret;
         });
     }
-    loadUqServices(api) {
+    loadUqServices(uq) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.items = yield devApi.loadUqServices(this.store.unit.id, api);
+            let ret = yield devApi.loadUqServices(this.store.unit.id, uq);
+            this.items = ret[0];
         });
     }
     loadAppServices(app) {

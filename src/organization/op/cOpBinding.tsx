@@ -2,24 +2,24 @@ import React from "react";
 import { Page, Controller, meInFrame, VPage } from "tonva-tools";
 import { List, Muted, LMR, FA } from "tonva-react-form";
 import { VOpBinding } from './vOpBinding';
-import { CAction, CQuery, CUsq, centerApi, entityIcons, ControllerUsq } from "tonva-react-usql";
-import { Organization, Team, Section, Post, Sheet, App, Usq, To, Entity, EntityBlock } from "./model";
+import { CAction, CQuery, centerApi, entityIcons, ControllerUq } from "tonva-react-uq";
+import { Organization, Team, Section, Post, Sheet, App, Uq, To, Entity, EntityBlock } from "./model";
 import { VAllPosts } from "./vAllPosts";
 import { VFullFunction } from "./vFullFunction";
 import { VSearchUser } from "./vSearchUser";
 
 // 单据跟操作的绑定设置
-export class COpBinding extends ControllerUsq {
+export class COpBinding extends ControllerUq {
     /*
-    constructor(unitxUsq: CUsq, res:any) {
+    constructor(unitxUq: CUq, res:any) {
         super({});
-        this.unitxUsq = unitxUsq;
+        this.unitxUq = unitxUq;
     }*/
 
     icon = <FA name="map-o" className="text-success" fixWidth={true} />;
-    label = '岗位权限 - USQ对象';
+    label = '岗位权限 - UQ对象';
 
-    //private unitxUsq: CUsq;
+    //private unitxUq: CUq;
     private apps: App[];
     organizations: Organization[];
     teams: Team[];
@@ -32,29 +32,29 @@ export class COpBinding extends ControllerUsq {
 
     protected async internalStart():Promise<void> {
         await this.buildPosts();
-        await this.buildAppsUsqs();
+        await this.buildAppsUqs();
         this.openPage(<this.appsView />);
     }
 
-    private async buildAppsUsqs() {
+    private async buildAppsUqs() {
         let unit = meInFrame.unit;
-        let ret:any[][] = await centerApi.get('/unit/apps-usqs', {unit: unit});
+        let ret:any[][] = await centerApi.get('/unit/apps-uqs', {unit: unit});
         this.apps = ret[0];
-        let usqs: Usq[] = ret[1];
+        let uqs: Uq[] = ret[1];
 
         for (let app of this.apps) {
-            app.usqs = [];
+            app.uqs = [];
         }
-        for (let usq of usqs) {
-            let app = this.apps.find(v => v.id === usq.app);
+        for (let uq of uqs) {
+            let app = this.apps.find(v => v.id === uq.app);
             if (app === undefined) continue;
-            app.usqs.push(usq);
-            this.setUsqEntities(usq);
+            app.uqs.push(uq);
+            this.setUqEntities(uq);
         }
     }
 
     private async buildPosts() {
-        let queryAllTeams = this.cUsq.cFromName('query', 'allteams') as CQuery;
+        let queryAllTeams = this.cUq.cFromName('query', 'allteams') as CQuery;
         let ret:any[][] = await queryAllTeams.entity.query(undefined);
         this.teams = ret['teams'];
         this.organizations = ret['organization'];
@@ -105,22 +105,22 @@ export class COpBinding extends ControllerUsq {
         }
     }
 
-    private setUsqEntities(usq:Usq) {
-        let entities = usq.entities;
+    private setUqEntities(uq:Uq) {
+        let entities = uq.entities;
         if (entities === null) return;
         let lns = entities.split('\n');
         let len = lns.length;
         let p:number;
         for (let i=0; i<len;) {
             switch (lns[i]) {
-                case 'tuid': p = this.setEntities(usq.tuids = [], lns, i, usq); break;
-                case 'map': p = this.setEntities(usq.maps = [], lns, i, usq); break;
-                case 'book': p = this.setEntities(usq.books = [], lns, i, usq); break;
-                case 'history': p = this.setEntities(usq.histories = [], lns, i, usq); break;
-                case 'pending': p = this.setEntities(usq.pendings = [], lns, i, usq); break;
-                case 'query': p = this.setEntities(usq.queries = [], lns, i, usq); break;
-                case 'action': p = this.setEntities(usq.actions = [], lns, i, usq); break;
-                case 'sheet': p = this.setSheets(usq.sheets = [], lns, i, usq); break;
+                case 'tuid': p = this.setEntities(uq.tuids = [], lns, i, uq); break;
+                case 'map': p = this.setEntities(uq.maps = [], lns, i, uq); break;
+                case 'book': p = this.setEntities(uq.books = [], lns, i, uq); break;
+                case 'history': p = this.setEntities(uq.histories = [], lns, i, uq); break;
+                case 'pending': p = this.setEntities(uq.pendings = [], lns, i, uq); break;
+                case 'query': p = this.setEntities(uq.queries = [], lns, i, uq); break;
+                case 'action': p = this.setEntities(uq.actions = [], lns, i, uq); break;
+                case 'sheet': p = this.setSheets(uq.sheets = [], lns, i, uq); break;
                 default:
                     alert('unknown entity type: ' + lns[i]);
                     return;
@@ -129,7 +129,7 @@ export class COpBinding extends ControllerUsq {
         }
     }
 
-    private setEntities(entities:Entity[], lines:string[], p:number, usq:Usq):number {
+    private setEntities(entities:Entity[], lines:string[], p:number, uq:Uq):number {
         let len = lines.length;
         let i = p+1;
         for (; i<len; i++) {
@@ -137,7 +137,7 @@ export class COpBinding extends ControllerUsq {
             if (ln.length > 0) {
                 let name = ln;
                 entities.push({
-                    usq: usq,
+                    uq: uq,
                     name: name,
                     states: undefined
                 });
@@ -147,7 +147,7 @@ export class COpBinding extends ControllerUsq {
         return i;
     }
 
-    private setSheets(sheets:Sheet[], lines:string[], p:number, usq:Usq):number {
+    private setSheets(sheets:Sheet[], lines:string[], p:number, uq:Uq):number {
         let len = lines.length;
         let i = p+1;
         for (; i<len; i++) {
@@ -157,7 +157,7 @@ export class COpBinding extends ControllerUsq {
                 let name = parts[0];
                 parts[0] = '$';
                 let sheet:Sheet = {
-                    usq: usq,
+                    uq: uq,
                     name: name,
                     states: parts,
                 }
@@ -169,10 +169,10 @@ export class COpBinding extends ControllerUsq {
     }
 
     async saveSheetStatePosts(sheet:Sheet, stateName:string, toArr:{post:number, team:number, section:number}[]) {
-        let actionSaveEntityOpPost = this.cUsq.cFromName('action', 'saveentityoppost') as CAction;
-        let {usq, name} = sheet;
+        let actionSaveEntityOpPost = this.cUq.cFromName('action', 'saveentityoppost') as CAction;
+        let {uq, name} = sheet;
         await actionSaveEntityOpPost.submit({
-            usq: usq.id,
+            uq: uq.id,
             entityName: name,
             opName: stateName,
             posts: toArr
@@ -190,7 +190,7 @@ export class COpBinding extends ControllerUsq {
         this.openPage(<this.appView {...app} />)
     }
 
-    async callSearchUser(usq:Usq): Promise<any> {
+    async callSearchUser(uq:Uq): Promise<any> {
         let user = await this.vCall(VSearchUser, meInFrame.unit);
         return user;
     }
@@ -203,7 +203,7 @@ export class COpBinding extends ControllerUsq {
                     下面是全部启用的APP。请选择
                 </li>
                 <li>
-                    每个APP会使用一个以上的USQ。USQ里面定义了Tuid，Action，Map和Sheet等对象。
+                    每个APP会使用一个以上的UQ。UQ里面定义了Tuid，Action，Map和Sheet等对象。
                 </li>
                 <li>
                     设置对象跟岗位的关联
@@ -225,8 +225,8 @@ export class COpBinding extends ControllerUsq {
     }
     private entityClick = async (block:EntityBlock, entity:Entity) => {
         //alert('entity click');
-        let entityPosts = this.cUsq.cFromName('query', 'getEntityPost') as CQuery;
-        let ret = await entityPosts.entity.query({usq: entity.usq.id, entityName: entity.name});
+        let entityPosts = this.cUq.cFromName('query', 'getEntityPost') as CQuery;
+        let ret = await entityPosts.entity.query({uq: entity.uq.id, entityName: entity.name});
         let opTos:{[op:string]:To[]} = {};
         for (let row of ret.ret) {
             let {op, post, team, section} = row;
@@ -245,8 +245,8 @@ export class COpBinding extends ControllerUsq {
     }
 
     private sheetClickOld = async (sheet:Sheet) => {
-        let entityPosts = this.cUsq.cFromName('query', 'getEntityPost') as CQuery;
-        let ret = await entityPosts.entity.query({usq: sheet.usq.id, entityName: sheet.name});
+        let entityPosts = this.cUq.cFromName('query', 'getEntityPost') as CQuery;
+        let ret = await entityPosts.entity.query({uq: sheet.uq.id, entityName: sheet.name});
         let opTos:{[op:string]:To[]} = {};
         for (let row of ret.ret) {
             let {op, post, team, section} = row;
@@ -268,7 +268,7 @@ export class COpBinding extends ControllerUsq {
         </div>
     }
 
-    private settingClick = (item:any, usq:Usq) => {
+    private settingClick = (item:any, uq:Uq) => {
         let {name} = item;
         let V: new (coordinator) => VPage<COpBinding>;
         switch (name) {
@@ -276,11 +276,11 @@ export class COpBinding extends ControllerUsq {
             case 'entity-by-all-post': V = VAllPosts; break;
             case 'user-all-entities': V = VFullFunction; break;
         }
-        this.showVPage(V, usq);
+        this.showVPage(V, uq);
     }
     
-    private usqRender = (usq:Usq, index:number) => {
-        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = usq;
+    private uqRender = (uq:Uq, index:number) => {
+        let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = uq;
         let nameRender = this.entityRender;
         let blocks:EntityBlock[] = [
             {items: tuids, type: 'tuid', itemClick: this.entityClick},
@@ -306,7 +306,7 @@ export class COpBinding extends ControllerUsq {
                 item={{
                     key: (item:any)=>item.name, 
                     render: this.renderSetting,
-                    onClick:(item:any)=>this.settingClick(item, usq) 
+                    onClick:(item:any)=>this.settingClick(item, uq) 
                 }}
              />
             {blocks.map(block => {
@@ -350,7 +350,7 @@ export class COpBinding extends ControllerUsq {
 
     private appView = (app:App) => <Page header={app.name + '操作权限'}>
         {
-            app.usqs.map((v, index) => this.usqRender(v, index))
+            app.uqs.map((v, index) => this.uqRender(v, index))
         }
     </Page>;
 

@@ -1,8 +1,8 @@
 import {CenterApi} from 'tonva-tools';
 
 class DevApi extends CenterApi {
-    async uqServer():Promise<any> {
-        let ret = await this.get('uq-server', undefined);
+    async uqBuilderUrl():Promise<any> {
+        let ret = await this.get('uq-builder-url', undefined);
         return ret;
     }    
     async counts(unit:number):Promise<any> {
@@ -12,7 +12,7 @@ class DevApi extends CenterApi {
         return await this.get('app', {id:id});
     }
     async uq(id:number):Promise<any> {
-        return await this.get('usq', {id:id});
+        return await this.get('uq', {id:id});
     }
     async server(id:number):Promise<any> {
         return await this.get('server', {id:id});
@@ -41,8 +41,8 @@ class DevApi extends CenterApi {
     async saveApp(values:any):Promise<number> {
         return await this.post('app-save', values);
     }
-    async saveUsq(values:any):Promise<number> {
-        return await this.post('usq-save', values);
+    async saveUq(values:any):Promise<number> {
+        return await this.post('uq-save', values);
     }
     async saveBus(values:any):Promise<number> {
         return await this.post('bus-save', values);
@@ -59,8 +59,8 @@ class DevApi extends CenterApi {
     async delApp(unit:number,id:number):Promise<void> {
         return await this.post('app-del', {unit:unit, id:id});
     }
-    async delUsq(unit:number,id:number):Promise<void> {
-        return await this.post('usq-del', {unit:unit, id:id});
+    async delUq(unit:number,id:number):Promise<void> {
+        return await this.post('uq-del', {unit:unit, id:id});
     }
     async delBus(unit:number,id:number):Promise<void> {
         return await this.post('bus-del', {unit:unit, id:id});
@@ -75,17 +75,17 @@ class DevApi extends CenterApi {
         return await this.post('service-del', {unit:unit, id:id});
     }
     async loadAppUqs(app:number):Promise<any[]> {
-        return await this.get('app-usqs', {app: app});
+        return await this.get('app-uqs', {app: app});
     }
-    async appBindUq(unit:number,app:number,usqs:{id:number, access:string[]}[]):Promise<void> {
-        let usqsText:string;
-        if (usqs !== undefined) {
-            usqsText = usqs.map(v => String(v.id)+'|'+v.access.join(',')).join(';');
+    async appBindUq(unit:number,app:number,uqs:{id:number, access:string[]}[]):Promise<void> {
+        let uqsText:string;
+        if (uqs !== undefined) {
+            uqsText = uqs.map(v => String(v.id)+'|'+v.access.join(',')).join(';');
         }
-        await this.post('app-bind-usq', {unit:unit, app:app, usqs:usqsText});
+        await this.post('app-bind-uq', {unit:unit, app:app, uqs:uqsText});
     }
-    async searchUsq(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
-        return await this.get('usq-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
+    async searchUq(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
+        return await this.get('uq-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
     async searchApp(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('app-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
@@ -96,14 +96,17 @@ class DevApi extends CenterApi {
     async searchUqdb(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('uqdb-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
-    async loadAppServices(unit:number, app:number):Promise<any[]> {
-        return await this.get('app-services', {unit:unit, app:app});
-    }
+    //async loadAppServices(unit:number, app:number):Promise<any[]> {
+    //    return await this.get('app-services', {unit:unit, app:app});
+    //}
     async loadUqServices(unit:number, uq:number):Promise<any[]> {
         return await this.get('uq-services', {unit:unit, uq:uq});
     }
     async changeServiceProp(unit:number, service:number, prop:string, value:any):Promise<number> {
         return await this.post('service-change-prop', {unit:unit, service:service, prop:prop, value:value});
+    }
+    async uqGetEntities(unit:number, uq:number):Promise<any[][]> {
+        return await this.get('uq-get-entities', {unit:unit, uq:uq});
     }
 }
 

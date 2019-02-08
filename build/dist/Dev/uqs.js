@@ -14,35 +14,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { Media, PropGrid, Muted, List } from 'tonva-react-form';
+import { EasyDate, Media, PropGrid, Muted, List, LMR, Badge, FA } from 'tonva-react-form';
 import { nav } from 'tonva-tools';
 import { UnitSpan, IdDates, ServerSpan } from 'tools';
-import { Row } from './row';
 import { appIcon, appItemIcon } from 'consts';
-import { store } from 'store';
-import { NewService, ServiceInfo } from './servicePage';
+import { store } from '../store';
+import { NewService, ServiceInfo } from './uq-servicePage';
+import { UqUpload } from './uqUpload';
 let Info = class Info extends React.Component {
-    /*
-    private rows:Prop[];
-    constructor(props:any) {
-        super(props);
-        let {name, discription, access, unit, date_init, date_update} = this.props;
-        let disp = <div>
-            <div>{discription}</div>
-            <IdDates date_update={date_update} date_init={date_init} />
-        </div>;
-        this.rows = [
-            '',
-            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
-            '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
-            {type: 'component', label: '入口', component: <div className="py-2">{
-                access?
-                    access.split(',').join(', ')
-                    : <Muted>(全)</Muted>
-            }</div> },
-        ];
-    }*/
+    constructor() {
+        super(...arguments);
+        this.onUq = () => __awaiter(this, void 0, void 0, function* () {
+            nav.push(React.createElement(UqUpload, { uq: this.props, services: store.dev.services.items }));
+        });
+    }
     componentWillMount() {
         store.dev.services.items = undefined;
     }
@@ -52,10 +37,19 @@ let Info = class Info extends React.Component {
         });
     }
     renderService(service, index) {
-        let { url, server } = service;
-        return React.createElement("div", { className: "d-flex w-100 align-items-center cursor-pointer py-2 px-3", style: { flex: 1 } },
+        let { url, server, db, db_type, compile_time } = service;
+        let compile = !compile_time ?
+            React.createElement(Muted, null, "\u672A\u7F16\u8BD1") :
+            React.createElement(React.Fragment, null,
+                React.createElement(Muted, null, "\u7F16\u8BD1: "),
+                React.createElement(EasyDate, { date: compile_time }));
+        return React.createElement(LMR, { className: "d-flex w-100 align-items-center cursor-pointer py-2 px-3", right: React.createElement("small", null, compile) },
             React.createElement("div", null,
                 React.createElement("div", null, url),
+                React.createElement("div", null,
+                    db_type,
+                    " ",
+                    db),
                 React.createElement(Muted, null,
                     React.createElement(ServerSpan, { id: server }))));
     }
@@ -77,13 +71,18 @@ let Info = class Info extends React.Component {
             { type: 'component', label: '入口', component: React.createElement("div", { className: "py-2" }, access ?
                     access.split(',').join(', ')
                     : React.createElement(Muted, null, "(\u5168)")) },
+            {
+                type: 'component',
+                label: '编译代码',
+                component: React.createElement(LMR, { onClick: () => this.onUq(), className: "w-100 py-2 cursor-pointer", left: "\u4E0A\u4F20\u7F16\u8BD1uq\u4EE3\u7801", right: React.createElement(FA, { className: "align-self-center", name: "chevron-right" }) })
+            },
         ];
         let services = store.dev.services.items;
         return React.createElement("div", null,
             React.createElement(PropGrid, { rows: rows, values: this.props }),
             React.createElement("div", { className: "d-flex mx-3 mt-3 mb-1 align-items-end" },
-                React.createElement(Muted, { style: { display: 'block', flex: 1 } }, "Service\u5217\u8868"),
-                React.createElement("button", { className: "btn btn-outline-primary btn-sm", onClick: () => nav.push(React.createElement(NewService, { type: 3, id: this.props.id })) }, "\u589E\u52A0Service")),
+                React.createElement(Muted, { style: { display: 'block', flex: 1 } }, "Service"),
+                React.createElement("button", { className: "btn btn-outline-primary btn-sm", onClick: () => nav.push(React.createElement(NewService, { type: 3, id: this.props.id })) }, "\u589E\u52A0")),
             React.createElement(List, { items: services, item: { render: this.renderService, onClick: this.serviceClick } }));
     }
 };
@@ -110,7 +109,16 @@ const uqsProps = {
         },
     ],
     row: (item) => {
-        return React.createElement(Row, { icon: appItemIcon, main: item.name, vice: item.discription });
+        let { name, discription, service_count } = item;
+        let icon = appItemIcon;
+        //return <Row icon={appItemIcon} main={item.name} vice={item.discription} />;
+        return React.createElement(LMR, { className: "py-1 px-3 align-items-stretch", left: React.createElement(Badge, { size: "sm", className: "pt-1" },
+                React.createElement("img", { src: icon })), right: React.createElement(React.Fragment, null, service_count) },
+            React.createElement("div", { className: "px-3" },
+                React.createElement("div", null,
+                    React.createElement("b", null, name)),
+                React.createElement("div", null,
+                    React.createElement(Muted, null, discription))));
     },
     items: () => store.dev.uqs,
     repeated: {

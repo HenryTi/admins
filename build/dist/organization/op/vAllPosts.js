@@ -14,7 +14,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { VPage, Page } from "tonva-tools";
-import { entityIcons } from 'tonva-react-usql';
+import { entityIcons } from 'tonva-react-uq';
 import { List, Muted, LMR, FA } from 'tonva-react-form';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
@@ -42,7 +42,7 @@ export class VAllPosts extends VPage {
                     continue;
                 entities.push({ entity: i });
             }
-            let saveEntityOpForAll = this.controller.cUsq.cFromName('action', 'saveEntityOpForAll');
+            let saveEntityOpForAll = this.controller.cUq.cFromName('action', 'saveEntityOpForAll');
             let ret = yield saveEntityOpForAll.entity.submit({
                 usq: this.usq.id,
                 entities: entities,
@@ -99,7 +99,7 @@ export class VAllPosts extends VPage {
                 { items: histories, type: 'history' },
                 { items: pendings, type: 'pending' },
             ];
-            let getEntityOpForAll = this.controller.cUsq.cFromName('query', 'getEntityOpForAll');
+            let getEntityOpForAll = this.controller.cUq.cFromName('query', 'getEntityOpForAll');
             let entityOpForAllResult = yield getEntityOpForAll.entity.query({ usq: this.usq.id });
             let entityOpForAll = {};
             for (let eaa of entityOpForAllResult.ret) {

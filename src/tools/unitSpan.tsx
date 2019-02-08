@@ -8,7 +8,6 @@ import {store} from '../store';
 import {Unit, DevModel} from '../model';
 import {devApi} from '../api';
 import {span} from './span';
-import {IdDates} from './idDates';
 
 export interface UnitLinkProps {
     className?: string;
@@ -18,16 +17,6 @@ export interface UnitLinkProps {
 
 @observer
 export class UnitSpan extends React.Component<UnitLinkProps> {
-    /*
-    constructor(props:any) {
-        super(props);
-        this.onClick = this.onClick.bind(this);
-    }
-    componentWillMount() {
-        let {id} = this.props;
-        store.cacheUnits.get(id);
-    }
-    */
     onClick = (evt) => {
         evt.preventDefault();
         nav.push(<UnitInfo id={this.props.id} />);
@@ -50,6 +39,17 @@ export class UnitSpan extends React.Component<UnitLinkProps> {
             content = id;
         }
         return span(isLink, className, this.onClick, content);
+    }
+}
+
+@observer
+export class UnitName extends React.Component<UnitLinkProps> {
+    render() {
+        let {id, isLink, className} = this.props;
+        if (id === undefined) return null;
+        let unit = store.cacheUnits.get(id);
+        let {name} = unit;
+        return <>{name}</>;
     }
 }
 

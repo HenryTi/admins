@@ -7,10 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as React from 'react';
-import { CTuidSelect, QueryPageItems } from "tonva-react-usql";
+import { CTuidSelect, QueryPageItems } from "tonva-react-uq";
 class CUserSelect extends CTuidSelect {
     buildPageItems() {
-        let query = this.cUsq.cFromName('query', 'SearchUser');
+        let query = this.cUq.cFromName('query', 'SearchUser');
         return new QueryPageItems(query.entity);
     }
     idFromItem(item) { return item.id; }

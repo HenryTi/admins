@@ -10,20 +10,14 @@ import {IdDates} from './idDates';
 import {span} from './span';
 import {UnitSpan} from './unitSpan';
 
-export interface UsqLinkProps {
+export interface UqLinkProps {
     className?: string;
     id: number;
     isLink?: boolean;
 }
 
 @observer
-export class UqSpan extends React.Component<UsqLinkProps> {
-    /*
-    componentWillMount() {
-        let {id} = this.props;
-        store.cacheApis.get(id);
-    }
-    */
+export class UqSpan extends React.Component<UqLinkProps> {
     onClick = (evt) => {
         evt.preventDefault();
         nav.push(<UqInfo id={this.props.id} />);
@@ -31,7 +25,7 @@ export class UqSpan extends React.Component<UsqLinkProps> {
     }
     render() {
         let {id, className, isLink} = this.props;
-        let api = store.cacheUsqs.get(id);
+        let api = store.cacheUqs.get(id);
         let content;
         if (api === null) {
             content = id;
@@ -51,14 +45,14 @@ export class UqSpan extends React.Component<UsqLinkProps> {
 }
 
 @observer
-class UqInfo extends React.Component<UsqLinkProps> {
+class UqInfo extends React.Component<UqLinkProps> {
     private rows:Prop[];
     constructor(props:any) {
         super(props);
     }
     render() {
-        let usq = store.cacheUsqs.get(this.props.id);
-        let {name, discription, unit, date_init, date_update} = usq;
+        let uq = store.cacheUqs.get(this.props.id);
+        let {name, discription, unit, date_init, date_update} = uq;
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />

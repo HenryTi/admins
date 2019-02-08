@@ -1,3 +1,4 @@
+/*
 import * as React from 'react';
 import {EasyDate, Media, Prop, PropGrid, LMR, FA, PickFace, FormProps, List, Muted} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
@@ -10,13 +11,14 @@ import {ObjViewProps} from './ObjViewProps';
 import {UqUpload} from './uqUpload';
 import { observer } from 'mobx-react';
 
+
 class Info extends React.Component<DevModel.Uqdb> {
     onUq() {
         alert('moved to uq');
         //nav.push(<UqUpload {...this.props} />);
     }
     render() {
-        let {dbname, discription, usq, cloud, connection, unit, date_init, date_update} = this.props;
+        let {dbname, discription, uq, cloud, connection, unit, date_init, date_update} = this.props;
         //api = 55;
         let disp = <div>
             <div>{discription}</div>
@@ -28,7 +30,7 @@ class Info extends React.Component<DevModel.Uqdb> {
             '',
             {type: 'component', label: '开发号', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'component', label: 'UQ', component: <div className="py-2">
-                <UqSpan id={usq} isLink={true} />
+                <UqSpan id={uq} isLink={true} />
             </div>},
             {type: 'string', label: '云服务', name: 'cloud'},
             {type: 'component', label: 'uq代码', component: 
@@ -62,7 +64,7 @@ const uqdbsProps:ObjViewProps<DevModel.Uqdb> = {
         },
         {
             label: 'UQ', 
-            field: {name: 'usq', type: 'number', required: true},
+            field: {name: 'uq', type: 'number', required: true},
             face: {
                 type: 'pick', 
                 content: ({id}:{id:number})=><UqSpan id={id} isLink={false} />,
@@ -70,12 +72,6 @@ const uqdbsProps:ObjViewProps<DevModel.Uqdb> = {
                 pick: async (face:PickFace, formProps:FormProps, formValues:any):Promise<any> => {
                     return new Promise<any>((resolve, reject) => {
                         nav.push(<SearchApis resolve={resolve} />);
-                        /*
-                            <button onClick={()=>{
-                                resolve({id:18});
-                                nav.pop();
-                            }}>完成</button>
-                        </Page>);*/
                     });
                 }
             }
@@ -107,14 +103,6 @@ class SearchApis extends React.Component<SearchApisProps> {
     async componentWillMount() {
         await store.dev.uqs.load();
     }
-    /*
-    onSearch = async (key:string) => {
-        await store.dev.apis.items.apps.searchApi(key);
-    }
-    onBind(api: DevModel.Api, bind: boolean) {
-        store.dev.apps.appBindApi([{id:api.id, access:['*']}]);
-    }
-    */
     row = (api: DevModel.UQ) => {
         let {name, discription} = api;
         return <div className="d-flex justify-content-start py-2 px-3">
@@ -126,13 +114,9 @@ class SearchApis extends React.Component<SearchApisProps> {
         this.props.resolve(api);
     }
     render() {
-        /*
-        let header = <SearchBox className="w-100 mx-1" 
-            onSearch={this.onSearch} 
-            placeholder="搜索API名字" 
-            maxLength={100} />;*/
         return <Page back="close" header="选择API">
             <List items={store.dev.uqs.items} item={{render: this.row, onClick: this.onSelect}} loading={null} />
         </Page>;
     }
 }
+*/

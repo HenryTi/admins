@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Muted } from 'tonva-react-form';
 import { left0 } from 'tonva-tools';
-import { VMapMain, MapUI, Field, CMap }  from 'tonva-react-usql'; 
+import { VMapMain, MapUI, Field, CMap }  from 'tonva-react-uq'; 
 
 class CMapTeamPerson extends CMap {
     async searchOnKey(keyField:Field, param):Promise<number> {

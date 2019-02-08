@@ -10,7 +10,7 @@ import {createIdPick, IdPickProps} from '../createIdPick';
 
 class Info extends React.Component<DevModel.Service> {
     render() {
-        let {url, type, discription, server, app, usq, unit, date_init, date_update} = this.props;
+        let {url, type, discription, server, app, uq, unit, date_init, date_update} = this.props;
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
@@ -19,7 +19,7 @@ class Info extends React.Component<DevModel.Service> {
         if (app !== undefined)
             obj = {type: 'component', label: 'APP', component: <div className="py-2"><AppSpan id={app} isLink={true} /></div> };
         else
-            obj = {type: 'component', label: 'USQ', component: <div className="py-2"><UqSpan id={usq} isLink={true} /></div> };
+            obj = {type: 'component', label: 'UQ', component: <div className="py-2"><UqSpan id={uq} isLink={true} /></div> };
 
         let rows:Prop[] = [
             '',
@@ -69,11 +69,11 @@ const idPickUqProps: IdPickProps = {
     caption: '选择UQ',
     searchPlaceHolder: '搜索UQ',
     candidateItems: async (params:any, key:string) => {
-        await store.dev.searchUsq.first(key);
-        return store.dev.searchUsq.items;
+        await store.dev.searchUq.first(key);
+        return store.dev.searchUq.items;
     },
     moreCandidates: async () => {
-        await store.dev.searchUsq.more();
+        await store.dev.searchUq.more();
     },
     row: (item:DevModel.UQ, index:number) => {
         return <div>{item.name + ' ' + item.discription}</div>;

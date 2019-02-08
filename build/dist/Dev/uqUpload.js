@@ -10,7 +10,7 @@ import * as React from 'react';
 import { nav, Page } from 'tonva-tools';
 import { List, EasyDate, LMR, Muted } from 'tonva-react-form';
 import { store } from '../store';
-export class UsqlUpload extends React.Component {
+export class UqUpload extends React.Component {
     constructor(props) {
         super(props);
         this.onFilesChange = (evt) => {
@@ -28,7 +28,7 @@ export class UsqlUpload extends React.Component {
             let fr = new FileReader();
             fr.onload = function (f) {
                 //alert(this.result);
-                nav.push(React.createElement(UsqlPage, { name: file.name, content: this.result }));
+                nav.push(React.createElement(UqPage, { name: file.name, content: this.result }));
             };
             fr.readAsText(file, "utf8");
         };
@@ -87,7 +87,7 @@ export class UsqlUpload extends React.Component {
                 let file = files[i];
                 data.append('files[]', file, file.name);
             }
-            let url = store.usqlServer + 'usql-compile/' + this.props.id + '/update';
+            let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/update';
             if (thoroughly === true)
                 url += '-thoroughly';
             try {
@@ -97,7 +97,7 @@ export class UsqlUpload extends React.Component {
                     body: data,
                     signal: abortController.signal,
                 });
-                nav.push(React.createElement(CompileResult, { res: res, abortController: abortController }));
+                nav.push(React.createElement(CompileResult, Object.assign({}, this.props, { res: res, abortController: abortController })));
             }
             catch (e) {
                 console.error('%s %s', url, e);
@@ -117,9 +117,9 @@ export class UsqlUpload extends React.Component {
                 React.createElement("div", { className: "py-2 flex-grow-1" }),
                 React.createElement("button", { className: "btn btn-outline-warning", type: "submit", onClick: this.onUpdateThoroughly }, "\u5B8C\u5168\u7F16\u8BD1"));
         }
-        return React.createElement(Page, { header: "\u7F16\u8BD1USQL" },
+        return React.createElement(Page, { header: "编译 - " + this.props.uq.name },
             React.createElement("div", { className: "py-2 px-3" },
-                React.createElement("div", null, "\u8BF7\u9009\u62E9usql\u6E90\u4EE3\u7801\u6587\u4EF6"),
+                React.createElement("div", null, "\u8BF7\u9009\u62E9UQ\u6E90\u4EE3\u7801\u6587\u4EF6"),
                 React.createElement("form", { className: "my-1", encType: "multipart/form-data", onSubmit: this.onSubmit },
                     React.createElement("div", { className: "my-1" },
                         React.createElement("input", { ref: (fileInput) => this.fileInput = fileInput, type: "file", id: "photo", className: "w-100 form-control-file", name: "files", multiple: true, onChange: this.onFilesChange })),
@@ -129,7 +129,7 @@ export class UsqlUpload extends React.Component {
                 React.createElement("div", null, this.state.text)));
     }
 }
-class UsqlPage extends React.Component {
+class UqPage extends React.Component {
     render() {
         return React.createElement(Page, { header: this.props.name },
             React.createElement("pre", { className: "px-3 py-2" }, this.props.content));
@@ -138,12 +138,23 @@ class UsqlPage extends React.Component {
 class CompileResult extends React.Component {
     constructor(props) {
         super(props);
+        this.doubleClick = () => {
+            var pane = document.getElementById('scrollDiv');
+            let main = this.getParent(pane);
+            if (!main)
+                return;
+            if (main.scrollTop >= main.scrollHeight / 2) {
+                this.topIntoView();
+            }
+            else {
+                this.bottomIntoView();
+            }
+        };
         this.texts = [];
         this.state = {
             texts: this.texts,
             seconds: -1,
         };
-        this.doubleClick = this.doubleClick.bind(this);
     }
     componentWillMount() {
         nav.regConfirmClose(() => __awaiter(this, void 0, void 0, function* () {
@@ -151,7 +162,7 @@ class CompileResult extends React.Component {
                 return true;
             return new Promise((resolve, reject) => {
                 try {
-                    if (confirm('正在编译usql，真的要中止吗？') === true) {
+                    if (confirm('正在编译中，真的要中止吗？') === true) {
                         try {
                             this.props.abortController.abort();
                         }
@@ -220,18 +231,6 @@ class CompileResult extends React.Component {
         let last = childNodes.item(len-1);
         (last as HTMLElement).scrollIntoView();
         */
-    }
-    doubleClick() {
-        var pane = document.getElementById('scrollDiv');
-        let main = this.getParent(pane);
-        if (!main)
-            return;
-        if (main.scrollTop >= main.scrollHeight / 2) {
-            this.topIntoView();
-        }
-        else {
-            this.bottomIntoView();
-        }
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {

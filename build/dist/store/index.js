@@ -86,10 +86,10 @@ export class Store {
             this.unit = ret;
             console.log("loadUnit unit=%s", JSON.stringify(ret));
             this.memberCount = yield mainApi.unitMemberCount(this.unitId);
-            let usqlServer = yield devApi.usqlServer();
-            let { url, urlDebug } = usqlServer;
-            this.usqlServer = host.getUrlOrDebug(url, urlDebug);
-            console.log("usql-server: %s", JSON.stringify(this.usqlServer));
+            let uqServer = yield devApi.uqServer();
+            let { url, urlDebug } = uqServer;
+            this.uqServer = host.getUrlOrDebug(url, urlDebug);
+            console.log("uq-build: %s", JSON.stringify(this.uqServer));
         });
     }
     stopUnitApp(appId) {

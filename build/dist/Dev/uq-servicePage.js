@@ -14,11 +14,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { PropGrid, TonvaForm, Muted } from 'tonva-react-form';
+import { PropGrid, TonvaForm } from 'tonva-react-form';
 import { nav, Page } from 'tonva-tools';
-import { ServerSpan } from '../tools';
+import { ServerSpan, StringValueEdit, TextValueEdit } from '../tools';
 import { store } from '../store';
-import { StringValueEdit } from '../tools';
 import { createIdPick } from '../createIdPick';
 const ServerCaption = (item) => {
     let { discription, cloud, ip } = item;
@@ -46,6 +45,9 @@ const idPickServerProps = {
 };
 const urlField = { name: 'url', type: 'string', required: true, maxLength: 200 };
 const serverField = { name: 'server', type: 'id' };
+const dbTypeField = { name: 'db_type', type: 'string', maxLength: 20, defaultValue: 'mysql' };
+const dbField = { name: 'db', type: 'string', maxLength: 50, required: true };
+const connectionField = { name: 'connection', type: 'string', maxLength: 250 };
 const urlRow = {
     label: 'URL',
     field: urlField,
@@ -66,12 +68,36 @@ const serverRow = {
         itemFromId: (id) => store.cacheServers.get(id),
     },
 };
+const dbTypeRow = {
+    label: '数据库类型',
+    field: dbTypeField,
+    face: {
+        type: 'string',
+        readonly: true,
+    }
+};
+const dbRow = {
+    label: '数据库名字',
+    field: dbField,
+};
+const connectionRow = {
+    label: '连接字符串',
+    field: connectionField,
+    face: {
+        type: 'textarea',
+        maxLength: 250,
+        rows: 8,
+    },
+};
 let NewService = class NewService extends React.Component {
     constructor(props) {
         super(props);
         this.formRows = [
             urlRow,
             serverRow,
+            dbTypeRow,
+            dbRow,
+            connectionRow
         ];
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -110,6 +136,22 @@ let ServiceInfo = class ServiceInfo extends React.Component {
                 return 'URL已经被使用了';
             }
         });
+        this.onDbChanged = (value, orgValue) => __awaiter(this, void 0, void 0, function* () {
+            let ret = yield store.dev.services.changeProp('db', value);
+            if (ret === 0) {
+                return 'Db已经被使用了';
+            }
+        });
+        this.onDbTypeChanged = (value, orgValue) => __awaiter(this, void 0, void 0, function* () {
+            if (value === undefined || value === null)
+                return;
+            if (value.toLowerCase().trim() !== 'mysql')
+                return '目前只支持mysql';
+            let ret = yield store.dev.services.changeProp('db_type', value);
+        });
+        this.onConnectionChanged = (value, orgValue) => __awaiter(this, void 0, void 0, function* () {
+            yield store.dev.services.changeProp('connection', value);
+        });
         this.onDeleteClick = () => __awaiter(this, void 0, void 0, function* () {
             if (confirm("真的要删除Service吗？删除了不可恢复，需要重新录入。") !== true)
                 return;
@@ -118,44 +160,51 @@ let ServiceInfo = class ServiceInfo extends React.Component {
         });
     }
     render() {
+        let uq = store.dev.uqs.cur;
         let cur = store.dev.services.cur;
-        let { type, name, discription, server, url } = cur;
+        let { type, name, discription, server, url, db, db_type, connection } = cur;
         let rows = [
             '',
+            /*
             {
                 type: 'component',
-                component: React.createElement("div", { className: "px-3 py-2" },
-                    React.createElement("b", null, name),
-                    React.createElement("br", null),
-                    React.createElement(Muted, null, discription)),
+                component: <div className="px-3 py-2">
+                    <b>{name}</b><br/><Muted>{discription}</Muted>
+                </div>,
             },
-            '',
+            '',*/
             {
                 type: 'string',
                 name: 'url',
                 label: 'URL',
-                onClick: () => nav.push(React.createElement(StringValueEdit, { title: "\u4FEE\u6539URL", value: url, onChanged: this.onUrlChanged, info: "\u597D\u7684\u540D\u5B57\u4FBF\u4E8E\u7406\u89E3" }))
+                onClick: () => nav.push(React.createElement(StringValueEdit, { title: "\u4FEE\u6539URL", value: url, onChanged: this.onUrlChanged }))
             },
             {
                 type: 'component',
                 label: '服务器',
                 component: React.createElement(ServerSpan, { id: server })
             },
+            {
+                type: 'string',
+                name: 'db_type',
+                label: '数据库类型',
+                onClick: () => nav.push(React.createElement(StringValueEdit, { title: "\u6570\u636E\u5E93\u7C7B\u578B", value: db_type, onChanged: this.onDbTypeChanged }))
+            },
+            {
+                type: 'string',
+                name: 'db',
+                label: '数据库名',
+                onClick: () => nav.push(React.createElement(StringValueEdit, { title: "\u6570\u636E\u5E93\u540D\u5B57", value: db, onChanged: this.onDbChanged }))
+            },
+            {
+                type: 'string',
+                name: 'connection',
+                label: '连接字符串',
+                onClick: () => nav.push(React.createElement(TextValueEdit, { title: "\u8FDE\u63A5\u5B57\u7B26\u4E32", value: connection, onChanged: this.onConnectionChanged }))
+            },
         ];
-        let typeName;
-        switch (type) {
-            default:
-                typeName = '';
-                break;
-            case 2:
-                typeName = 'APP';
-                break;
-            case 3:
-                typeName = 'API';
-                break;
-        }
         let right = React.createElement("button", { onClick: this.onDeleteClick, className: "btn btn-success" }, "\u5220\u9664");
-        return React.createElement(Page, { header: typeName + ' Service', right: right },
+        return React.createElement(Page, { header: 'UQ - ' + uq.name, right: right },
             React.createElement(PropGrid, { rows: rows, values: cur }));
     }
 };
@@ -163,4 +212,4 @@ ServiceInfo = __decorate([
     observer
 ], ServiceInfo);
 export { ServiceInfo };
-//# sourceMappingURL=servicePage.js.map
+//# sourceMappingURL=uq-servicePage.js.map
