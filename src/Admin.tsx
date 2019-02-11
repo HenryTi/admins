@@ -201,6 +201,7 @@ default class AdminPage extends React.Component {
         if (isOwner === 1) {
             items.push(this.adminsAction);
         }
+        console.log('unit:', unit);
         if (isAdmin === 1) {
             if ((type & 2) !== 0 && unit.name !== '$$$') {
                 // unit
@@ -223,7 +224,7 @@ default class AdminPage extends React.Component {
                     {
                         title: 'UQ', 
                         count: counts.uq, 
-                        icon: 'cogs', 
+                        icon: 'database', 
                         onClick: () => new UQController(undefined).start(unit.id),
                         //items: store.dev.apis, 
                         //objProps: uqsProps,

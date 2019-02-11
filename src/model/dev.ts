@@ -28,6 +28,7 @@ export namespace DevModel {
         name: string;
         discription: string;
         schema: string;
+        owner?: string;
     }
 
     export interface Server extends ObjBase {

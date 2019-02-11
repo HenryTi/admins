@@ -83,10 +83,9 @@ export class Store {
 
     async loadUnit(): Promise<void> {
         if (this.unitId === undefined) return;
-        console.log('loadUnit()');    
         let ret = await mainApi.unit(this.unitId);
         this.unit = ret;
-        console.log("loadUnit unit=%s", JSON.stringify(ret));
+        console.log("loadUnit unit=%s", ret);
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
         let uqServer = await devApi.uqBuilderUrl();
         let {url, urlDebug} = uqServer;

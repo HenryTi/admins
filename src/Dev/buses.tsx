@@ -99,7 +99,8 @@ const busesProps:ObjViewProps<DevModel.Bus> = {
         },
     ],
     row: (item:DevModel.Bus):JSX.Element => {
-        return <Row icon={appItemIcon} main={item.name} vice={item.discription} />;
+        let {owner, name, discription} = item;
+        return <Row icon={appItemIcon} main={owner + ' / ' + name} vice={discription} />;
     },
     items: ()=>store.dev.buses,
     repeated: {
