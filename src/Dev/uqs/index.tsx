@@ -43,7 +43,6 @@ export class UQController extends Controller {
 
     onUqUpload = async() => {
         let onDispose = () => {
-            alert('a');
         };
         nav.push(<UqUpload uq={this.uq} services={this.services} />, onDispose);
     }
