@@ -10,6 +10,7 @@ export namespace DevModel {
     export interface UQ extends ObjBase {
         name: string;
         discription: string;
+        owner?: string;
         access: string;
         service_count: number;
     }

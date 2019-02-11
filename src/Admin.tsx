@@ -14,8 +14,10 @@ import { mainApi } from 'api';
 import { COrganization } from 'organization';
 import {
     ObjViewProps, ObjView,
-    appsProps, busesProps, 
+    //appsProps, 
+    busesProps, 
     serversProps, /*uqdbsProps, */servicesProps, UQController} from './Dev';
+import { AppController } from './Dev';
 
 export class CAdmin extends Controller {
     isProduction: boolean;
@@ -213,9 +215,10 @@ default class AdminPage extends React.Component {
                         title: 'APP', 
                         count: counts.app, 
                         icon: 'tablet', 
+                        onClick: () => new AppController(undefined).start(unit.id),
                         //items: store.dev.apps,
                         //page: <ObjView {...appsProps} items={store.dev.apps} />
-                        objProps: appsProps
+                        //objProps: appsProps
                     },
                     {
                         title: 'UQ', 

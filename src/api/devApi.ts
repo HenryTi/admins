@@ -87,6 +87,9 @@ class DevApi extends CenterApi {
     async searchUq(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('uq-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
+    async getMyUqs(unit:number):Promise<any[]> {
+        return await this.get('my-uqs', {unit:unit});
+    }
     async searchApp(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('app-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
