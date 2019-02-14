@@ -1,0 +1,93 @@
+li.va-row {
+    display: flex;
+    flex-direction: row;
+    padding: 4px 6px;
+    margin-bottom: 1px;
+    background-color: white;
+    align-items: center;
+  }
+  li.va-row.icon {
+  align-items: flex-start;
+  }
+  li.va-row>header {
+    position: relative;
+    border: none;
+    background: none;
+    width: 40px;
+    display: flex;
+    padding: 4px 2px;
+    align-items: center;
+    justify-content: center;
+  }
+  li.va-row.icon>header {
+    position: relative;
+    display: block;
+    border-radius: 6px;
+    height: 40px;
+    margin: 4px 4px 4px 4px;
+    padding: 0px;
+    border: 1px solid lightblue;
+    background-color: lightblue;
+  }
+  li.va-row>header>img {
+    width: 100%;
+    height: 100%;
+  }
+  li.va-row>header>b {
+    position: absolute;
+    left: 30px;
+    top: -2px;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: normal;
+    border-radius: 9px;
+    background-color: red;
+    color: white;
+    display: block;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+  }
+  li.va-row.icon>header>b {
+    top: -6px;
+  }
+  li.va-row>header>b.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    left: 35px;
+    top: 0px;
+  }
+  li.va-row>div {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 0;
+    padding: 0px 4px 0px 12px;
+    min-width: 200px;
+  }
+  li.va-row>div.none {
+    border-bottom:none;
+  }
+  li.va-row>div>div {
+    flex: 1;
+    height: 1.5em;
+    overflow: hidden;
+    font-weight: bold;
+  }
+  li.va-row>div>span {
+    display: flex;
+    font-size: 12px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 1.5em;
+    color: gray;
+  }
+  li.va-row>footer {
+      display: flex;
+  }
+  li.va-row.va-action {
+    cursor: pointer;
+  }
+  

@@ -1,0 +1,185 @@
+
+/* tab css */
+.tab {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+}
+.tab>div:first-child {
+  display: flex;
+  flex: 1 1 auto;
+}
+.tab>div:last-child {
+  display: flex;
+  align-items: center;
+}
+.tab>div:last-child, .tab>div:last-child>div {
+  display: flex;
+  align-items: center;
+}
+.tab>div:last-child>div {
+  flex-direction: column;
+}
+.tab>div>div {
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+}
+.tab>div>div>div {
+  position: relative;
+}
+.tab>div>div>div>u {
+  position: absolute;
+  right: -1.2rem;
+  top: 0rem;
+  font-size: 0.7em;
+  background-color: red;
+  display: flex;
+  align-items: center;
+  color: white;
+  min-width: 1rem;
+  padding: 0 3px;
+  height: 1.0rem;
+  text-decoration: none;
+  justify-content: center;
+  border-radius: 0.6rem;
+}
+.tab>div>div>div>u.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  min-width: 0.5rem;
+  right: -0.8rem;
+}
+
+/* form css */
+.border-gray {
+  border-color: #cccccc !important;
+}
+.form-row-checkbox {
+  min-width: 2rem;
+  max-width: 2rem;
+  padding: 0 0 0 0.2rem;
+  text-align: left;
+  z-index: 999;
+}
+.form-row-checkbox input {
+  height: 1.2rem;
+  width: 1.2rem;
+  min-width: 1.2rem;
+  cursor: pointer;
+}
+.form-row-edit {
+  min-width: 1.7rem;
+  max-width: 1.7rem;
+  margin-left: 0.2rem;
+  padding: 0 0.2rem 0.2rem 0;
+  text-align: right;
+  cursor: pointer;
+  align-self: start;
+  z-index: 999;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.row-selected label {
+  font-weight: bold;
+}
+.required-item {
+  border-color: #007bff;
+}
+.deleted, .deleted label, .deleted input {
+  text-decoration: line-through rgb(255, 127, 127);
+  color: gray;
+}
+.w-1c {
+  width: 1rem !important;
+}
+.w-min-1c {
+  min-width: 1rem !important;
+}
+.w-max-1c {
+  max-width: 1rem !important;
+}
+.w-2c {
+  width: 2rem !important;
+}
+.w-min-2c {
+  min-width: 2rem !important;
+}
+.w-max-2c {
+  max-width: 2rem !important;
+}
+.w-4c {
+  width: 4rem !important;
+}
+.w-min-4c {
+  min-width: 4rem !important;
+}
+.w-max-4c {
+  max-width: 4rem !important;
+}
+.w-6c {
+  width: 6rem !important;
+}
+.w-min-6c {
+  min-width: 6rem !important;
+}
+.w-max-6c {
+  max-width: 6rem !important;
+}
+.w-8c {
+  width: 8rem !important;
+}
+.w-min-8c {
+  min-width: 8rem !important;
+}
+.w-max-8c {
+  max-width: 8rem !important;
+}
+.w-max-20c {
+  max-width: 20rem !important;
+}
+.w-max-30c {
+  max-width: 30rem !important;
+}
+
+.form-inline label.form-check-inline {
+  display: inline-flex;
+  vertical-align: middle;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+}
+.form-check-inline {
+  justify-content: center;
+  align-content: center;
+}
+.form-radio-inline {
+  display: inline-flex;
+  align-items: center;
+  padding-top: 0.375em;
+  padding-bottom: 0.375em;
+  padding-right: 0.75em;
+  margin-bottom: 0;
+  height: calc(2.25rem + 2px);
+  line-height: 1.5;
+}
+span.form-radio-inline {
+  padding-left: 0.75em;
+  vertical-align: middle;
+}
+.form-check-inline input, .form-radio-inline input {
+  height: 1.2em;
+  width: 2em;
+  vertical-align: middle;
+}
+fieldset.edit-container {
+  display: block;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block-start: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  padding-block-end: 0;
+  min-inline-size: min-content;
+}

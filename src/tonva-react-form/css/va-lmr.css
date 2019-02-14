@@ -1,0 +1,9 @@
+.va-lmr {
+    display: flex;
+    flex-direction: row;
+}
+
+.va-lmr > div {
+    flex: 1;
+    /*margin: 0 15px;*/
+}

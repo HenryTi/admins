@@ -18,6 +18,7 @@ import {
     busesProps, 
     serversProps, /*uqdbsProps, */servicesProps, UQController} from './Dev';
 import { AppController } from './Dev';
+import { UsersController } from 'Users';
 
 export class CAdmin extends Controller {
     isProduction: boolean;
@@ -167,6 +168,12 @@ default class AdminPage extends React.Component {
         icon: 'users',
         page: Members,
     };
+    private newUsersAction:ActionItem = {
+        main: '用户管理',
+        right: rArrow,
+        icon: 'users',
+        controller: new UsersController(undefined),
+    };
     /*
     private devAction:Item = {
         main: <DevActions />,
@@ -205,7 +212,7 @@ default class AdminPage extends React.Component {
         if (isAdmin === 1) {
             if ((type & 2) !== 0 && unit.name !== '$$$') {
                 // unit
-                items.push(this.appsAction, this.usersAction, this.organizeAction);
+                items.push(this.appsAction, this.usersAction, this.newUsersAction, this.organizeAction);
             }
             if ((type & 1) !== 0) {
                 // dev unit
@@ -305,7 +312,7 @@ default class AdminPage extends React.Component {
             if (P !== undefined)
                 nav.push(<P />);
             else {
-                await controller.start();
+                await controller.start(store.unit.id);
             }
         }
     }

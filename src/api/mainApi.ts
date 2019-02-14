@@ -1,4 +1,5 @@
 import {CenterApi, User, meInFrame} from 'tonva-tools';
+import { string } from 'prop-types';
 
 class MainApi extends CenterApi {
     async stickies():Promise<any[]> {
@@ -112,6 +113,10 @@ class MainApi extends CenterApi {
 
     async unitSetMemberRoles(unit:number, member:number, roles:number[]):Promise<void> {
         await this.post('unit/member-set-roles', {unit:unit, member:member, roles:roles});
+    }
+
+    async unitUsers(unit:number, key:string, pageStart:number, pageSize:number):Promise<any> {
+        return await this.get('unit/users', {unit: unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
 }
 
