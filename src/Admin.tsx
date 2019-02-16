@@ -212,7 +212,12 @@ default class AdminPage extends React.Component {
         if (isAdmin === 1) {
             if ((type & 2) !== 0 && unit.name !== '$$$') {
                 // unit
-                items.push(this.appsAction, this.usersAction, this.newUsersAction, this.organizeAction);
+                items.push(
+                    this.appsAction, 
+                    //this.usersAction, 
+                    this.newUsersAction, 
+                    //this.organizeAction
+                );
             }
             if ((type & 1) !== 0) {
                 // dev unit

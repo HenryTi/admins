@@ -1,39 +1,105 @@
 import * as React from 'react';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react';
 import { Controller, VPage, Page } from "tonva-tools";
 import { mainApi } from 'api';
-import { List, SearchBox } from 'tonva-react-form';
+import { LMR, FA } from 'tonva-react-form';
+import { VApps } from './vApps';
+import { VUsers } from './vUsers';
+import { VApp } from './vApp';
+import { VUser } from './vUser';
+import { VAppEditUsers } from './vAppEditUsers';
+import { VUserEditApps } from './vUserEditApps';
 
-interface User {
+export interface User {
     id: number;
     name: string;
     nick: string;
     icon: string;
     assigned: string;
 }
-interface App {
+export interface App {
     id: number;
     name: string;
     discription: string;
 }
-interface UserApps {
+export interface UserApps {
     user: User;
     apps: App[];
+}
+export interface AppUsers {
+    app: App;
+    users: User[];
+}
+export interface EditApp extends App {
+    bind: number;   // 0: not bind, 1: bind
+}
+export interface EditUser extends User {
+    bind: number;  // 0: not bind, 1: bind
 }
 
 export class UsersController extends Controller {
     private unitId: number;
     @observable userAppsList: UserApps[];
+    @observable appUsersList: AppUsers[];
+    curUser: User;
+    @observable curUserApps: App[];
+    @observable userEditApps: EditApp[];
+    curApp: App;
+    @observable curAppUsers: User[];
+    @observable appEditUsers: EditUser[];
 
     protected async internalStart(unitId:number) {
         this.unitId = unitId;
+        let cn = "bg-white px-3 py-2 my-1";
+        let appIcon = <FA name="columns" className="text-primary mr-3" />;
+        let userIcon = <FA name="user-plus" className="text-primary mr-3" />;
+        this.openPage(<Page header="用户管理">
+            <LMR className={cn} onClick={this.onAppUsers} left={appIcon}>App的用户</LMR>
+            <LMR className={cn} onClick={this.onUserApps} left={userIcon}>用户的App</LMR>
+        </Page>);
+    }
+
+    private onAppUsers = async () => {
+        await this.loadAppUsers(undefined);
+        this.showVPage(VApps);
+    }
+
+    private onUserApps = async () => {
         await this.loadUserApps(undefined);
         this.showVPage(VUsers);
     }
 
+    private async loadAppUsers(key:string) {
+        let list:AppUsers[] = [];
+        let pageStart = 0;
+        let pageSize = 100;
+        let ret = await mainApi.unitAppUsers(this.unitId, key, pageStart, pageSize);
+        let apps = ret[0];
+        let users = ret[1];
+        let coll: {[id:number]:AppUsers} = {}
+        for (let a of apps) {
+            let app:App = {
+                id: a.id,
+                name: a.name,
+                discription: a.discription,
+            };
+            list.push(coll[a.id] = {app:app, users:[]});
+        }
+        for (let u of users) {
+            let user:User = {
+                id: u.user,
+                name: u.name,
+                nick: u.nick,
+                icon: u.icon,
+                assigned: u.assigned
+            }
+            coll[u.app].users.push(user);
+        }
+        this.appUsersList = list;
+    }
+
     private async loadUserApps(key:string) {
-        let userAppsList:UserApps[] = [];
+        let list:UserApps[] = [];
         let pageStart = 0;
         let pageSize = 100;
         let ret = await mainApi.unitUsers(this.unitId, key, pageStart, pageSize);
@@ -48,7 +114,7 @@ export class UsersController extends Controller {
                 icon: u.icon,
                 assigned: u.assigned
             };
-            userAppsList.push(coll[u.id] = {user:user, apps:[]});
+            list.push(coll[u.id] = {user:user, apps:[]});
         }
         for (let a of apps) {
             let app:App = {
@@ -58,40 +124,78 @@ export class UsersController extends Controller {
             }
             coll[a.user].apps.push(app);
         }
-        this.userAppsList = userAppsList;
+        this.userAppsList = list;
     }
 
     searchUser = async(key:string) => {
         await this.loadUserApps(key);
     }
-}
 
-class VUsers extends VPage<UsersController> {
-    async showEntry() {
-        this.openPage(this.page);
+    searchApp = async(key:string) => {
+        await this.loadAppUsers(key);
     }
 
-    private renderRow = (userApps: UserApps, index:number):JSX.Element => {
-        let {user, apps} = userApps;
-        let {id, name, nick, icon, assigned} = user;
-        return <div className="d-block px-3 py-2">
-            <div className="mb-2">{assigned || nick || name}</div>
-            <div className="small">
-                <span className="text-muted">APP: </span>
-                {apps.length===0?'[无]':apps.map(a => a.name).join(', ')}
-            </div>
-        </div>;
+    onAppsClick = async (appUsers: AppUsers) => {
+        this.curApp = appUsers.app;
+        let pageStart = 0;
+        let pageSize = 100;
+        this.curAppUsers = await mainApi.unitOneAppUsers(this.unitId, this.curApp.id, pageStart, pageSize);
+        this.showVPage(VApp);
     }
 
-    private page = observer(() => {
-        let {userAppsList, searchUser} = this.controller;
-        let searchBox = <SearchBox className="w-100 pr-1" 
-            onSearch={searchUser} 
-            placeholder="搜索用户" 
-            allowEmptySearch={true} />;
-        return <Page header={searchBox}>
-            <List items={userAppsList} 
-                item={{render: this.renderRow, key: (item=>item.user.id)}} />
-        </Page>;
-    });
+    onUsersClick = async (userApps: UserApps) => {
+        this.curUser = userApps.user;
+        let pageStart = 0;
+        let pageSize = 100;
+        this.curUserApps = await mainApi.unitOneUserApps(this.unitId, this.curUser.id, pageStart, pageSize);
+        this.showVPage(VUser);
+    }
+
+    onAppEditUsers = async (key?:string) => {
+        let pageStart = 0;
+        let pageSize = 100;
+        this.appEditUsers = await mainApi.unitAppEditUsers(this.unitId, this.curApp.id, key, pageStart, pageSize);
+        this.showVPage(VAppEditUsers);
+    }
+
+    onUserEditApps = async (key?:string) => {
+        let pageStart = 0;
+        let pageSize = 100;
+        this.userEditApps = await mainApi.unitUserEditApps(this.unitId, this.curUser.id, key, pageStart, pageSize);
+        this.showVPage(VUserEditApps);
+    }
+
+    bindAppUser = async(user:User, checked:boolean) => {
+        await mainApi.bindAppUser(this.unitId, this.curApp.id, user.id, checked===true? 1:0);
+        let appUsers = this.appUsersList.find(v => v.app.id === this.curApp.id);
+        if (checked === true) {
+            this.curAppUsers.push(user);
+            if (appUsers) appUsers.users.push(user);
+        }
+        else {
+            let index = this.curAppUsers.findIndex(v => v.id === user.id);
+            if (index>=0) this.curAppUsers.splice(index, 1);
+            if (appUsers) {
+                index = appUsers.users.findIndex(v => v.id === user.id);
+                if (index>=0) appUsers.users.splice(index, 1);
+            }
+        }
+    }
+
+    bindUserApp = async(app:App, checked:boolean) => {
+        await mainApi.bindAppUser(this.unitId, app.id, this.curUser.id, checked===true? 1:0);
+        let userApps = this.userAppsList.find(v => v.user.id === this.curUser.id);
+        if (checked === true) {
+            this.curUserApps.push(app);
+            if (userApps) userApps.apps.push(app);
+        }
+        else {
+            let index = this.curUserApps.findIndex(v => v.id === app.id);
+            if (index>=0) this.curUserApps.splice(index, 1);
+            if (userApps) {
+                index = userApps.apps.findIndex(v => v.id === app.id);
+                if (index>=0) userApps.apps.splice(index, 1);
+            }
+        }
+    }
 }

@@ -118,6 +118,24 @@ class MainApi extends CenterApi {
     async unitUsers(unit:number, key:string, pageStart:number, pageSize:number):Promise<any> {
         return await this.get('unit/users', {unit: unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
+    async unitAppUsers(unit:number, key:string, pageStart:number, pageSize:number):Promise<any> {
+        return await this.get('unit/app-users', {unit: unit, key:key, pageStart:pageStart, pageSize:pageSize});
+    }
+    async unitOneAppUsers(unit:number, app:number, pageStart:number, pageSize:number):Promise<any[]> {
+        return await this.get('unit/one-app-users', {unit: unit, app:app, pageStart:pageStart, pageSize:pageSize});
+    }
+    async unitOneUserApps(unit:number, user:number, pageStart:number, pageSize:number):Promise<any[]> {
+        return await this.get('unit/one-user-apps', {unit: unit, user:user, pageStart:pageStart, pageSize:pageSize});
+    }
+    async unitAppEditUsers(unit:number, app:number, key:string, pageStart:number, pageSize:number):Promise<any[]> {
+        return await this.get('unit/app-edit-users', {unit: unit, app:app, key:key, pageStart:pageStart, pageSize:pageSize});
+    }
+    async unitUserEditApps(unit:number, user:number, key:string, pageStart:number, pageSize:number):Promise<any[]> {
+        return await this.get('unit/user-edit-apps', {unit: unit, user:user, key:key, pageStart:pageStart, pageSize:pageSize});
+    }
+    async bindAppUser(unit:number, app:number, user:number, bind:number):Promise<void> {
+        await this.post('unit/bind-app-user', {unit: unit, app:app, user:user, bind:bind});
+    }
 }
 
 export const mainApi = new MainApi('tv/', undefined);
