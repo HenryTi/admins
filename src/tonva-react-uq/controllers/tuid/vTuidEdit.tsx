@@ -12,7 +12,7 @@ export class VTuidEdit extends VEntity<Tuid, TuidUI, CTuidMain> {
     private vForm: VForm;
     private id: number;
 
-    async showEntry(param?:any):Promise<void> {
+    async open(param?:any):Promise<void> {
         this.vForm = this.createForm(this.onSubmit, param);
         if (param !== undefined) {
             this.id = param.id;

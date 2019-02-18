@@ -19,13 +19,13 @@ export class AppPage extends VPage<AppController> {
     };
     */
 
-    async showEntry() {
+    async open() {
         //this.uqs.list = this.controller.uqs;
         this.openPage(this.page);
     }
 
     private editItem = async () => {
-        await this.showVPage(EditPage);
+        await this.openVPage(EditPage);
         //nav.push(<EditAppPage {...this.props} />);
     }
 
@@ -83,7 +83,7 @@ export class AppPage extends VPage<AppController> {
             '',
             //this.uqs,
         ];
-        let btnAddUq = <button className="btn btn-outline-primary btn-sm" onClick={()=>this.showVPage(SearchUqPage)}>
+        let btnAddUq = <button className="btn btn-outline-primary btn-sm" onClick={()=>this.openVPage(SearchUqPage)}>
             增加关联
         </button>;
         return <Page header={'App - ' + name} right={right}>

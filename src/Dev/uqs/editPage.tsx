@@ -22,7 +22,7 @@ const formRows = [
 
 
 export abstract class EditBasePage extends VPage<UQController> {
-    async showEntry() {
+    async open() {
         this.openPage(this.page);
     }
     protected onSubmit = async (values:any):Promise<SubmitResult> => {

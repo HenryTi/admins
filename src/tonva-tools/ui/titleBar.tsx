@@ -1,6 +1,7 @@
 import * as React from 'react';
 import _ from 'lodash';
 import {nav, mobileHeaderStyle} from './nav';
+import { Page } from './page';
 
 export interface TitleBarProps {
     back?: 'back' | 'close' | 'none';
@@ -39,7 +40,16 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         window.open(document.location.href);
     }
     private logoutClick = () => {
-        if (confirm('Really want to logout?') === false) return;
+        nav.push(<Page header="安全退出" back="close">
+            <div className="m-5 border border-info bg-white rounded p-3 text-center">
+                <div>退出当前账号不会删除任何历史数据，下次登录依然可以使用本账号</div>
+                <div className="mt-3">
+                    <button className="btn btn-danger" onClick={()=>this.logout()}>退出</button>
+                </div>
+            </div>
+        </Page>);
+    }
+    private logout() {
         let {logout} = this.props;
         if (typeof logout === 'function') {
             logout(); 

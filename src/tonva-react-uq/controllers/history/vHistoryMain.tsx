@@ -5,7 +5,7 @@ import { VEntity } from '../CVEntity';
 import { CHistory, HistoryUI } from './cHistory';
 
 export class VHistoryMain extends VEntity<History, HistoryUI, CHistory> {
-    async showEntry(param?:any):Promise<void> {
+    async open(param?:any):Promise<void> {
         this.openPage(this.view);
     }
 

@@ -5,7 +5,7 @@ import { Sheet } from '../../entities';
 import { SheetUI, CSheet } from './cSheet';
 
 export class VSheetSchema extends VEntity<Sheet, SheetUI, CSheet> {
-    async showEntry(param?:any) {
+    async open(param?:any) {
         this.openPage(this.view);
     }
 

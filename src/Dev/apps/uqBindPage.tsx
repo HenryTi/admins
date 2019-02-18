@@ -7,7 +7,7 @@ export class UqBindPage extends VPage<AppController> {
     private uqAccess: UqAccess;
     private accesses: string[];
     private accessChecked:{[name:string]:boolean};
-    async showEntry(uqAccess: UqAccess) {
+    async open(uqAccess: UqAccess) {
         this.uqAccess = uqAccess;
         let {uq, bind_access} = this.uqAccess;
         let {access} = uq;

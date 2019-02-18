@@ -12,7 +12,7 @@ export class VTuidMain extends VEntity<TuidMain, TuidUI, CTuidMain> {
     onList = () => this.event('list');
     onSearch = async (key:string) => this.event('list', key);
 
-    async showEntry(param?:any):Promise<void> {
+    async open(param?:any):Promise<void> {
         this.openPage(this.view);
     }
 

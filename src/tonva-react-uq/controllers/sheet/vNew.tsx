@@ -9,7 +9,7 @@ import { SheetUI, CSheet } from './cSheet';
 export class VSheetNew extends VEntity<Sheet, SheetUI, CSheet> {
     vForm: VForm;
 
-    async showEntry(param?:any) {
+    async open(param?:any) {
         this.vForm = this.createForm(this.onSubmit, param);
         this.openPage(this.view);
     }

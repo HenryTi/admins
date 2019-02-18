@@ -10,7 +10,7 @@ export class VActionMain extends VEntity<Action, ActionUI, CAction> {
     protected vForm: VForm;
     protected returns: any;
 
-    async showEntry(param?:any):Promise<void> {
+    async open(param?:any):Promise<void> {
         this.vForm = this.createForm(this.onSubmit, param);
         this.openPage(this.mainPage);
     }

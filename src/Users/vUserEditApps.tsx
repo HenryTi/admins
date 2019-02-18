@@ -5,7 +5,7 @@ import { List, SearchBox, LMR } from 'tonva-react-form';
 import { UsersController, UserApps, AppUsers, App, EditApp } from './cUsers';
 
 export class VUserEditApps extends VPage<UsersController> {
-    async showEntry() {
+    async open() {
         this.openPage(this.page);
     }
 

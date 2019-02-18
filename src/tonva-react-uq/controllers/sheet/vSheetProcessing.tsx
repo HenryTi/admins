@@ -4,7 +4,7 @@ import { VSheetView } from './vSheetView';
 import { SheetData } from './cSheet';
 
 export class VSheetProcessing extends VSheetView { 
-    async showEntry(sheetData:SheetData) {
+    async open(sheetData:SheetData) {
         this.sheetData = sheetData;
         //let {brief, data, flows} = await this.controller.getSheetData(sheetId);
         //this.brief = brief;

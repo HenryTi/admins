@@ -238,7 +238,7 @@ export class COpBinding extends ControllerUq {
                 section: this.sectionDict[section],
             });
         }
-        this.showVPage(VOpBinding, {entity:entity, opTos:opTos});
+        this.openVPage(VOpBinding, {entity:entity, opTos:opTos});
     }
     private sheetClick = async (block:EntityBlock, sheet:Sheet) => {
         this.sheetClickOld(sheet);
@@ -258,7 +258,7 @@ export class COpBinding extends ControllerUq {
                 section: this.sectionDict[section],
             });
         }
-        this.showVPage(VOpBinding, {entity:sheet, opTos:opTos});
+        this.openVPage(VOpBinding, {entity:sheet, opTos:opTos});
     }
 
     private renderSetting = (item:any, index:number) => {
@@ -276,7 +276,7 @@ export class COpBinding extends ControllerUq {
             case 'entity-by-all-post': V = VAllPosts; break;
             case 'user-all-entities': V = VFullFunction; break;
         }
-        this.showVPage(V, uq);
+        this.openVPage(V, uq);
     }
     
     private uqRender = (uq:Uq, index:number) => {

@@ -206,7 +206,7 @@ export class VOpBinding extends VPage<COpBinding> {
         });
     }
 
-    async showEntry({entity, opTos}:{entity:Entity, opTos:{[op:string]:To[]}}) {
+    async open({entity, opTos}:{entity:Entity, opTos:{[op:string]:To[]}}) {
         this.sheet = entity;
         let {name, states} = entity;
         if (states === undefined) {

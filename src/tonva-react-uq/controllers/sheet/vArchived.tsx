@@ -11,7 +11,7 @@ export class VArchived extends VSheetView {
     //protected controller: CSheet;
     //brief: any;
 
-    async showEntry(sheetData:SheetData) {
+    async open(sheetData:SheetData) {
         this.sheetData = sheetData;
         /*
         let {brief, data, flows} = await this.controller.getArchived(inBrief.id);

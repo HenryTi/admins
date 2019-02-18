@@ -9,7 +9,7 @@ export interface HistoryUI extends EntityUI {
 
 export class CHistory extends CEntity<History, HistoryUI> {
     protected async internalStart() {
-        await this.showVPage(this.VHistoryMain);
+        await this.openVPage(this.VHistoryMain);
     }
 
     protected get VHistoryMain():typeof VHistoryMain {return VHistoryMain}

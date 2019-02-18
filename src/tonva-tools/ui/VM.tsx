@@ -34,8 +34,8 @@ export abstract class Controller {
     protected onDispose() {
     }
 
-    protected async showVPage(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<void> {
-        await (new vp(this)).showEntry(param);
+    protected async openVPage(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<void> {
+        await (new vp(this)).open(param);
     }
 
     protected renderView(view: new (coordinator: Controller)=>View<Controller>, param?:any) {
@@ -104,7 +104,7 @@ export abstract class Controller {
         if (this._resolve_$ === undefined) this._resolve_$ = [];
         return new Promise<any> (async (resolve, reject) => {
             this._resolve_$.push(resolve);
-            await (new vp(this)).showEntry(param);
+            await (new vp(this)).open(param);
         });
     }
 
@@ -169,8 +169,8 @@ export abstract class View<C extends Controller> {
         return (new vm(this.controller)).render(param);
     }
 
-    protected async showVPage(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<void> {
-        await (new vp(this.controller)).showEntry(param);
+    protected async openVPage(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<void> {
+        await (new vp(this.controller)).open(param);
     }
 
     protected async event(type:string, value?:any) {
@@ -228,7 +228,7 @@ export abstract class VPage<C extends Controller> extends View<C> {
         super(coordinator);
     }
 
-    abstract showEntry(param?:any):Promise<void>;
+    abstract open(param?:any):Promise<void>;
 
     render(param?:any):JSX.Element {return null;}
 }

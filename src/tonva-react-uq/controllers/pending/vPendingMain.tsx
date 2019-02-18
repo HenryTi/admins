@@ -5,7 +5,7 @@ import { VEntity } from '../CVEntity';
 import { CPending, PendingUI } from './cPending';
 
 export class VPendingMain extends VEntity<Pending, PendingUI, CPending> {
-    async showEntry(param?:any):Promise<void> {
+    async open(param?:any):Promise<void> {
         this.openPage(this.view);
     }
 

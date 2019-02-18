@@ -241,7 +241,7 @@ export class CApp extends Controller {
                 return;
             }
         }
-        this.showVPage(this.VAppMain);
+        this.openVPage(this.VAppMain);
     }
 
     private getCUqFromId(uqId:number): CUq {
@@ -279,7 +279,7 @@ export class CApp extends Controller {
 }
 
 class VAppMain extends VPage<CApp> {
-    async showEntry(param?:any) {
+    async open(param?:any) {
         this.openPage(this.appPage);
     }
 

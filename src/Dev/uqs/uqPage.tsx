@@ -8,12 +8,12 @@ import { DevModel } from 'model';
 import { EditPage } from './editPage';
 
 export class UQPage extends VPage<UQController> {
-    async showEntry() {
+    async open() {
         this.openPage(this.page);
     }
 
     private editItem = async () => {
-        await this.showVPage(EditPage);
+        await this.openVPage(EditPage);
         //nav.push(<EditAppPage {...this.props} />);
     }
 

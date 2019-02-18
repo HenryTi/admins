@@ -61,12 +61,12 @@ export class UsersController extends Controller {
 
     private onAppUsers = async () => {
         await this.loadAppUsers(undefined);
-        this.showVPage(VApps);
+        this.openVPage(VApps);
     }
 
     private onUserApps = async () => {
         await this.loadUserApps(undefined);
-        this.showVPage(VUsers);
+        this.openVPage(VUsers);
     }
 
     private async loadAppUsers(key:string) {
@@ -140,7 +140,7 @@ export class UsersController extends Controller {
         let pageStart = 0;
         let pageSize = 100;
         this.curAppUsers = await mainApi.unitOneAppUsers(this.unitId, this.curApp.id, pageStart, pageSize);
-        this.showVPage(VApp);
+        this.openVPage(VApp);
     }
 
     onUsersClick = async (userApps: UserApps) => {
@@ -148,21 +148,21 @@ export class UsersController extends Controller {
         let pageStart = 0;
         let pageSize = 100;
         this.curUserApps = await mainApi.unitOneUserApps(this.unitId, this.curUser.id, pageStart, pageSize);
-        this.showVPage(VUser);
+        this.openVPage(VUser);
     }
 
     onAppEditUsers = async (key?:string) => {
         let pageStart = 0;
         let pageSize = 100;
         this.appEditUsers = await mainApi.unitAppEditUsers(this.unitId, this.curApp.id, key, pageStart, pageSize);
-        this.showVPage(VAppEditUsers);
+        this.openVPage(VAppEditUsers);
     }
 
     onUserEditApps = async (key?:string) => {
         let pageStart = 0;
         let pageSize = 100;
         this.userEditApps = await mainApi.unitUserEditApps(this.unitId, this.curUser.id, key, pageStart, pageSize);
-        this.showVPage(VUserEditApps);
+        this.openVPage(VUserEditApps);
     }
 
     bindAppUser = async(user:User, checked:boolean) => {

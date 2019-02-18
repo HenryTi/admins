@@ -6,7 +6,7 @@ import { SheetData } from './cSheet';
 
 export class VSheetEdit extends VSheetView { //VEntity<Sheet, SheetUI, CSheet> {
     protected sheetData: SheetData;
-    async showEntry(param: SheetData) {
+    async open(param: SheetData) {
         this.sheetData = param;
         this.vForm = this.createForm(this.onSubmit, param.data, FormMode.edit);
         this.openPage(this.view);

@@ -9,7 +9,7 @@ export interface PendingUI extends EntityUI {
 
 export class CPending extends CEntity<Pending, PendingUI> {
     protected async internalStart() {
-        await this.showVPage(this.VPendingMain);
+        await this.openVPage(this.VPendingMain);
     }
 
     protected get VPendingMain():typeof VPendingMain {return VPendingMain}

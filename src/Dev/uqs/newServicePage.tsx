@@ -87,7 +87,7 @@ export class NewServicePage extends VPage<UQController> {
         dbRow,
         connectionRow
     ];
-    async showEntry() {
+    async open() {
         this.openPage(this.page);
     }
     private onSubmit = async (values:any):Promise<SubmitResult | undefined> => {

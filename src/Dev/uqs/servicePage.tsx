@@ -8,7 +8,7 @@ import { StringValueEdit, ServerSpan, TextValueEdit } from 'tools';
 
 export class ServicePage extends VPage<UQController> {
     @observable private service: DevModel.Service;
-    async showEntry(service: DevModel.Service) {
+    async open(service: DevModel.Service) {
         this.service = service;
         this.openPage(this.page);
     }

@@ -10,7 +10,7 @@ export class VSheetList extends VEntity<Sheet, SheetUI, CSheet> {
     stateName: string;
     stateLabel: string;
 
-    async showEntry(item:any) {
+    async open(item:any) {
         this.row = this.ui.listRow || this.rowContent;
         this.stateName = item.state;
         this.stateLabel = this.controller.getStateLabel(this.stateName);

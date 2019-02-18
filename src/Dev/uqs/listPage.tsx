@@ -7,11 +7,11 @@ import { appItemIcon } from 'consts';
 import { NewPage } from './editPage';
 
 export class ListPage extends VPage<UQController> {
-    async showEntry(param:any) {
+    async open(param:any) {
         this.openPage(this.page);
     }
     private newItem = () => {
-        this.showVPage(NewPage);
+        this.openVPage(NewPage);
     }
     private page = ():JSX.Element => {
         let {uqList: list, listRowClick} = this.controller;

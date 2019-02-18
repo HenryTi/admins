@@ -8,7 +8,7 @@ import { VForm } from '../form';
 export class VInputValues extends VEntity<Map, MapUI, CMap> {
     private vForm: VForm;
 
-    async showEntry(param?:any) {
+    async open(param?:any) {
         this.vForm = this.createForm(this.onValuesSubmit);
         this.openPageElement(<this.view />);
     }

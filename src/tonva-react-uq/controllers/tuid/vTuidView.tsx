@@ -18,7 +18,7 @@ export class VTuidView extends VEntity<TuidMain, TuidUI, CTuidMain> {
         this.vForm = this.createForm(undefined, param);
     }
 
-    async showEntry(param:any) {
+    async open(param:any) {
         this.buildForm(param);
         this.openPage(this.view);
     }

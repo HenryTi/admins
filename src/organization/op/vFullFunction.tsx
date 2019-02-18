@@ -18,7 +18,7 @@ export class VFullFunction extends VPage<COpBinding> {
     private entityOpUserFully:CMap;
     private pageUsers: PageUsers;
     private tuidUser: CTuid<Tuid>;
-    async showEntry(uq: Uq) {
+    async open(uq: Uq) {
         this.uq = uq;
         this.entityOpUserFully = this.controller.cUq.cFromName('map', 'entityOpUserFully') as CMap;
         this.tuidUser = this.controller.cUq.cFromName('tuid', 'user') as CTuid<Tuid>;

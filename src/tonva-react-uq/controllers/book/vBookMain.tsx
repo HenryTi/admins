@@ -5,7 +5,7 @@ import { VEntity } from '../CVEntity';
 import { CBook, BookUI } from './cBook';
 
 export class VBookMain extends VEntity<Book, BookUI, CBook> {
-    async showEntry(param?:any):Promise<void> {
+    async open(param?:any):Promise<void> {
         this.openPage(this.view);
     }
 

@@ -5,7 +5,7 @@ import { VSheet } from "./vSheet";
 
 export class VSheetSaved extends VSheet {
     private brief: any;
-    async showEntry(brief?:any) {
+    async open(brief?:any) {
         this.brief = brief;
         this.openPage(this.view);
     }

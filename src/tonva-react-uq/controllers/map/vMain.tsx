@@ -12,7 +12,7 @@ import { PureJSONContent } from '../form/viewModel';
 export class VMapMain extends VEntity<Map, MapUI, CMap> {
     private isFrom: boolean;
 
-    async showEntry(param?:any) {
+    async open(param?:any) {
         this.isFrom = this.controller.isFrom;
         this.openPage(this.view);
     }

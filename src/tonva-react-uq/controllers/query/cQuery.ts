@@ -18,7 +18,7 @@ export abstract class CQueryBase extends CEntity<Query, QueryUI> {
 
 export class CQuery extends CQueryBase {
     protected async internalStart() {
-        await this.showVPage(this.VQueryMain);
+        await this.openVPage(this.VQueryMain);
     }
 
     protected get VQueryMain():typeof VQueryMain {return this.ui && this.ui.main || VQueryMain}
@@ -26,7 +26,7 @@ export class CQuery extends CQueryBase {
 
 export class CQuerySelect extends CQueryBase {
     protected async internalStart(param?:any) {
-        await this.showVPage(this.VQuerySelect, param);
+        await this.openVPage(this.VQuerySelect, param);
     }
 
     protected get VQuerySelect():typeof VQuerySelect {return VQuerySelect}

@@ -48,7 +48,7 @@ export class CSheet extends CEntity<Sheet, SheetUI> {
     protected async internalStart() {
         await this.loadStateSheetCount();
         this.pageStateItems = this.entity.createPageStateItems();
-        await this.showVPage(this.VSheetMain);
+        await this.openVPage(this.VSheetMain);
     }
 
     protected async onMessage(msg: any):Promise<void> {
@@ -131,7 +131,7 @@ export class CSheet extends CEntity<Sheet, SheetUI> {
             case 'processing':
                 await this.showProcessing(value); return;
         }
-        await this.showVPage(c, value);
+        await this.openVPage(c, value);
     }
 
     async startSheet(sheetId:number) {
@@ -152,12 +152,12 @@ export class CSheet extends CEntity<Sheet, SheetUI> {
                 }
             }
         });
-        await this.showVPage(this.VSheetAction, sheetData);
+        await this.openVPage(this.VSheetAction, sheetData);
     }
 
     async showProcessing(sheetId:number) {
         let sheetData:SheetData = await this.getSheetData(sheetId);
-        await this.showVPage(this.VSheetProcessing, sheetData);
+        await this.openVPage(this.VSheetProcessing, sheetData);
     }
 
     async editSheet(sheetData:SheetData):Promise<any> {
@@ -168,7 +168,7 @@ export class CSheet extends CEntity<Sheet, SheetUI> {
 
     async showArchived(inBrief:any) {
         let sheetData = await this.getArchived(inBrief.id);
-        await this.showVPage(this.VArchived, sheetData);
+        await this.openVPage(this.VArchived, sheetData);
     }
 
     onSave = async (values:any, valuesWithBox:any):Promise<void> => {
@@ -181,7 +181,7 @@ export class CSheet extends CEntity<Sheet, SheetUI> {
     }
 
     async showSaved(sheetData:any) {
-        await this.showVPage(this.VSheetSaved, sheetData);
+        await this.openVPage(this.VSheetSaved, sheetData);
     }
 
     private getStateUI(stateName:string) {

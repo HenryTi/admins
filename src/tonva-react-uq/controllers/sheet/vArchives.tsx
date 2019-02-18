@@ -8,7 +8,7 @@ import { SheetUI, CSheet } from './cSheet';
 export class VArchives extends VEntity<Sheet, SheetUI, CSheet> {
     list: any[];
 
-    async showEntry() {
+    async open() {
         this.list = await this.entity.getArchives(undefined, 10);
         this.openPage(this.view);
     }

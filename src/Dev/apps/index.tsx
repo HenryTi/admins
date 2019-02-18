@@ -4,7 +4,7 @@ import { observable } from 'mobx';
 import { Controller } from "tonva-tools";
 import { DevModel } from 'model';
 import { devApi } from 'api';
-import { ListPage } from './listPage';
+import { AppsPage } from './appsPage';
 import { AppPage } from './appPage';
 import { UqBindPage } from './uqBindPage';
 
@@ -21,7 +21,7 @@ export class AppController extends Controller {
     protected async internalStart(unitId:any) {
         this.unitId = unitId;
         this.appList = await devApi.apps(this.unitId);
-        this.showVPage(ListPage);
+        this.openVPage(AppsPage);
     }
 
     listRowClick = async (item:DevModel.App) => {
@@ -45,7 +45,7 @@ export class AppController extends Controller {
                 bind_access: bind_access && bind_access.split(',')
             }
         });
-        this.showVPage(AppPage);
+        this.openVPage(AppPage);
     }
 
     saveApp = async (values: DevModel.App) => {
@@ -59,7 +59,7 @@ export class AppController extends Controller {
     deleteApp = async () => {
         await devApi.delApp(this.unitId, this.app.id);
         let index = this.appList.findIndex(v => v.id === this.app.id);
-        if (index >= 0) this.appList.splice(index);
+        if (index >= 0) this.appList.splice(index, 1);
     }
 
     searchUq = async (key:string, pageStart:number, pageSize:number) => {
@@ -82,7 +82,7 @@ export class AppController extends Controller {
             let access = uqAccess.bind_access;
             if (access === null || access === undefined) uqAccess.bind_access = [];
         }
-        this.showVPage(UqBindPage, uqAccess);
+        this.openVPage(UqBindPage, uqAccess);
     }
 
     // accesses = undefined, 表示删除

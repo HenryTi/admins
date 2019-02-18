@@ -12,7 +12,7 @@ export abstract class VTuidMainListBase  extends VEntity<TuidMain, TuidUI, CTuid
     protected rowContent: (row:any) => JSX.Element;
     protected ownerId: number;
 
-    async showEntry(param?:any) {
+    async open(param?:any) {
         this.rowContent = this.ui.rowContent || RowContent;
         if (this.entity.owner !== undefined) this.ownerId = Number(param);
         // 初始查询, key是空的
@@ -74,7 +74,7 @@ export class VTuidMainList extends VTuidMainListBase {
 export abstract class VTuidDivListBase  extends VEntity<TuidDiv, TuidUI, CTuidDiv> {
     protected ownerId: number;
 
-    async showEntry(param?:any) {
+    async open(param?:any) {
         //this.PageItems = new TuidPageItems(this.entity);
         if (this.entity.owner !== undefined) this.ownerId = Number(param);
         // 初始查询, key是空的

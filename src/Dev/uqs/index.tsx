@@ -20,13 +20,13 @@ export class UQController extends Controller {
     protected async internalStart(unitId:any) {
         this.unitId = unitId;
         this.uqList = await devApi.uqs(this.unitId);
-        this.showVPage(ListPage);
+        this.openVPage(ListPage);
     }
 
     listRowClick = async (item:DevModel.UQ) => {
         this.uq = item;
         await this.loadUqEntities(item.id);
-        this.showVPage(UQPage);
+        this.openVPage(UQPage);
     }
 
     private async loadUqEntities(uqId: number) {
@@ -38,7 +38,7 @@ export class UQController extends Controller {
     }
 
     serviceClick = (service: DevModel.Service) => {
-        this.showVPage(ServicePage, service);
+        this.openVPage(ServicePage, service);
     }
 
     onUqUpload = async() => {
@@ -81,6 +81,6 @@ export class UQController extends Controller {
     }
 
     showNewServicePage = async () => {
-        await this.showVPage(NewServicePage);
+        await this.openVPage(NewServicePage);
     }
 }

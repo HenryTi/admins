@@ -9,7 +9,7 @@ export interface BookUI extends EntityUI {
 
 export class CBook extends CEntity<Book, BookUI> {
     protected async internalStart() {
-        await this.showVPage(this.VBookMain);
+        await this.openVPage(this.VBookMain);
     }
 
     protected get VBookMain():typeof VBookMain {return VBookMain}

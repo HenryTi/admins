@@ -66,7 +66,7 @@ const formRows:FormRow[] = [
 ];
 
 export abstract class EditBasePage extends VPage<AppController> {
-    async showEntry() {
+    async open() {
         this.openPage(this.page);
     }
     protected onSubmit = async (values:any):Promise<SubmitResult> => {

@@ -22,6 +22,7 @@ export namespace DevModel {
         "public": number;
         server: number;
         url: string;
+        urlDebug: string;
     }
 
     export interface Bus extends ObjBase {

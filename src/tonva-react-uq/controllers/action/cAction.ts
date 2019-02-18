@@ -9,7 +9,7 @@ export interface ActionUI extends EntityUI {
 
 export class CAction extends CEntity<Action, ActionUI> {
     protected async internalStart() {
-        await this.showVPage(this.VActionMain);
+        await this.openVPage(this.VActionMain);
     }
 
     protected get VActionMain():typeof VActionMain {return VActionMain}

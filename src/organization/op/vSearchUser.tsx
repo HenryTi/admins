@@ -18,7 +18,7 @@ export class VSearchUser extends VPage<COpBinding> {
     private renderSelectUser = (item:any, index:number) => {
         return <div className="px-3 py-2">{JSON.stringify(item)}</div>;
     }
-    async showEntry(unit: number) {
+    async open(unit: number) {
         this.unit = unit;
         let search = <SearchBox className="w-100" onSearch={this.onSearch} placeholder="选择用户" />;
         this.openPageElement(<Page header={search}>

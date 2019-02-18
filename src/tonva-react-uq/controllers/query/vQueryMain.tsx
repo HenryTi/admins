@@ -12,7 +12,7 @@ export class VQueryMain extends VEntity<Query, QueryUI, CQuery> {
     protected vForm: VForm;
     private row: React.StatelessComponent;
 
-    async showEntry(param?:any):Promise<void> {
+    async open(param?:any):Promise<void> {
         this.vForm = this.createForm(this.onSubmit, param);
         let {row, queryRow} = this.ui;
         this.row = queryRow || row || DefaultRow;

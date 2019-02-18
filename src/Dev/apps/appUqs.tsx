@@ -12,7 +12,7 @@ import { AppController } from '.';
 export class SearchUqPage extends VPage<AppController> {
     @observable private uqs: DevModel.UQ[];
 
-    async showEntry() {
+    async open() {
         this.uqs = await this.controller.getMyUqs();
         this.openPage(this.page);
     }

@@ -109,7 +109,7 @@ export class CTuidMain extends CTuid<TuidMain> {
 
     protected async internalStart(param?:any):Promise<void> {
         this.isFrom = this.entity.schemaFrom !== undefined;
-        await this.showVPage(this.VTuidMain);
+        await this.openVPage(this.VTuidMain);
     }
 
     protected async onEvent(type:string, value:any) {
@@ -125,7 +125,7 @@ export class CTuidMain extends CTuid<TuidMain> {
                 await cTuidInfo.start(value);
                 return;
         }
-        await this.showVPage(v, value);
+        await this.openVPage(v, value);
     }
 
     protected async edit(id:number) {
@@ -134,7 +134,7 @@ export class CTuidMain extends CTuid<TuidMain> {
             values = await this.entity.load(id);
         }
         let v = this.VTuidEdit;
-        await this.showVPage(v, values);
+        await this.openVPage(v, values);
     }
 
     private itemChanged({id, values}:{id:number, values: any}) {
@@ -155,7 +155,7 @@ export class CTuidEdit extends CTuidMain {
 
 export class CTuidList extends CTuidMain {
     protected async internalStart(id:number):Promise<void> {
-        await this.showVPage(this.VTuidList);
+        await this.openVPage(this.VTuidList);
     }
 }
 
@@ -167,7 +167,7 @@ export class CTuidDiv extends CTuid<TuidDiv> {
 
 export class CTuidSelect extends CTuid<Tuid> {
     protected async internalStart(param?: any):Promise<void> {
-        await this.showVPage(this.VTuidSelect, param);
+        await this.openVPage(this.VTuidSelect, param);
     }
     protected async beforeStart():Promise<boolean> {
         //if (await super.beforeStart() === false) return false;
@@ -184,7 +184,7 @@ export class CTuidSelect extends CTuid<Tuid> {
 export class CTuidInfo extends CTuid<Tuid> {
     protected async internalStart(id: any):Promise<void> {
         let data = await this.entity.load(id)
-        await this.showVPage(this.VTuidInfo, data);
+        await this.openVPage(this.VTuidInfo, data);
     }
     protected get VTuidInfo():typeof VTuidInfo {return VTuidInfo}
 }

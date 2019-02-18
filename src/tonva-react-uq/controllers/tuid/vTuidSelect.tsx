@@ -12,7 +12,7 @@ export class VTuidSelect extends VEntity<Tuid, TuidUI, CTuid<Tuid>> {
     protected mainRowContent: (row:any) => JSX.Element;
     protected divRowContent: (row:any) => JSX.Element;
 
-    async showEntry(param?:any): Promise<void> {
+    async open(param?:any): Promise<void> {
         if (param === undefined)
             await this.showMain(param);
         else

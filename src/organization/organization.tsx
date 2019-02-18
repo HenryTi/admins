@@ -39,13 +39,13 @@ export class COrganization extends CUq {
             this.linkFromName('tuid', 'section'),
             this.linkFromName('tuid', 'organization'),
         ];
-        this.showVPage(VOrganization);
+        this.openVPage(VOrganization);
     }
     
 }
 
 class VOrganization extends VPage<COrganization> {
-    async showEntry() {
+    async open() {
         this.openPage(this.appPage);
     }
 

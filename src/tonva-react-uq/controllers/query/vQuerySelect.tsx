@@ -12,7 +12,7 @@ export class VQuerySelect extends VEntity<Query, QueryUI, CQuerySelect> {
     PageItems:QueryPageItems;
     ownerId: number;
 
-    async showEntry(param?:any) {
+    async open(param?:any) {
         let {row, selectRow} = this.ui;
         this.row = selectRow || row || DefaultRow;
         //this.entity = this.controller.entity;

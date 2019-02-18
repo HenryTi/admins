@@ -40,11 +40,11 @@ export class CAdmin extends Controller {
 
         if (this.isProduction === false) {
             await this.loadAdminUnits();
-            this.showVPage(VAdmin);
+            this.openVPage(VAdmin);
             return;
         }
         await store.loadUnit();
-        this.showVPage(VAdmin);
+        this.openVPage(VAdmin);
     /*
         let user = nav.user;
         if (user === undefined) {
@@ -67,7 +67,7 @@ export class CAdmin extends Controller {
 }
 
 export class VAdmin extends VPage<CAdmin> {
-    async showEntry() {
+    async open() {
         let {isProduction, adminUnits} = this.controller;
         if (isProduction === false) {
             switch (adminUnits.length) {
@@ -135,7 +135,7 @@ interface DevItem<T extends DevModel.ObjBase> {
     onClick?: ()=>void;
 }
 
-type Item = ActionItem|DevItem<DevModel.ObjBase>;
+type Item = ActionItem|DevItem<DevModel.ObjBase>|string;
 
 const rArrow = <FA name="chevron-right" />;
 
@@ -146,20 +146,20 @@ default class AdminPage extends React.Component {
     async componentWillMount() {
         let {unit, dev} = store;
         let {isAdmin, isOwner, type} = unit;
-        if ((type & 1) !== 0) {
-            // dev unit
-            this.caption = '开发号';
-            await store.dev.loadCounts();
+        switch (type) {
+            case 1: this.caption = '开发号'; break;
+            case 2: this.caption = '小号'; break;
+            case 3: this.caption = '系统号'; break;
         }
-        else {
-            this.caption = '小号';
+        if ((type & 1) !== 0) {
+            await store.dev.loadCounts();
         }
     }
 
     private appsAction:ActionItem = {
         main: '启停App',
         right: rArrow, //'增减',
-        icon: 'play',
+        icon: 'play-circle-o',
         page: AppsPage,
     };
     private usersAction:ActionItem = {
@@ -171,7 +171,7 @@ default class AdminPage extends React.Component {
     private newUsersAction:ActionItem = {
         main: '用户管理',
         right: rArrow,
-        icon: 'users',
+        icon: 'user-o',
         controller: new UsersController(undefined),
     };
     /*
@@ -210,9 +210,10 @@ default class AdminPage extends React.Component {
         }
         console.log('unit:', unit);
         if (isAdmin === 1) {
-            if ((type & 2) !== 0 && unit.name !== '$$$') {
+            if ((type & 2) !== 0) {
                 // unit
                 items.push(
+                    '小号管理',
                     this.appsAction, 
                     //this.usersAction, 
                     this.newUsersAction, 
@@ -222,65 +223,44 @@ default class AdminPage extends React.Component {
             if ((type & 1) !== 0) {
                 // dev unit
                 let {counts} = dev;
-                if (counts !== undefined) {
-                    let devItems:DevItem<DevModel.ObjBase>[] = [
+                //if (counts !== undefined) {
+                let devItems:(DevItem<DevModel.ObjBase>|string)[] = [
+                    '开发号管理',
                     {
                         title: 'APP', 
-                        count: counts.app, 
+                        count: counts && counts.app, 
                         icon: 'tablet', 
                         onClick: () => new AppController(undefined).start(unit.id),
-                        //items: store.dev.apps,
-                        //page: <ObjView {...appsProps} items={store.dev.apps} />
-                        //objProps: appsProps
                     },
                     {
                         title: 'UQ', 
-                        count: counts.uq, 
+                        count: counts && counts.uq, 
                         icon: 'database', 
                         onClick: () => new UQController(undefined).start(unit.id),
-                        //items: store.dev.apis, 
-                        //objProps: uqsProps,
-                        //page: <ObjView {...apisProps} items={store.dev.apis} />
                     },
                     {
                         title: 'BUS', 
-                        count: counts.bus, 
+                        count: counts && counts.bus, 
                         icon: 'cogs', 
                         objProps: busesProps,
                     },
                     {
                         title: 'Server', 
-                        count: counts.server, 
+                        count: counts && counts.server, 
                         icon: 'server', 
-                        //items: store.dev.servers, 
-                        //page: <ObjView {...serversProps} items={store.dev.servers} />
                         objProps: serversProps,
                     },
-                    /*
-                    {
-                        title: 'Service', 
-                        count: counts.service, 
-                        icon: 'microchip', 
-                        //items: store.dev.services, 
-                        //page: <ObjView {...servicesProps} items={store.dev.services} />
-                        objProps: servicesProps,
-                    },*/
-                    /*
-                    {
-                        title: 'uqDB', 
-                        count: counts.uqdb, 
-                        icon: 'database', 
-                        objProps: uqdbsProps,
-                    },
-                    */
-                    ];
-                    items.push(...devItems);
-                }
+                ];
+                items.push(...devItems);
+            //}
             }
         }
         return items;
     }
     private row = (item:Item, index:number):JSX.Element => {
+        if (typeof item === 'string') {
+            return <div className="px-3 pt-3 pb-1 small text-muted" style={{backgroundColor:'#f0f0f0'}}>{item}</div>;
+        }
         let {title} = item as DevItem<DevModel.ObjBase>;
         let left:any, mid:any, r:any;
         if (title !== undefined) {
@@ -332,11 +312,11 @@ default class AdminPage extends React.Component {
         if (items === undefined) {
             return <Page header="" />;
         }
-        let title = this.caption;
-        let header = title, top;
+        let header:any, top:any;
         if (unit !== undefined) {
             let {name, nick, icon, discription} = unit;
-            header = title + ' - ' + (unit.nick || unit.name);
+            header = nick || name;
+            if (this.caption !== undefined) header = this.caption + ' - ' + header;            
             top = <LMR className='px-3 my-4 bg-white py-2 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}
                 left={<div><img src={icon || appIcon} /></div>}>
                 <div className="px-3">
@@ -345,6 +325,9 @@ default class AdminPage extends React.Component {
                     <div className='small text-info'>{discription}</div>
                 </div>
             </LMR>;
+        }
+        else {
+            header = '系统管理';
         }
         return <Page header={header} logout={logout}>
             {top}

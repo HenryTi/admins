@@ -18,7 +18,7 @@ export class VAllPosts extends VPage<COpBinding> {
     private checked:{[entity:string]:Checked} = {};
 
     @observable private isChanged:boolean = false;
-    async showEntry(uq: Uq) {
+    async open(uq: Uq) {
         this.uq = uq;
         let {name, tuids, actions, maps, books, queries, histories, pendings, sheets} = this.uq;
         this.blocks = [

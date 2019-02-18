@@ -70,7 +70,7 @@ export class CMap extends CEntity<Map, MapUI> {
             }
         }
 
-        await this.showVPage(this.VMapMain);
+        await this.openVPage(this.VMapMain);
     }
 
     private createItem(parent:MapItem, tuid:Tuid, box:BoxId, keyIndex:number, values?:any) {
