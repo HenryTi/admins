@@ -24,15 +24,15 @@ export class UqUpload extends React.Component<UpUploadProps, State> {
             files: undefined,
         }
     }
-    private onFilesChange = (evt) => {
-        let files:any[] = [];
-        let len = evt.target.files.length;
+    private onFilesChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+        let upFiles:any[] = [];
+        let {files} = evt.target;
+        let len = files.length;
         for (let i=0; i<len; i++) {
-            let f = evt.target.files[i];
-            files.push(f);
+            upFiles.push(files[i]);
         }
         this.setState({
-            files: files,
+            files: upFiles,
         });
     }
     fileRender(file, index):JSX.Element {
@@ -55,7 +55,7 @@ export class UqUpload extends React.Component<UpUploadProps, State> {
             <div><Muted>修改日期: <EasyDate date={lastModifiedDate} /></Muted></div>
         </LMR>;
     }
-    private fileClick = (file) => {
+    private fileClick = (file:any) => {
         let fr = new FileReader();
         fr.onload = function(f) {
             //alert(this.result);
@@ -68,14 +68,8 @@ export class UqUpload extends React.Component<UpUploadProps, State> {
     }
 
     private async update(thoroughly:boolean) {
-        //var files = (evt.target[0] as any).files;
         var files:FileList = this.fileInput.files;
         var data = new FormData();
-        /*
-        for (let i in files) {
-            data.append("file" + i, files[i]);
-        }
-        */
         let len = files.length;
         for (let i=0; i<len; i++) {
             let file = files[i];

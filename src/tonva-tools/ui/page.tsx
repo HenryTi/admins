@@ -83,6 +83,7 @@ export interface PageProps extends ScrollProps {
     header?: boolean | string | JSX.Element;
     keepHeader?: boolean;
     right?: JSX.Element;
+    sideBar?: JSX.Element;
     footer?: JSX.Element;
     tabs?: Tab[];
     logout?: boolean | (()=>void);
@@ -193,7 +194,8 @@ export class Page extends React.Component<PageProps, PageState> {
 
         return <article className='page-container'>
             {titleBar}
-            <section>
+            <section className="position-relative">
+            {this.props.sideBar}
             {
                 this.state.tabs.map((tab, index) => {
                     let {isSelected, isMounted, content} = tab;
@@ -228,7 +230,8 @@ export class Page extends React.Component<PageProps, PageState> {
         return (
             <article className='page-container' onTouchStart={this.onTouchStart}>
                 {titleBar}
-                <section>
+                <section className="position-relative">
+                    {this.props.sideBar}
                     <ScrollView
                         onScroll={onScroll}
                         onScrollTop={onScrollTop}

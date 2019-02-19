@@ -565,18 +565,23 @@ export class Nav {
     confirmBox(message?:string): boolean {
         return this.nav.confirmBox(message);
     }
-    navToApp(url: string, unitId: number, apiId?:number, sheetType?:number, sheetId?:number) {
-        let sheet = this.centerHost.includes('http://localhost:') === true? 'sheet_debug':'sheet'
-        let uh = sheetId === undefined?
-                appUrl(url, unitId) :
-                appUrl(url, unitId, sheet, [apiId, sheetType, sheetId]);
-        console.log('navToApp: %s', JSON.stringify(uh));
-        nav.push(<article className='app-container'>
-            <span id={uh.hash} onClick={()=>this.back()} style={mobileHeaderStyle}>
-                <i className="fa fa-arrow-left" />
-            </span>
-            <iframe src={uh.url} />
-        </article>);
+    async navToApp(url: string, unitId: number, apiId?:number, sheetType?:number, sheetId?:number):Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            let sheet = this.centerHost.includes('http://localhost:') === true? 'sheet_debug':'sheet'
+            let uh = sheetId === undefined?
+                    appUrl(url, unitId) :
+                    appUrl(url, unitId, sheet, [apiId, sheetType, sheetId]);
+            console.log('navToApp: %s', JSON.stringify(uh));
+            nav.push(<article className='app-container'>
+                <span id={uh.hash} onClick={()=>this.back()} style={mobileHeaderStyle}>
+                    <i className="fa fa-arrow-left" />
+                </span>
+                <iframe src={uh.url} />
+            </article>, 
+            ()=> {
+                resolve();
+            });
+        });
     }
 
     navToSite(url: string) {

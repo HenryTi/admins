@@ -349,7 +349,6 @@ export let centerToken:string|undefined = undefined;
 let loginedUserId:number = 0;
 export function setCenterToken(userId:number, t?:string) {
     centerToken = t;
-    loginedUserId = userId;
     console.log('setCenterToken %s', t);
     centerChannel = undefined;
     centerChannelUI = undefined;

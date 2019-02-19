@@ -26,7 +26,7 @@ export class CAdmin extends Controller {
 
     private async loadAdminUnits(): Promise<void> {
         let ret = await mainApi.userAdminUnits();
-        this.adminUnits = ret;
+        this.adminUnits = ret[0];
         if (ret.length === 1) {
             meInFrame.unit = ret[0].id;
             await store.loadUnit();
@@ -138,7 +138,11 @@ interface DevItem<T extends DevModel.ObjBase> {
 type Item = ActionItem|DevItem<DevModel.ObjBase>|string;
 
 const rArrow = <FA name="chevron-right" />;
-
+const typeCaptions = {
+    1: '开发号',
+    2: '小号',
+    3: '系统号'
+}
 @observer
 default class AdminPage extends React.Component {
     private caption:string;
@@ -146,11 +150,13 @@ default class AdminPage extends React.Component {
     async componentWillMount() {
         let {unit, dev} = store;
         let {isAdmin, isOwner, type} = unit;
+        this.caption = typeCaptions[type];
+        /*
         switch (type) {
             case 1: this.caption = '开发号'; break;
             case 2: this.caption = '小号'; break;
             case 3: this.caption = '系统号'; break;
-        }
+        }*/
         if ((type & 1) !== 0) {
             await store.dev.loadCounts();
         }

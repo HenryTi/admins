@@ -4,6 +4,11 @@
     height: 3rem;    
 }
 
+.va-badge.va-badge-xs {
+    width: 2rem;
+    height: 2rem;
+}
+
 .va-badge.va-badge-sm {
     width: 2.5rem;
     height: 2.5rem;

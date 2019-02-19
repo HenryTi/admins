@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import '../css/va-badge.css';
 
 export interface BadgeProps {
     className?: string;
     badge?: string|number;
-    size?: 'sm'|'lg';
+    size?: 'xs' | 'sm' | 'lg';
     color?: 'secondary'|'success'|'danger'|'primary'|'info'|'warning';
     badgeAlign?: 'left'|'center'|'right';
     badgeVertical?: 'top'|'middle'|'bottom';

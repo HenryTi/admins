@@ -101,6 +101,24 @@
 .w-max-1c {
   max-width: 1rem !important;
 }
+.w-1-2c {
+  width: 1.2rem !important;
+}
+.w-min-1-2c {
+  min-width: 1.2rem !important;
+}
+.w-max-1-2c {
+  max-width: 1.2rem !important;
+}
+.w-1-5c {
+  width: 1.5rem !important;
+}
+.w-min-1-5c {
+  min-width: 1.5rem !important;
+}
+.w-max-1-5c {
+  max-width: 1.5rem !important;
+}
 .w-2c {
   width: 2rem !important;
 }

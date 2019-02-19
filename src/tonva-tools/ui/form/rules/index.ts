@@ -21,7 +21,7 @@ export class RuleCustom extends Rule {
         switch (typeof ret) {
             case 'undefined': return;
             case 'string': defy.push(ret as string); return;
-            default: defy.push(...(ret as string[])); return;
+            default: defy.push(...ret); return;
         }        
     }
 }

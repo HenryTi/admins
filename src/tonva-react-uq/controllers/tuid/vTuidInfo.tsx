@@ -3,7 +3,7 @@ import { VTuidView } from './vTuidView';
 
 export class VTuidInfo  extends VTuidView {
 /*
-    async showEntry(param?:any) {
+    async open(param?:any) {
         this.open(this.view);
     }
 */

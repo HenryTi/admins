@@ -65,21 +65,21 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
                 <i className={classNames('fa', 'fa-'+(icon||'ellipsis-v'))} />
             </button>
             <div ref={v => this.menu=v} className={classNames({"dropdown-menu":true, "dropdown-menu-right":isRight, "show":dropdownOpen})}>
-            {
-                actions.map((v,index) => {
-                    let {icon, caption, action} = v;
-                    if (icon === undefined && caption === undefined) 
-                        return <div className="dropdown-divider" />;
-                    let i:any;
-                    if (hasIcon === true) {
-                        if (icon !== undefined) icon = 'fa-' + icon;
-                        i = <><i className={classNames('fa', icon, 'fa-fw')} aria-hidden={true}></i>&nbsp; </>;
-                    }
-                    if (action === undefined) 
-                        return <h6 className="dropdown-header">{i} {caption}</h6>;
-                    return <a className="dropdown-item" key={index} href="#" onClick={(evt:React.MouseEvent<HTMLAnchorElement>)=>{ evt.preventDefault();action()}}>{i} {caption}</a>
-                })
-            }
+                {
+                    actions.map((v,index) => {
+                        let {icon, caption, action} = v;
+                        if (icon === undefined && caption === undefined) 
+                            return <div className="dropdown-divider" />;
+                        let i:any;
+                        if (hasIcon === true) {
+                            if (icon !== undefined) icon = 'fa-' + icon;
+                            i = <><i className={classNames('fa', icon, 'fa-fw')} aria-hidden={true}></i>&nbsp; </>;
+                        }
+                        if (action === undefined) 
+                            return <h6 className="dropdown-header">{i} {caption}</h6>;
+                        return <a className="dropdown-item" key={index} href="#" onClick={(evt:React.MouseEvent<HTMLAnchorElement>)=>{ evt.preventDefault();action()}}>{i} {caption}</a>
+                    })
+                }
             </div>
         </div>
     }
