@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Widget } from './widget';
-import { UiIdItem, TempletType } from '../uiSchema';
+import { UiIdItem, TempletType } from '../../schema';
 import { observable } from 'mobx';
 
 export class IdWidget extends Widget {

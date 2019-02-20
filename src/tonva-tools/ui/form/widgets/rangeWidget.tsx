@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { UiRange } from '../uiSchema';
+import { UiRange } from '../../schema';
 import { Widget } from './widget';
 
 export class RangeWidget extends Widget {

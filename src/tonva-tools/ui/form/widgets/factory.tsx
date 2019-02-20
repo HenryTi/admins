@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import { Schema, ArrSchema, DataType, ButtonSchema, ItemSchema } from '../schema';
-import { UiItem, UiArr, UiType, UiButton, TempletType, TypeWidget, UiCustom } from '../uiSchema';
+import { Schema, ArrSchema, DataType, ButtonSchema, ItemSchema } from '../../schema';
+import { UiItem, UiArr, UiType, UiButton, TempletType, TypeWidget, UiCustom } from '../../schema';
 import { TextWidget } from './textWidget';
 import { TextAreaWidget } from './textareaWidget';
 import { PasswordWidget, UrlWidget, EmailWidget } from './passwordWidget';

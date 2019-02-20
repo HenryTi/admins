@@ -3,8 +3,8 @@ import {observer} from 'mobx-react';
 import classNames from 'classnames';
 //import { ArrRow } from '../arrRow';
 import { Context, RowContext, ContextContainer } from '../context';
-import { ArrSchema } from '../schema';
-import { UiArr, TempletType } from '../uiSchema';
+import { ArrSchema } from '../../schema';
+import { UiArr, TempletType } from '../../schema';
 import { Unknown } from './unknown';
 import { factory } from './factory';
 

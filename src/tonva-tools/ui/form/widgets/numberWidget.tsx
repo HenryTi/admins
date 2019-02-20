@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextWidget } from './textWidget';
 import { RuleNum, RuleInt } from '../rules';
-import { NumBaseSchema } from '../schema';
+import { NumBaseSchema } from '../../schema';
 
 export class NumberWidget extends TextWidget {
     protected inputType = 'number';

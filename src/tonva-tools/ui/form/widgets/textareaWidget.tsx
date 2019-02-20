@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Widget } from './widget';
-import { UiTextAreaItem } from '../uiSchema';
-import { StringSchema } from '../schema';
+import { UiTextAreaItem } from '../../schema';
+import { StringSchema } from '../../schema';
 
 export class TextAreaWidget extends Widget {
     protected itemSchema: StringSchema;

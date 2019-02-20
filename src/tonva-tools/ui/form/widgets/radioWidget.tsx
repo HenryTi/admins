@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { TextWidget } from './textWidget';
 import { Widget } from './widget';
-import { UiRadio } from '../uiSchema';
+import { UiRadio } from '../../schema';
 import { RowContext } from '../context';
 
 

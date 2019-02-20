@@ -18,6 +18,7 @@ export interface User extends Guest {
     icon?: string;
 }
 
+/*
 export class UserInNav {
     private user: User;
     constructor(user: User) {
@@ -30,7 +31,7 @@ export class UserInNav {
     get guest(): number {return this.user.guest}
     get token(): string {return this.user.token}
 }
-
+*/
 export function decodeUserToken(token: string): User {
     let ret:any = jwtDecode(token);
     let user: User = {

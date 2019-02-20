@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observable} from 'mobx';
-import {User, Guest, UserInNav} from '../user';
+import {User, Guest/*, UserInNav*/} from '../user';
 import {Page} from './page';
 import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
@@ -340,9 +340,10 @@ export class Nav {
     private ws: WsBase;
     private wsHost: string;
     private local: LocalData = new LocalData();
-    @observable user: UserInNav = undefined;
+    @observable user: User/*InNav*/ = undefined;
     language: string;
     culture: string;
+    resUrl: string;
 
     constructor() {
         let {lang, district} = resOptions;
@@ -418,8 +419,9 @@ export class Nav {
         nav.clear();
         nav.push(<Page header={false}><Loading /></Page>);
         await host.start();
-        let {url, ws} = host;
+        let {url, ws, resHost} = host;
         this.centerHost = url;
+        this.resUrl = 'http://' + resHost + '/res/';
         this.wsHost = ws;
         setCenterUrl(url);
         
@@ -482,14 +484,19 @@ export class Nav {
         netToken.set(0, guest.token);
     }
 
+    saveLocalUser() {
+        this.local.user.set(this.user);
+    }
+
     async logined(user: User) {
         let ws:WSChannel = this.ws = new WSChannel(this.wsHost, user.token);
         ws.connect();
 
         console.log("logined: %s", JSON.stringify(user));
-        this.local.user.set(user);
+        this.user = user;
+        this.saveLocalUser();
         netToken.set(user.id, user.token);
-        this.user = new UserInNav(user);
+        //this.user = new UserInNav(user);
         await this.showAppView();
     }
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { observable } from 'mobx';
 import { Widget } from './widget';
-import { UiSelect } from '../uiSchema';
+import { UiSelect } from '../../schema';
 
 export class SelectWidget extends Widget {
     protected select: HTMLSelectElement;

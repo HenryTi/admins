@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Form } from './form';
-import { UiSchema, UiArr, UiItem } from './uiSchema';
-import { ArrSchema, ItemSchema } from './schema';
+import { UiSchema, UiArr, UiItem } from '../schema';
+import { ArrSchema, ItemSchema } from '../schema';
 import { Widget as Widget } from './widgets/widget';
 //import { ArrRow } from './arrRow';
 import { observable, computed } from 'mobx';

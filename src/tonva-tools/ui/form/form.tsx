@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {observable, IReactionDisposer, autorun} from 'mobx';
 import classNames from 'classnames';
-import { Schema, ItemSchema, ArrSchema } from './schema';
-import { UiSchema, TempletType } from './uiSchema';
+import { Schema, ItemSchema, ArrSchema } from '../schema';
+import { UiSchema, TempletType } from '../schema';
 import { factory } from './widgets';
 import 'font-awesome/css/font-awesome.min.css';
 import { ContextContainer, FormContext, Context, RowContext } from './context';

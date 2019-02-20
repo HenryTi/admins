@@ -1,9 +1,9 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { UiItem, ChangingHandler, ChangedHandler } from '../uiSchema';
+import { UiItem, ChangingHandler, ChangedHandler } from '../../schema';
 import { FieldProps } from '../field';
 import { Context } from '../context';
-import { ItemSchema } from '../schema';
+import { ItemSchema } from '../../schema';
 import { Rule, RuleRequired, RuleCustom, FieldRule } from '../rules';
 import { computed, observable, reaction } from 'mobx';
 

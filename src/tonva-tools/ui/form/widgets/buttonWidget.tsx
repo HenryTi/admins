@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UiButton, TempletType } from '../uiSchema';
+import { UiButton, TempletType } from '../../schema';
 import { Unknown } from './unknown';
 import { Widget } from './widget';
 import { observer } from 'mobx-react';

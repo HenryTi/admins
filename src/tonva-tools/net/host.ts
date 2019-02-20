@@ -2,6 +2,8 @@ export const isDevelopment = process.env.NODE_ENV === 'development';
 
 const centerHost = process.env['REACT_APP_CENTER_HOST'];
 const centerDebugHost = 'localhost:3000'; //'192.168.86.64';
+const resHost = process.env['REACT_APP_RES_HOST'] || centerHost;
+const resDebugHost = 'localhost:3015'; //'192.168.86.63';
 const uqDebugHost = 'localhost:3015'; //'192.168.86.63';
 const uqDebugBuilderHost = 'localhost:3009';
 interface HostValue {
@@ -11,6 +13,10 @@ interface HostValue {
 const hosts:{[name:string]:HostValue} = {
     centerhost: {
         value: process.env['REACT_APP_CENTER_DEBUG_HOST'] || centerDebugHost, 
+        local: false
+    },
+    reshost: {
+        value: process.env['REACT_APP_RES_DEBUG_HOST'] || resDebugHost,
         local: false
     },
     uqhost: {
@@ -33,6 +39,7 @@ function centerWsFromHost(host:string) {return `ws://${host}/tv/`}
 class Host {
     url: string;
     ws: string;
+    resHost: string;
 
     async start() {
         if (isDevelopment === true) {
@@ -41,6 +48,7 @@ class Host {
         let host = this.getCenterHost();
         this.url = centerUrlFromHost(host);
         this.ws = centerWsFromHost(host);
+        this.resHost = this.getResHost();
     }
 
     private debugHostUrl(host:string) {return `http://${host}/hello`}
@@ -70,28 +78,29 @@ class Host {
     }
 
     private getCenterHost():string {
-        //let host = process.env['REACT_APP_CENTER_HOST'];
-        let {value, local} = hosts.centerhost; // process.env.REACT_APP_CENTER_DEBUG_HOST || centerDebugHost;
+        let {value, local} = hosts.centerhost;
         let hash = document.location.hash;
         if (hash.includes('sheet_debug') === true) {
             return value;
         }
-        //if (process.env.NODE_ENV==='development') {
         if (isDevelopment === true) {
-            if (local === true) return value;
-            /*
-            if (debugHost !== undefined) {
-                try {
-                    console.log('try connect debug url');
-                    await fetchLocalCheck(centerUrlFromHost(debugHost));
-                    return debugHost;
-                }
-                catch (err) {
-                    //console.error(err);
-                }
-            }*/
+            //if (local === true) 
+            return value;
         }
         return centerHost;
+    }
+
+    private getResHost():string {
+        let {value, local} = hosts.reshost;
+        let hash = document.location.hash;
+        if (hash.includes('sheet_debug') === true) {
+            return value;
+        }
+        if (isDevelopment === true) {
+            //if (local === true) 
+            return value;
+        }
+        return resHost;
     }
 
     getUrlOrDebug(url:string, urlDebug:string):string {
