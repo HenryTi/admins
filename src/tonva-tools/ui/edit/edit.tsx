@@ -88,16 +88,21 @@ export class Edit extends React.Component<EditProps> {
             return;
         }
         let itemEdit:ItemEdit = createItemEdit(itemSchema, uiItem, label, value);
-        changeValue = await itemEdit.start();
-        if (changeValue != value) {
-            if (onItemChanged === undefined) {
-                alert(`${itemSchema.name} value changed, new: ${changeValue}, pre: ${value}`);
+        try {
+            changeValue = await itemEdit.start();
+            if (changeValue != value) {
+                if (onItemChanged === undefined) {
+                    alert(`${itemSchema.name} value changed, new: ${changeValue}, pre: ${value}`);
+                }
+                else {
+                    await onItemChanged(itemSchema, changeValue, value);
+                }
             }
-            else {
-                await onItemChanged(itemSchema, changeValue, value);
-            }
+            await itemEdit.end();
         }
-        await itemEdit.end();
+        catch (err) {
+            console.log('no value changed');
+        }
     }
 }
 

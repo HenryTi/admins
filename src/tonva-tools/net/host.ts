@@ -35,7 +35,15 @@ const hosts:{[name:string]:HostValue} = {
 
 function centerUrlFromHost(host:string) {return `http://${host}/`}
 function centerWsFromHost(host:string) {return `ws://${host}/tv/`}
-    
+
+const fetchOptions = {
+    method: "GET",
+    mode: "no-cors", // no-cors, cors, *same-origin
+    headers: {
+        "Content-Type": "text/plain"
+    },
+};
+
 class Host {
     url: string;
     ws: string;
@@ -54,27 +62,37 @@ class Host {
     private debugHostUrl(host:string) {return `http://${host}/hello`}
     private async tryLocal() {
         let promises:PromiseLike<any>[] = [];
+        let hostArr:string[] = [];
         for (let i in hosts) {
             let hostValue = hosts[i];
             let {value} = hostValue;
-            //let host = process.env[env] || value;
-            let fetchUrl = this.debugHostUrl(value);
-            let fetchOptions = {
-                method: "GET",
-                mode: "no-cors", // no-cors, cors, *same-origin
-                headers: {
-                    "Content-Type": "text/plain"
-                },
-            };
+            if (hostArr.findIndex(v => v === value) < 0) hostArr.push(value);
+        }
+
+        for (let host of hostArr) {
+            let fetchUrl = this.debugHostUrl(host);
             promises.push(localCheck(fetchUrl, fetchOptions));
         }
         let results = await Promise.all(promises);
+        let len = hostArr.length;
+        for (let i=0; i<len; i++) {
+            let local = results[i];
+            let host = hostArr[i];
+            for (let j in hosts) {
+                let hostValue = hosts[j];
+                if (hostValue.value === host) {
+                    hostValue.local = local;
+                }
+            }
+        }
+        /*
         let p = 0;
         for (let i in hosts) {
             let hostValue = hosts[i];
             hostValue.local = results[p];
             ++p;
         }
+        */
     }
 
     private getCenterHost():string {
@@ -84,8 +102,7 @@ class Host {
             return value;
         }
         if (isDevelopment === true) {
-            //if (local === true) 
-            return value;
+            if (local === true) return value;
         }
         return centerHost;
     }
@@ -97,8 +114,7 @@ class Host {
             return value;
         }
         if (isDevelopment === true) {
-            //if (local === true) 
-            return value;
+            if (local === true) return value;
         }
         return resHost;
     }

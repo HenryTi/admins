@@ -54,7 +54,7 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         if (typeof logout === 'function') {
             logout(); 
         }
-        nav.logout();
+        nav.logout(undefined);
     }
     render() {
         let b = this.state.hasBack || self != top;

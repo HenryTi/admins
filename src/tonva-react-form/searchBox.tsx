@@ -12,6 +12,7 @@ export interface SearchBoxProps {
     size?: 'sm' | 'md' | 'lg';
     inputClassName?: string;
     onSearch: (key:string)=>Promise<void>;
+    onFocus?: ()=>void;
     allowEmptySearch?: boolean;
 }
 
@@ -25,14 +26,6 @@ export class SearchBox extends React.Component<SearchBoxProps> { //}, SearchBoxS
     private key: string = null;
     @observable private disabled: boolean;
 
-    /*
-    constructor(props: SearchBoxProps) {
-        super(props);
-        this.state = {
-            disabled: false,
-        }
-    }*/
-
     private onChange = (evt: React.ChangeEvent<any>) => {
         this.key = evt.target.value;
         if (this.key !== undefined) {
@@ -43,14 +36,7 @@ export class SearchBox extends React.Component<SearchBoxProps> { //}, SearchBoxS
             this.disabled = !this.key;
         }
     }
-    /*
-    ref = (input: HTMLInputElement) => {
-        this.input = input;
-        this.key = this.props.initKey || '';
-        if (input === null) return;
-        input.value = this.key;
-    }*/
-    onSubmit = async (evt: React.FormEvent<any>) => {
+    private onSubmit = async (evt: React.FormEvent<any>) => {
         evt.preventDefault();
         if (this.key === null) this.key = this.props.initKey || '';
         if (this.props.allowEmptySearch !== true) {
@@ -60,8 +46,11 @@ export class SearchBox extends React.Component<SearchBoxProps> { //}, SearchBoxS
         await this.props.onSearch(this.key);
         if (this.input) this.input.disabled = false;
     }
+    clear() {
+        if (this.input) this.input.value = '';
+    }
     render() {
-        let {className, inputClassName,
+        let {className, inputClassName, onFocus,
             label, placeholder, buttonText, maxLength, size} = this.props;
         let inputSize:string;
         switch (size) {
@@ -75,10 +64,10 @@ export class SearchBox extends React.Component<SearchBoxProps> { //}, SearchBoxS
         return <form className={className} onSubmit={this.onSubmit} >
             <div className={classNames("input-group", inputSize)}>
                 {lab}
-                <input onChange={this.onChange}
+                <input ref={v=>this.input=v} onChange={this.onChange}
                     type="text"
                     name="key"
-                    //ref={this.ref}
+                    onFocus={onFocus}
                     className={classNames('form-control', inputClassName || 'border-primary')}
                     placeholder={placeholder}
                     defaultValue={this.props.initKey}

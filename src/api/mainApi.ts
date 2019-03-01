@@ -136,6 +136,13 @@ class MainApi extends CenterApi {
     async bindAppUser(unit:number, app:number, user:number, bind:number):Promise<void> {
         await this.post('unit/bind-app-user', {unit: unit, app:app, user:user, bind:bind});
     }
+
+    async userFromKey(key:string):Promise<any> {
+        return await this.get('tie/user-from-key', {key:key});
+    }
+    async unitAddUser(unit:number, user:number) {
+        await this.post('unit/add-user', {unit:unit, user:user});
+    }
 }
 
 export const mainApi = new MainApi('tv/', undefined);

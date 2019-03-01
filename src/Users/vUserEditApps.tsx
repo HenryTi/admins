@@ -11,7 +11,7 @@ export class VUserEditApps extends VPage<UsersController> {
 
     private page = observer(() => {
         let {curUser, userEditApps, onUserEditApps} = this.controller;
-        return <Page header={(curUser.assigned || curUser.nick || curUser.name) + ' - 增减App'}>
+        return <Page header={'增减App - ' + (curUser.assigned || curUser.nick || curUser.name)}>
             <List items={userEditApps} item={{render:this.renderApp}} />
         </Page>
     })

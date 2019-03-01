@@ -9,6 +9,8 @@ import { VApp } from './vApp';
 import { VUser } from './vUser';
 import { VAppEditUsers } from './vAppEditUsers';
 import { VUserEditApps } from './vUserEditApps';
+import { VAddUser } from './VAddUser';
+import { Unit } from 'model';
 
 export interface User {
     id: number;
@@ -38,7 +40,7 @@ export interface EditUser extends User {
 }
 
 export class UsersController extends Controller {
-    private unitId: number;
+    private unit: Unit;
     @observable userAppsList: UserApps[];
     @observable appUsersList: AppUsers[];
     curUser: User;
@@ -48,14 +50,15 @@ export class UsersController extends Controller {
     @observable curAppUsers: User[];
     @observable appEditUsers: EditUser[];
 
-    protected async internalStart(unitId:number) {
-        this.unitId = unitId;
+    protected async internalStart(unit:Unit) {
+        this.unit = unit;
         let cn = "bg-white px-3 py-2 my-1";
         let appIcon = <FA name="columns" className="text-primary mr-3" />;
         let userIcon = <FA name="user-plus" className="text-primary mr-3" />;
-        this.openPage(<Page header="用户管理">
-            <LMR className={cn} onClick={this.onAppUsers} left={appIcon}>App的用户</LMR>
-            <LMR className={cn} onClick={this.onUserApps} left={userIcon}>用户的App</LMR>
+        let right = <button className="btn btn-sm btn-success" onClick={this.onAddUser}><FA name="plus" /></button>;
+        this.openPage(<Page header={'用户管理 - ' +  this.unit.name} right={right}>
+            <LMR className={cn} onClick={this.onAppUsers} left={appIcon}>App</LMR>
+            <LMR className={cn} onClick={this.onUserApps} left={userIcon}>用户</LMR>
         </Page>);
     }
 
@@ -73,7 +76,7 @@ export class UsersController extends Controller {
         let list:AppUsers[] = [];
         let pageStart = 0;
         let pageSize = 100;
-        let ret = await mainApi.unitAppUsers(this.unitId, key, pageStart, pageSize);
+        let ret = await mainApi.unitAppUsers(this.unit.id, key, pageStart, pageSize);
         let apps = ret[0];
         let users = ret[1];
         let coll: {[id:number]:AppUsers} = {}
@@ -102,7 +105,7 @@ export class UsersController extends Controller {
         let list:UserApps[] = [];
         let pageStart = 0;
         let pageSize = 100;
-        let ret = await mainApi.unitUsers(this.unitId, key, pageStart, pageSize);
+        let ret = await mainApi.unitUsers(this.unit.id, key, pageStart, pageSize);
         let users = ret[0];
         let apps = ret[1];
         let coll: {[id:number]:UserApps} = {}
@@ -139,7 +142,7 @@ export class UsersController extends Controller {
         this.curApp = appUsers.app;
         let pageStart = 0;
         let pageSize = 100;
-        this.curAppUsers = await mainApi.unitOneAppUsers(this.unitId, this.curApp.id, pageStart, pageSize);
+        this.curAppUsers = await mainApi.unitOneAppUsers(this.unit.id, this.curApp.id, pageStart, pageSize);
         this.openVPage(VApp);
     }
 
@@ -147,26 +150,30 @@ export class UsersController extends Controller {
         this.curUser = userApps.user;
         let pageStart = 0;
         let pageSize = 100;
-        this.curUserApps = await mainApi.unitOneUserApps(this.unitId, this.curUser.id, pageStart, pageSize);
+        this.curUserApps = await mainApi.unitOneUserApps(this.unit.id, this.curUser.id, pageStart, pageSize);
         this.openVPage(VUser);
     }
 
     onAppEditUsers = async (key?:string) => {
         let pageStart = 0;
         let pageSize = 100;
-        this.appEditUsers = await mainApi.unitAppEditUsers(this.unitId, this.curApp.id, key, pageStart, pageSize);
+        this.appEditUsers = await mainApi.unitAppEditUsers(this.unit.id, this.curApp.id, key, pageStart, pageSize);
         this.openVPage(VAppEditUsers);
+    }
+
+    onAddUser = () => {
+        this.openVPage(VAddUser);
     }
 
     onUserEditApps = async (key?:string) => {
         let pageStart = 0;
         let pageSize = 100;
-        this.userEditApps = await mainApi.unitUserEditApps(this.unitId, this.curUser.id, key, pageStart, pageSize);
+        this.userEditApps = await mainApi.unitUserEditApps(this.unit.id, this.curUser.id, key, pageStart, pageSize);
         this.openVPage(VUserEditApps);
     }
 
     bindAppUser = async(user:User, checked:boolean) => {
-        await mainApi.bindAppUser(this.unitId, this.curApp.id, user.id, checked===true? 1:0);
+        await mainApi.bindAppUser(this.unit.id, this.curApp.id, user.id, checked===true? 1:0);
         let appUsers = this.appUsersList.find(v => v.app.id === this.curApp.id);
         if (checked === true) {
             this.curAppUsers.push(user);
@@ -183,7 +190,8 @@ export class UsersController extends Controller {
     }
 
     bindUserApp = async(app:App, checked:boolean) => {
-        await mainApi.bindAppUser(this.unitId, app.id, this.curUser.id, checked===true? 1:0);
+        await mainApi.bindAppUser(this.unit.id, app.id, this.curUser.id, checked===true? 1:0);
+        if (this.userAppsList === undefined) return;
         let userApps = this.userAppsList.find(v => v.user.id === this.curUser.id);
         if (checked === true) {
             this.curUserApps.push(app);
@@ -197,5 +205,9 @@ export class UsersController extends Controller {
                 if (index>=0) userApps.apps.splice(index, 1);
             }
         }
+    }
+
+    addUser = async (userId: number) => {
+        await mainApi.unitAddUser(this.unit.id, userId);
     }
 }

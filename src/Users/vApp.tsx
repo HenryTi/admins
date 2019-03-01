@@ -21,9 +21,9 @@ export class VApp extends VPage<UsersController> {
         let {name, nick, assigned} = user;
         let content:any;
         if (assigned)
-            content = <>{assigned} <Muted>{name}</Muted></>;
+            content = <span>{assigned} &nbsp; <small className="text-muted">{name}</small></span>;
         else if (nick)
-            content = <>{nick} <Muted>{name}</Muted></>;
+            content = <span>{nick} &nbsp; <small className="text-muted">{name}</small></span>;
         else
             content = <>{name}</>
         return <div className="px-3 py-2">{content}</div>

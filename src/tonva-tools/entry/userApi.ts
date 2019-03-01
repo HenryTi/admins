@@ -22,13 +22,30 @@ export class UserApi extends CenterApi {
     async register(params: {
         nick:string, 
         user:string, 
-        pwd:string, 
+        pwd:string,
         country:number, 
         mobile:number, 
-        email:string
+        email:string,
+        verify:string,
     }): Promise<any>
     {
         return await this.post('register', params);
+    }
+
+    async setVerify(account:string, type:'mobile'|'email') {
+        return await this.post('set-verify', {account:account, type:type});
+    }
+
+    async checkVerify(account:string, verify:string) {
+        return await this.post('check-verify', {account:account, verify:verify});
+    }
+
+    async isExists(account:string) {
+        return await this.get('is-exists', {account:account});
+    }
+
+    async resetPassword(account:string, password:string, verify:string, type:'mobile'|'email') {
+        return await this.post('reset-password', {account:account, password, verify, type});
     }
 }
 

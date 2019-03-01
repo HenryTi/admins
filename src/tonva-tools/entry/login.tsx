@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton, resLang, StringSchema} from '../ui';
-import RegisterView from './register';
-import Forget from './forget';
+import { RegisterController, ForgetController } from './register';
+//import Forget from './forget';
 import userApi from './userApi';
 import { LoginRes, loginRes } from './res';
-
-const logo = require('../img/logo.svg');
+import { tonvaTop, getSender } from './tools';
+import { User } from 'tonva-tools/user';
 
 const schema: Schema = [
     {name: 'username', type: 'string', required: true, maxLength: 100} as StringSchema,
@@ -13,36 +13,21 @@ const schema: Schema = [
     {name: 'login', type: 'submit'},
 ];
 
-export default class Login extends React.Component<{withBack?:boolean}> {
+export interface LoginProps {
+    withBack?: boolean;
+    callback?: (user:User) => Promise<void>
+}
+
+export default class Login extends React.Component<LoginProps> {
     private res: LoginRes = resLang(loginRes);
     private uiSchema: UiSchema = {
         items: {
-            username: {placeholder: '用户名', label: '用户'} as UiTextItem, 
+            username: {placeholder: '手机/邮箱/用户名', label: '登录账号'} as UiTextItem, 
             password: {widget: 'password', placeholder: '密码', label: '密码'} as UiPasswordItem,
             login: {widget: 'button', className: 'btn btn-primary btn-block mt-3', label: '登录'} as UiButton,
         }
     }
     
-    /*
-    private schema:FormSchema = new FormSchema({
-        fields: [
-            {
-                type: 'string',
-                name: 'username',
-                placeholder: '用户名',
-                rules: ['required', 'maxlength:100']
-            },
-            {
-                type: 'password',
-                name: 'password',
-                placeholder: '密码',
-                rules: ['required', 'maxlength:100']
-            },
-        ],
-        onSumit: this.onLoginSubmit.bind(this),
-    });
-    */
-
     private onSubmit = async (name:string, context:Context):Promise<string> => {
         let values = context.form.data;
         let un = values['username'];
@@ -55,48 +40,48 @@ export default class Login extends React.Component<{withBack?:boolean}> {
             pwd: pwd,
             guest: nav.guest,
         });
-        if (user === undefined) return '用户名或密码错！';
+
+        if (user === undefined) {
+            let sender = getSender(un);
+            let type:string = sender !== undefined? sender.caption : '用户名';
+            return type + '或密码错！';
+        }
         console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
-        await nav.logined(user);
+        await nav.logined(user, this.props.callback);
     }
-    click() {
-        nav.replace(<RegisterView />);
+    private clickReg = () => {
+        //nav.replace(<RegisterView />);
+        let register = new RegisterController(undefined);
+        register.start();
+    }
+    private clickForget = () => {
+        let forget = new ForgetController(undefined);
+        forget.start();
     }
     render() {
         let footer = <div className='text-center'>
             <button className="btn btn-link" color="link" style={{margin:'0px auto'}}
-                onClick={() => nav.push(<RegisterView />)}>
-                如果没有账号，请注册
+                onClick={this.clickReg}>
+                注册账号
             </button>
         </div>;
         let header:string|boolean|JSX.Element = false;
-        let top = <>
-            <span className="text-primary">同</span>&nbsp;
-            <span className="text-danger">花</span>
-        </>;
+        let top:any;
         if (this.props.withBack === true) {
             header = '登录';
-            top = <>登录用户</>;
+            top = <>登录账号</>;
+        }
+        else {
+            top = tonvaTop;
         }
         return <Page header={header} footer={footer}>
-            <div style={{
-                maxWidth:'25em',
-                margin: '3em auto',
-                padding: '0 3em',
-            }}>
-                <div className='container' style={{display:'flex', position:'relative'}}>
-                    <img className='App-logo' src={logo} style={{height:'60px', position:'absolute'}}/>
-                    <span style={{flex:1,
-                        fontSize: 'x-large',
-                        alignSelf: 'center',
-                        textAlign: 'center',
-                        margin: '10px',
-                    }}>{top}</span>
-                </div>
-                <div style={{height:'20px'}} />
+            <div className="w-max-20c my-5 py-5"
+                style={{marginLeft:'auto', marginRight:'auto'}}>
+                {top}
+                <div className="h-3c" />
                 <Form schema={schema} uiSchema={this.uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
                 <button className="btn btn-link btn-block"
-                    onClick={() => nav.push(<Forget />)}>
+                    onClick={() => this.clickForget()}>
                     忘记密码
                 </button>
             </div>

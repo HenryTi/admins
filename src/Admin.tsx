@@ -26,9 +26,9 @@ export class CAdmin extends Controller {
 
     private async loadAdminUnits(): Promise<void> {
         let ret = await mainApi.userAdminUnits();
-        this.adminUnits = ret[0];
-        if (ret.length === 1) {
-            meInFrame.unit = ret[0].id;
+        let adminUnits = this.adminUnits = ret[0];
+        if (adminUnits.length === 1) {
+            meInFrame.unit = adminUnits[0].id;
             await store.loadUnit();
         }
     }
@@ -303,7 +303,7 @@ default class AdminPage extends React.Component {
             if (P !== undefined)
                 nav.push(<P />);
             else {
-                await controller.start(store.unit.id);
+                await controller.start(store.unit);
             }
         }
     }

@@ -10,7 +10,8 @@ export class StringItemEdit extends ItemEdit {
     protected uiItem: UiTextItem;
     protected async internalStart():Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            nav.push(React.createElement(this.page, {resolve:resolve, reject:reject}), ()=>reject());
+            let element = React.createElement(this.page, {resolve:resolve, reject:reject});
+            nav.push(element,reject);
         });
     }
 
