@@ -24,9 +24,10 @@ export class CAdmin extends Controller {
     isProduction: boolean;
     adminUnits: UnitAdmin[]; // 仅仅为Admins调试用。从登录用户获取units
 
-    private async loadAdminUnits(): Promise<void> {
+    private async loadAdminUnits(): Promise<void> {        
         let ret = await mainApi.userAdminUnits();
         let adminUnits = this.adminUnits = ret[0];
+        console.log('loadAdminUnits', adminUnits);
         if (adminUnits.length === 1) {
             meInFrame.unit = adminUnits[0].id;
             await store.loadUnit();

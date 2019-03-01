@@ -210,7 +210,20 @@ export class NavView extends React.Component<Props, State> {
     }
 
     popTo(key: number) {
-        throw new Error('to be designed');
+        if (key === undefined) return;
+        if (this.stack.find(v => v.key === key) === undefined) return;
+        while (this.stack.length >0) {
+            let len = this.stack.length;
+            let top = this.stack[len-1];
+            if (top.key === key) break;
+            this.pop();
+        }
+    }
+
+    topKey():number {
+        let len = this.stack.length;
+        if (len === 0) return undefined;
+        return this.stack[len-1].key;
     }
 
     removeCeased() {
@@ -446,6 +459,7 @@ export class Nav {
                 console.log('this.ws = wsBridge in sub frame');
                 //nav.user = {id:0} as User;
                 if (self !== window.parent) {
+                    console.log("window.parent.postMessage({type:'sub-frame-started', hash: mif.hash}, '*');");
                     window.parent.postMessage({type:'sub-frame-started', hash: mif.hash}, '*');
                 }
                 // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
@@ -586,6 +600,12 @@ export class Nav {
     }
     pop(level:number = 1) {
         this.nav.pop(level);
+    }
+    getTopKey():number {
+        return this.nav.topKey();
+    }
+    popTo(key:number) {
+        this.nav.popTo(key);
     }
     clear() {
         this.nav.clear();

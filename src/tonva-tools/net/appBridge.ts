@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {nav} from '../ui';
 import {uid} from '../uid';
-import {uqTokenApi as uqTokenApi, callCenterapi, CenterAppApi, AppUq, centerToken, App} from './uqApi';
+import {uqTokenApi as uqTokenApi, callCenterapi, CenterAppApi, AppUq, centerToken, App, setCenterToken} from './uqApi';
 import {setSubAppWindow} from './wsChannel';
 import { host } from './host';
 
@@ -108,7 +108,8 @@ function hideFrameBack(hash:string) {
 }
 async function initSubWin(message:any) {
     console.log('initSubWin: set nav.user', message);
-    nav.user = message; // message.user;
+    let user = nav.user = message; // message.user;
+    setCenterToken(user.id, user.token);
     await nav.showAppView();
 }
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<UqToken> {

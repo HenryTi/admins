@@ -47,6 +47,10 @@ export class UserApi extends CenterApi {
     async resetPassword(account:string, password:string, verify:string, type:'mobile'|'email') {
         return await this.post('reset-password', {account:account, password, verify, type});
     }
+    
+    async userSetProp(prop:string, value:any) {
+        await this.post('tie/user-set-prop', {prop:prop, value:value});
+    }
 }
 
 const userApi = new UserApi('tv/user/', undefined);
