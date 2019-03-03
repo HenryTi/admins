@@ -49,11 +49,18 @@ export class AppController extends Controller {
     }
 
     saveApp = async (values: DevModel.App) => {
-        let app = _.clone(values);
+        let app = _.clone(this.app);
+        _.merge(app, values);
         app.unit = this.unitId;
         let ret = await devApi.saveApp(app);
         app.id = ret;
-        this.appList.push(app);
+        let org = this.appList.find(v => v.id === ret);
+        if (org !== undefined) {
+            _.merge(org, app);
+        }
+        else {
+            this.appList.push(app);
+        }
     }
 
     deleteApp = async () => {

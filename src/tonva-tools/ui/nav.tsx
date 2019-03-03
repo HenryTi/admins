@@ -8,14 +8,14 @@ import {FetchError} from '../fetchError';
 import {appUrl, setMeInFrame, logoutUqTokens} from '../net/appBridge';
 import {LocalData} from '../local';
 import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, meInFrame, isDevelopment, host} from '../net';
+import { WsBase, wsBridge } from '../net/wsChannel';
+import { resOptions } from './res';
+import { Loading } from './loading';
+
 import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
 import '../css/animation.css';
-import { WsBase, wsBridge } from '../net/wsChannel';
-import { resOptions } from './res';
-import { Loading } from './loading';
-import { Callbacks, Callback } from './callbacks';
 
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
@@ -459,7 +459,6 @@ export class Nav {
                 console.log('this.ws = wsBridge in sub frame');
                 //nav.user = {id:0} as User;
                 if (self !== window.parent) {
-                    console.log("window.parent.postMessage({type:'sub-frame-started', hash: mif.hash}, '*');");
                     window.parent.postMessage({type:'sub-frame-started', hash: mif.hash}, '*');
                 }
                 // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
@@ -502,22 +501,7 @@ export class Nav {
     saveLocalUser() {
         this.local.user.set(this.user);
     }
-    /*
-    private loginCallbacks = new Callbacks<(user: User)=>Promise<void>>();
-    private logoutCallbacks = new Callbacks<()=>Promise<void>>();
-    registerLoginCallback(callback: (user:User)=>Promise<void>) {
-        this.loginCallbacks.register(callback);
-    }
-    unregisterLoginCallback(callback: (user:User)=>Promise<void>) {
-        this.loginCallbacks.unregister(callback);
-    }
-    registerLogoutCallback(callback: ()=>Promise<void>) {
-        this.logoutCallbacks.register(callback);
-    }
-    unregisterLogoutCallback(callback: ()=>Promise<void>) {
-        this.logoutCallbacks.unregister(callback);
-    }
-    */
+
     async logined(user: User, callback?: (user:User)=>Promise<void>) {
         let ws:WSChannel = this.ws = new WSChannel(this.wsHost, user.token);
         ws.connect();
@@ -577,6 +561,11 @@ export class Nav {
             await callback();
     }
 
+    async changePassword() {
+        let cp = await import('../entry/changePassword');
+        nav.push(<cp.ChangePasswordPage />);
+    }
+
     get level(): number {
         return this.nav.level;
     }
@@ -601,7 +590,7 @@ export class Nav {
     pop(level:number = 1) {
         this.nav.pop(level);
     }
-    getTopKey():number {
+    topKey():number {
         return this.nav.topKey();
     }
     popTo(key:number) {

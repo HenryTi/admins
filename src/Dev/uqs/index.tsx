@@ -48,7 +48,8 @@ export class UQController extends Controller {
     }
 
     saveUq = async (values: DevModel.UQ) => {
-        let uq = _.clone(values);
+        let uq = _.clone(this.uq);
+        _.merge(uq, values);
         uq.unit = this.unitId;
         let ret = await devApi.saveUq(uq);
         uq.id = ret;

@@ -166,9 +166,9 @@ export class Form extends React.Component<FormProps> {
     private arrItemOperated(itemSchema: ItemSchema) {
         let {name, type} = itemSchema;
         if (type !== 'arr') return;
-        //let arrVal = this.formData[name];
-        //if (arrVal === undefined) return;
+        if (this.data === undefined) return;
         let formArrVal = this.data[name];
+        if (formArrVal === undefined) return;
         let {arr: arrItems} = itemSchema as ArrSchema;
         for (let row of formArrVal) {
             let {$source} = row;

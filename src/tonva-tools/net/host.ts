@@ -71,7 +71,7 @@ class Host {
 
         for (let host of hostArr) {
             let fetchUrl = this.debugHostUrl(host);
-            promises.push(localCheck(fetchUrl, fetchOptions));
+            promises.push(localCheck(fetchUrl));
         }
         let results = await Promise.all(promises);
         let len = hostArr.length;
@@ -135,6 +135,10 @@ class Host {
         }
         return url;
     }
+
+    async localCheck(urlDebug: string):Promise<boolean> {
+        return await localCheck(urlDebug);
+    }
 }
 
 export const host:Host = new Host();
@@ -145,11 +149,11 @@ export const host:Host = new Host();
 
 // 实际上，一秒钟不够。web服务器会自动停。重启的时候，可能会比较长时间。也许两秒甚至更多。
 //const timeout = 2000;
-const timeout = 100;
+const timeout = 200;
 
-function fetchLocalCheck(url:string, options?:any):Promise<any> {
+function fetchLocalCheck(url:string):Promise<any> {
     return new Promise((resolve, reject) => {
-      fetch(url, options)
+      fetch(url, fetchOptions as any)
       .then(v => {
           v.text().then(resolve).catch(reject);
       })
@@ -159,12 +163,12 @@ function fetchLocalCheck(url:string, options?:any):Promise<any> {
     });
 }
 
-async function localCheck(url:string, options?:any):Promise<boolean> {
+async function localCheck(url:string):Promise<boolean> {
     try {
-        await fetchLocalCheck(url, options);
+        await fetchLocalCheck(url);
         return true;
     }
-    catch {
+    catch (err) {
         return false;
     }
 }

@@ -31,9 +31,9 @@
 }
 .tab>div>div>div>u {
   position: absolute;
-  right: -1.2rem;
+  right: -0.8rem;
   top: 0rem;
-  font-size: 0.7em;
+  font-size: 0.7rem;
   background-color: red;
   display: flex;
   align-items: center;

@@ -23,7 +23,7 @@ export interface EditProps {
 @observer
 export class Edit extends React.Component<EditProps> {
     private defaultSepClassName = "border-top edit-sep-light-gray";
-    private defaultRowContainerClassName = "px-3 py-2 cursor-pointer bg-white";
+    private defaultRowContainerClassName = "d-flex px-3 py-2 cursor-pointer bg-white align-items-center";
     private topBorder:JSX.Element;
     private bottomBorder:JSX.Element;
     private rowContainerClassName?: string;
@@ -65,18 +65,16 @@ export class Edit extends React.Component<EditProps> {
         let value:any = this.props.data[name];
         switch (type) {
             default:
-                divValue = <b>{value}</b>;
+                divValue = value? <b>{value}</b> : <small className="text-muted">(无)</small>;
                 break;
             case 'image':
                 divValue = <Image className="w-4c h-4c" src={value} />;
                 break;
         }
         return <div className={this.rowContainerClassName} onClick={async ()=>await this.rowClick(itemSchema, uiItem, label, value)}>
-            <div className="row align-items-center">
-                <div className="col-sm-2">{label}</div>
-                <div className="col-sm-9 text-right">{divValue}</div>
-                <div className="col-sm-1 text-right"><i className="fa fa-chevron-right" /></div>
-            </div>
+            <div className="w-6c">{label}</div>
+            <div className="flex-fill d-flex justify-content-end">{divValue}</div>
+            <div className="w-2c text-right"><i className="fa fa-chevron-right" /></div>
         </div>;
     }
 

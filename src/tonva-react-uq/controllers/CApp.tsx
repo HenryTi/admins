@@ -199,6 +199,8 @@ export class CApp extends Controller {
 
     private showUnsupport() {
         this.clearPrevPages();
+        let {user} = nav;
+        let userName:string = user? user.name : '[未登录]';
         this.openPage(<Page header="APP无法运行" logout={true}>
             <div className="m-3 text-danger container">
                 <div className="form-group row">
@@ -211,7 +213,7 @@ export class CApp extends Controller {
                 </div>
                 <div className="form-group row">
                     <div className="col-2">用户: </div>
-                    <div className="col">{`${nav.user.name}`}</div>
+                    <div className="col">{userName}</div>
                 </div>
                 <div className="form-group row">
                     <div className="col-2">App:</div>

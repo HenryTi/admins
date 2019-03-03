@@ -7,14 +7,16 @@ export interface ImageProps {
     style?: React.CSSProperties;
 }
 
-const defaultImage = 'http://101.200.46.56/imgs/Bear-icon.png';
-
 export function Image(props: ImageProps) {
     let {className, style, src} = props;
     if (!src) {
-        src = defaultImage;
+        return <div className={className} style={style}>
+            <div className="d-flex h-100 align-items-center justify-content-center border border-warning rounded">
+                <i className="fa fa-camera text-warning" />
+            </div>
+        </div>;
     }
-    else if (src.startsWith(':') === true) {
+    if (src.startsWith(':') === true) {
         src = nav.resUrl + src.substr(1);
     }
     return <img src={src} className={className} style={style} />;

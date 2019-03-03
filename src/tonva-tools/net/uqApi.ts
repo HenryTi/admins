@@ -407,7 +407,7 @@ export class UqTokenApi extends CenterApi {
             if (uq !== undefined) {
                 let {tick, value} = uq;
                 if ((nowTick - tick) < 24*3600*1000) {
-                    return value;
+                    return _.clone(value);
                 }
             }
             let ret = await this.get('app-uq', params);
@@ -416,7 +416,7 @@ export class UqTokenApi extends CenterApi {
                 value: ret,
             }
             localStorage.setItem(uqTokens, JSON.stringify(this.local));
-            return ret;
+            return _.clone(ret);
         }
         catch (err) {
             this.local = undefined;
@@ -483,5 +483,8 @@ export class CenterAppApi extends CenterApi {
     }
     async unitxUq(unit:number):Promise<AppUq> {
         return await this.get('tie/unitx-uq', {unit:unit});
+    }
+    async changePassword(param: {orgPassword:string, newPassword:string}) {
+        return await this.post('tie/reset-password', param);
     }
 }
