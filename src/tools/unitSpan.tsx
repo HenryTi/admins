@@ -1,12 +1,8 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import * as classNames from 'classnames';
 import {Prop, ListProp, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
-import {Unit, DevModel} from '../model';
-import {devApi} from '../api';
 import {span} from './span';
 
 export interface UnitLinkProps {
@@ -63,7 +59,7 @@ class UnitInfo extends React.Component<UnitLinkProps> {
         let {name, nick, icon, discription} = unit;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={icon || appIcon} main={name} discription={discription} />},
+            {type: 'component', component: <Media icon={icon} main={name} discription={discription} />},
             '',
         ];
         return <Page header={'小号 - 详细资料'}>

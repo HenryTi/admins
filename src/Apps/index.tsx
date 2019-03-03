@@ -1,8 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {List, FA, SubmitResult, LMR, Badge} from 'tonva-react-form';
-import {nav, Page} from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
+import {nav, Page, Image} from 'tonva-tools';
 import {store} from '../store';
 import {NewApp} from './new';
 import {UnitApp} from '../model';
@@ -19,7 +18,7 @@ export default class AppsPage extends React.Component {
         if (inUnit === 0)
             ban = <FA className="text-danger" name='ban' />;
         return <LMR className="px-3 py-1"
-            left={<Badge><img src={icon || appIcon} /></Badge>}
+            left={<Badge><Image src={icon} /></Badge>}
             right={ban}>
             <div className="px-3">
                 <div>{name}</div>

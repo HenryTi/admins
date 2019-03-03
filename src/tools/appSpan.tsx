@@ -1,12 +1,9 @@
 import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-import * as classNames from 'classnames';
 import {Prop, ListProp, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
 import {store} from '../store';
-import {DevModel} from '../model';
 import {devApi} from '../api';
 import {span} from './span';
 import {IdDates} from './idDates';
@@ -79,7 +76,7 @@ class AppInfo extends React.Component<AppSpanProps> {
         </div>;
         this.rows = [
             '',
-            {type: 'component', component: <Media icon={icon || appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <Media icon={icon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             this.apis,

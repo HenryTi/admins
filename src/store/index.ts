@@ -1,6 +1,5 @@
 import {observable, autorun} from 'mobx';
 import _ from 'lodash';
-//import {appIcon, appItemIcon} from './consts';
 import {meInFrame, host} from 'tonva-tools';
 import {mainApi, devApi} from '../api';
 import {Unit, UnitApps, App, Api, UnitAdmin, UnitApp, Role, RoleMember} from '../model';

@@ -1,10 +1,9 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {List, LMR, Badge, FA, TonvaForm, SubmitResult, FormRow, Muted, SearchBox} from 'tonva-react-form';
-import {nav, Page} from 'tonva-tools';
+import {nav, Page, Image} from 'tonva-tools';
 import {Role, RoleMember} from '../model';
 import {store} from '../store';
-import {appIcon, appItemIcon} from '../consts';
 import {mainApi} from '../api';
 import {MemberPage} from './memberPage';
 
@@ -43,7 +42,7 @@ const MemberRow = (member:RoleMember) => {
     else
         content = <div><b>{name}</b></div>;
     return <LMR className="py-2 px-3 align-items-stretch"
-        left={<Badge size="sm"><img src={icon||appIcon} /></Badge>}>
+        left={<Badge size="sm"><Image src={icon} /></Badge>}>
         <div className="px-3">{content}</div>
     </LMR>;
 };

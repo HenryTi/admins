@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import {nav, Page, Image} from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
 import NewFellow from './NewFellow';

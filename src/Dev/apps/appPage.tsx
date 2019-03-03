@@ -1,11 +1,8 @@
 import * as React from 'react';
-import { observable } from 'mobx';
 import { VPage, Page, nav } from 'tonva-tools';
 import { AppController, UqAccess } from '.';
 import { IdDates, UnitSpan, ServerSpan, UnitName } from 'tools';
 import { Prop, Media, PropGrid, ListProp, DropdownActions, List, LMR } from 'tonva-react-form';
-import { appIcon } from 'consts';
-import { DevModel } from 'model';
 import { EditPage } from './editPage';
 import { AppUqs, SearchUqPage } from './appUqs';
 

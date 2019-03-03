@@ -3,7 +3,6 @@ import { VPage, Page } from "tonva-tools";
 import { UQController } from '.';
 import { List, LMR, Badge, Muted, FA } from 'tonva-react-form';
 import { DevModel } from 'model';
-import { appItemIcon } from 'consts';
 import { NewPage } from './editPage';
 
 export class ListPage extends VPage<UQController> {

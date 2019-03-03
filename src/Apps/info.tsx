@@ -5,7 +5,6 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid, FA} from 'tonva-react-form';
 import {nav, Page, PageItems} from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
 import {IdDates, UnitSpan} from '../tools';
 import {UnitApp, DevModel} from '../model';
 import {store} from '../store';
@@ -75,7 +74,7 @@ export class Info extends React.Component<{app:UnitApp, appActed?:(appId:number,
             '',
             {
                 type: 'component', 
-                component: <Media icon={icon || appIcon} main={name} discription={disp} />
+                component: <Media icon={icon} main={name} discription={disp} />
             },
             '',
             {

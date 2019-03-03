@@ -2,9 +2,7 @@ import * as React from 'react';
 import {IObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
 import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid} from 'tonva-react-form';
-import {nav, Page, PageItems} from 'tonva-tools';
-import {appIcon, appItemIcon} from '../consts';
-import {IdDates, UnitSpan} from '../tools';
+import {nav, Page, PageItems, Image} from 'tonva-tools';
 import {mainApi} from '../api';
 import {store} from '../store';
 import {UnitApp} from '../model';
@@ -56,7 +54,7 @@ export class NewApp extends React.Component {
         else if (inUnit === 0)
             right = <small>已停用</small>;
         return <LMR className="px-3 py-2"
-            left={<Badge><img src={icon || appIcon} /></Badge>}
+            left={<Badge><Image src={icon} /></Badge>}
             right={right}>
             <div className="px-3">
                 <div>{name}</div>

@@ -5,7 +5,6 @@ import {Prop, Media, PropGrid} from 'tonva-react-form';
 import {nav, Page}  from 'tonva-tools';
 import {appIcon, appItemIcon} from 'consts';
 import {store} from 'store';
-import {DevModel} from 'model';
 import {IdDates} from './idDates';
 import {span} from './span';
 import {UnitSpan} from './unitSpan';

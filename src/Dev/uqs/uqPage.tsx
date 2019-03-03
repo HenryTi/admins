@@ -3,7 +3,6 @@ import { VPage, Page, nav } from 'tonva-tools';
 import { UQController } from '.';
 import { IdDates, UnitSpan, ServerSpan } from 'tools';
 import { Prop, Media, LMR, FA, PropGrid, Muted, List, EasyDate, DropdownActions } from 'tonva-react-form';
-import { appIcon } from 'consts';
 import { DevModel } from 'model';
 import { EditPage } from './editPage';
 
