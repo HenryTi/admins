@@ -1,13 +1,11 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, meInFrame, Controller, VPage, Image} from  'tonva-tools'; 
+import {nav, Page, meInFrame, Controller, VPage, Image, Edit, ItemSchema, UiSchema, StringSchema, ImageSchema, UiImageItem, UiTextItem} from  'tonva-tools'; 
 import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
 import {StringValueEdit} from './tools';
-import {appIcon, appItemIcon} from './consts';
 import {Unit, UnitApps, UnitAdmin, DevModel} from './model';
 import {store} from './store';
 import Administors from './Administors';
-//import DevActions from './Dev';
 import AppsPage from './Apps';
 import {Members} from './Members';
 import { mainApi } from 'api';
@@ -344,6 +342,7 @@ default class AdminPage extends React.Component {
 }
 
 class UnitProps extends React.Component {
+    /*
     private rows:Prop[] = [
         '',
         {label: '标志图', type: 'string', name: 'icon'},
@@ -370,15 +369,41 @@ class UnitProps extends React.Component {
                 info="对小号做一个说明" />)
         },
     ];
+    */
+    private schema:ItemSchema[] =[
+        {name: 'icon', type: 'image'} as ImageSchema,
+        {name: 'nick', type: 'string'} as StringSchema,
+        {name: 'discription', type: 'string'} as StringSchema,
+    ];
+    private uiSchema:UiSchema = {
+        items: {
+            nick: {widget:'text', label:'别名', placeholder:'好的别名更方便记忆'} as UiTextItem,
+            icon: {widget:'image', label:'标志图'} as UiImageItem,
+            discription: {widget:'text', label:'描述', placeholder:'简短清晰的描述'} as UiTextItem,
+        }
+    }
+    /*
     async onNickChanged(value:any, orgValue:any):Promise<void> {
         await store.unitChangeProp('nick', value);
     }
     async onDiscriptionChanged(value:any, orgValue:any):Promise<void> {
         await store.unitChangeProp('discription', value);
     }
+    */
+    private onItemChanged = async (itemSchema:ItemSchema, newValue:any, preValue:any) => {
+        let {name} = itemSchema;
+        //await userApi.userSetProp(name, newValue);
+        await store.unitChangeProp(name, newValue);
+        //this.data[name] = newValue;
+        //nav.user[name] = newValue;
+        //nav.saveLocalUser();
+    }
+    //<PropGrid rows={this.rows} values={store.unit} alignValue="right" />
     render() {
         return <Page header="小号信息">
-            <PropGrid rows={this.rows} values={store.unit} alignValue="right" />
+            <Edit schema={this.schema} uiSchema={this.uiSchema}
+                data={store.unit}
+                onItemChanged={this.onItemChanged} />
         </Page>;
     }
 }

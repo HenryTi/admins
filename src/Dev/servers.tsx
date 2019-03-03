@@ -1,8 +1,6 @@
 import * as React from 'react';
-import {EasyDate, Media, Prop, PropGrid, LMR, Muted} from 'tonva-react-form';
+import {Prop, PropGrid, LMR, Muted, FA} from 'tonva-react-form';
 import {UnitSpan, IdDates} from '../tools';
-import {Row} from './row';
-import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
 import {store} from '../store';
 import {ObjViewProps} from './ObjViewProps';
@@ -13,10 +11,15 @@ class Info extends React.Component<DevModel.Server> {
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
-        </div>;
+        </div>;        
+        //<Media icon={appIcon} main={discription} discription={ip} />},
         let rows:Prop[] = [
             '',
-            {type: 'component', component: <Media icon={appIcon} main={discription} discription={ip} />},
+            {type: 'component', component: <LMR className="py-2"
+                left={<FA name="server" className="text-primary fa-2x mr-3" />}>
+                <div><b>{ip}</b></div>
+                {disp}
+            </LMR>},
             '',
             {type: 'component', label: '开发号', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {type: 'string', label: '云服务', name: 'cloud'},
@@ -47,8 +50,9 @@ const serversProps:ObjViewProps<DevModel.Server> = {
     row: (item: DevModel.Server):JSX.Element => {
         let {discription, cloud} = item;
         //return <Row main={item.discription} vice={<>{item.cloud}  {item.ip}</>} />;
-        return <LMR className="py-2 px-3 align-items-center">
-            <div>
+        return <LMR className="py-2 px-3 align-items-center"
+            left={<FA name="server" className="text-primary fa-lg" />}>
+            <div className="px-3">
                 <div><b>{discription}</b></div>
                 <div><Muted>{cloud}</Muted></div>
             </div>

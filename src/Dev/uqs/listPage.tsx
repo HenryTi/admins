@@ -23,6 +23,7 @@ export class ListPage extends VPage<UQController> {
     private listRow = (item:DevModel.UQ):JSX.Element => {
         let {name, discription, service_count} = item;
         return <LMR className="py-1 px-3 align-items-center"
+            left={<FA name="database" className="text-primary fa-lg" />}
             right={<>{service_count}</>}>
             <div className="py-2 px-3">
                 <div><b>{name}</b></div>

@@ -40,10 +40,11 @@ export class UQPage extends VPage<UQController> {
             '',
             {
                 type: 'component', 
-                component: <div className="py-2">
+                component: <LMR className="py-2"
+                    left={<FA name="database" className="text-primary fa-2x mr-3" />}>
                     <div><b>{name}</b></div>
                     {disp}
-                </div>
+                </LMR>
             },
             {
                 type: 'component', 
