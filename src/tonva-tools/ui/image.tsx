@@ -1,4 +1,5 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import { nav } from './nav';
 
 export interface ImageProps {
@@ -10,10 +11,8 @@ export interface ImageProps {
 export function Image(props: ImageProps) {
     let {className, style, src} = props;
     if (!src) {
-        return <div className={className} style={style}>
-            <div className="d-flex h-100 align-items-center justify-content-center border border-warning rounded">
-                <i className="fa fa-camera text-warning" />
-            </div>
+        return <div className={classNames(className, 'image-none')} style={style}>
+            <i className="fa fa-camera" />
         </div>;
     }
     if (src.startsWith(':') === true) {
