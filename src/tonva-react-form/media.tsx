@@ -1,37 +1,29 @@
 import * as React from 'react';
-import * as className from 'classnames';
-import {observer} from 'mobx-react';
+import classNames from 'classnames';
+import { Image } from 'tonva-tools';
 
 export interface MediaProps {
-    icon: string|JSX.Element;
+    icon: string;
     main: string|JSX.Element;
     discription?: string | JSX.Element;
     px?: number;
     py?: number;
 }
 
-const imgStyle = {
-    width: '4rem', 
-    height: '4rem',
-};
-
 export class Media extends React.Component<MediaProps> {
     render() {
         let {icon, main, discription, px, py} = this.props;
-        let disp;
+        let disp:any;
         if (typeof discription === 'string')
             disp = <div>{discription}</div>;
         else
             disp = discription;
-        let img = icon;
-        if (typeof icon === 'string')
-            img = <img className="d-flex mr-3" src={icon} alt="img" style={imgStyle} />;
-        let cn = className(
+        let cn = classNames(
             'media', 
             px===undefined? 'px-0':'px-'+px, 
             py===undefined? 'py-2':'py-'+py);
         return <div className={cn}>
-            {img}
+            <Image className="mr-3 w-4c h-4c" src={icon} />
             <div className="media-body">
                 <h5 className="mt-0">{main}</h5>
                 {disp}

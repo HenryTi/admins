@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {EasyDate, Media, Prop, PropGrid} from 'tonva-react-form';
+import {EasyDate, Media, Prop, PropGrid, LMR, Muted} from 'tonva-react-form';
 import {UnitSpan, IdDates} from '../tools';
 import {Row} from './row';
 import {appIcon, appItemIcon} from '../consts';
@@ -45,7 +45,14 @@ const serversProps:ObjViewProps<DevModel.Server> = {
         },
     ],
     row: (item: DevModel.Server):JSX.Element => {
-        return <Row icon={appItemIcon} main={item.discription} vice={<>{item.cloud}  {item.ip}</>} />;
+        let {discription, cloud} = item;
+        //return <Row main={item.discription} vice={<>{item.cloud}  {item.ip}</>} />;
+        return <LMR className="py-2 px-3 align-items-center">
+            <div>
+                <div><b>{discription}</b></div>
+                <div><Muted>{cloud}</Muted></div>
+            </div>
+        </LMR>;
     },
     items: ()=>store.dev.servers,
     repeated: {

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { VPage, Page } from "tonva-tools";
+import { VPage, Page, Image } from "tonva-tools";
 import { AppController } from '.';
 import { List, LMR, Badge, Muted, FA } from 'tonva-react-form';
 import { DevModel } from 'model';
-import { appItemIcon } from 'consts';
 import { NewPage } from './editPage';
 
 export class AppsPage extends VPage<AppController> {
@@ -21,14 +20,13 @@ export class AppsPage extends VPage<AppController> {
         </Page>
     }
     private appRow = (item:DevModel.App):JSX.Element => {
-        let {name, discription, url, urlDebug} = item;
-        let icon = appItemIcon;
-        let left = <Badge size="sm" className="pt-1"><img src={icon} /></Badge>;
+        let {name, discription, icon, url, urlDebug} = item;
+        let left = <Badge size="sm"><Image src={icon} /></Badge>;
         let right = <div className="text-muted small text-right">
             {url || '-'}<br/>
             {urlDebug}
         </div>;
-        return <LMR className="py-1 px-3 align-items-stretch"
+        return <LMR className="py-2 px-3 align-items-stretch"
             left={left} right={right}>
             <div className="px-3">
                 <div><b>{name}</b></div>

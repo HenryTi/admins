@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page} from 'tonva-tools';
+import {nav, Page, Image} from 'tonva-tools';
 import {appIcon, appItemIcon} from '../consts';
 import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
@@ -30,7 +30,7 @@ export default class AdministorsPage extends React.Component {
             content = <><b>{nick}</b> &nbsp; <small className="text-muted">{name}</small></>;
         }
         return <LMR className="py-2 px-3 align-items-stretch"
-            left={<Badge size="sm"><img src={icon|| appItemIcon} /></Badge>}>
+            left={<Badge size="sm"><Image className="w-3c h-3c" src={icon} /></Badge>}>
             <div className="px-3">{content}</div>
         </LMR>;
     }

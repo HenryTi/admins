@@ -55,7 +55,7 @@ export class AppPage extends VPage<AppController> {
             '',
             {
                 type: 'component', 
-                component: <Media icon={icon || appIcon} main={name} discription={disp} />
+                component: <Media icon={icon} main={name} discription={disp} />
             },
             '',
             {

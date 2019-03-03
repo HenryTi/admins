@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, meInFrame, Controller, VPage} from  'tonva-tools'; 
+import {nav, Page, meInFrame, Controller, VPage, Image} from  'tonva-tools'; 
 import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
 import {StringValueEdit} from './tools';
 import {appIcon, appItemIcon} from './consts';
@@ -325,7 +325,7 @@ default class AdminPage extends React.Component {
             header = nick || name;
             if (this.caption !== undefined) header = this.caption + ' - ' + header;            
             top = <LMR className='px-3 my-4 bg-white py-2 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}
-                left={<div><img src={icon || appIcon} /></div>}>
+                left={<div><Image className="w-3c h-3c" src={icon} /></div>}>
                 <div className="px-3">
                     <h6 className='text-dark'>{name}</h6>
                     <h6><small className='text-secondary'>{nick}</small></h6>

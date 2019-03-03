@@ -40,7 +40,10 @@ export class UQPage extends VPage<UQController> {
             '',
             {
                 type: 'component', 
-                component: <Media icon={appIcon} main={name} discription={disp} />
+                component: <div className="py-2">
+                    <div><b>{name}</b></div>
+                    {disp}
+                </div>
             },
             {
                 type: 'component', 

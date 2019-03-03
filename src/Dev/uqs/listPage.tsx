@@ -22,11 +22,9 @@ export class ListPage extends VPage<UQController> {
     }
     private listRow = (item:DevModel.UQ):JSX.Element => {
         let {name, discription, service_count} = item;
-        let icon = appItemIcon;
-        return <LMR className="py-1 px-3 align-items-stretch"
-            left={<Badge size="sm" className="pt-1"><img src={icon} /></Badge>}
+        return <LMR className="py-1 px-3 align-items-center"
             right={<>{service_count}</>}>
-            <div className="px-3">
+            <div className="py-2 px-3">
                 <div><b>{name}</b></div>
                 <div><Muted>{discription}</Muted></div>
             </div>

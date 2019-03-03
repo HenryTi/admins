@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, Schema, UiSchema, ItemSchema, UiCheckItem, UiButton, ButtonSchema, Form, Context} from 'tonva-tools';
+import {nav, Page, Schema, UiSchema, ItemSchema, UiCheckItem, UiButton, ButtonSchema, Form, Context, Image} from 'tonva-tools';
 import {store} from '../store';
 import { UnitAdmin } from '../model/index';
 //import {mainApi} from '../api';
@@ -71,10 +71,11 @@ export default class EditAdmin extends React.Component {
 
 const Fellow = (props:UnitAdmin) => {
     let {name, nick, icon} = props;
+    //<img className='w-75' src={icon || process.env.REACT_APP_DEFAULT_ICON} />
     return <div className="container">
         <div className='row my-4'>
             <div className="col-xs-2 d-flex justify-content-end align-items-start">
-                <img className='w-75' src={icon || process.env.REACT_APP_DEFAULT_ICON} />
+                <Image className="w-75" src={icon} />
             </div>
             <div className="col-xs-auto">
                 <h4 className='text-dark'>{name}</h4>
