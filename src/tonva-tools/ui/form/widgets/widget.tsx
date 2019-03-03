@@ -133,29 +133,6 @@ export abstract class Widget {
     private isChanging: boolean;
     protected onInputChange = (evt: React.ChangeEvent<any>) => {
         this.changeValue(evt.target.value, true);
-        /*
-        let prev = this.value;
-        let onChanging: ChangingHandler;
-        let onChanged: ChangedHandler;
-        if (this.ui !== undefined) {
-            onChanging = this.ui.onChanging;
-            onChanged = this.ui.onChanged;
-        }
-        let allowChange = true;
-        if (onChanging !== undefined) {
-            this.isChanging = true;
-            allowChange = onChanging(this.context, this.value, prev);
-            this.isChanging = false;
-        }
-        if (allowChange === true) {
-            this.setDataValue(evt.currentTarget.value);
-            if (onChanged !== undefined) {
-                this.isChanging = true;
-                onChanged(this.context, this.value, prev);
-                this.isChanging = false;
-            }
-        }
-        */
     }
 
     protected changeValue(newValue: any, fromElement: boolean) {

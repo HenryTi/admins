@@ -4,3 +4,4 @@ export * from './uqSpan';
 export * from './appSpan';
 export * from './serverSpan';
 export * from './stringValueEdit';
+export * from './idPickPage';

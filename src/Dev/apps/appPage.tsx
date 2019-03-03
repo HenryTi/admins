@@ -5,17 +5,9 @@ import { IdDates, UnitSpan, ServerSpan, UnitName } from 'tools';
 import { Prop, Media, PropGrid, ListProp, DropdownActions, List, LMR } from 'tonva-react-form';
 import { EditPage } from './editPage';
 import { AppUqs, SearchUqPage } from './appUqs';
+import { observer } from 'mobx-react';
 
 export class AppPage extends VPage<AppController> {
-    /*
-    @observable private uqs:ListProp = {
-        label: '关联UQ', 
-        type: 'list', 
-        list: undefined, 
-        row: UqRow
-    };
-    */
-
     async open() {
         //this.uqs.list = this.controller.uqs;
         this.openPage(this.page);
@@ -33,7 +25,7 @@ export class AppPage extends VPage<AppController> {
         }
     }
 
-    private page = ():JSX.Element => {
+    private page = observer(():JSX.Element => {
         let {app} = this.controller;
         let {unit, name, discription, icon, server, date_init, date_update} = app;
         let disp = <div>
@@ -90,7 +82,7 @@ export class AppPage extends VPage<AppController> {
             </LMR>
             <List items={this.controller.uqAccesses} item={{render:this.renderUqRow, onClick:this.uqClick}} />
         </Page>
-    }
+    })
 
     private uqClick = (uqAccess:UqAccess) => {
         this.controller.onUq(uqAccess.uq);
@@ -110,16 +102,3 @@ export class AppPage extends VPage<AppController> {
         </LMR>
     }
 }
-/*
-class UqRow extends React.Component<any> {
-    render() {
-        let {name, discription, unit} = this.props;
-        let disp: any;
-        if (discription) disp = <div className="small text-muted">{discription}</div>;
-        return <div className='form-control-plaintext'>
-            <div><UnitName id={unit} /> / {name}</div>
-            {disp}
-        </div>
-    }
-}
-*/

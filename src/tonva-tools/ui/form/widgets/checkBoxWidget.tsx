@@ -38,7 +38,7 @@ export class CheckBoxWidget extends Widget {
     }
 
     render() {
-        let cn = classNames(this.className, 'form-check-inline');
+        let cn = classNames(this.className, 'form-check-inline p-0');
         let input = <input
             ref={(input)=>this.input = input}
             className={'align-self-center'}
@@ -46,11 +46,15 @@ export class CheckBoxWidget extends Widget {
             defaultChecked={this.defaultValue} 
             onChange={this.onInputChange}
             onClick={this.onClick} />;
-        return this.context.inNode?
-            <label className={cn}>
+        if (this.context.inNode === true) {
+            return <label className={cn}>
                 {input} {(this.ui&&this.ui.label) || this.name}
             </label>
-            :
-            <div className={cn}>{input}</div>;
+        }
+        else {
+            return <div className={cn}>
+                <label className="w-100 h-100 mb-0 d-flex justify-content-center">{input}</label>
+            </div>;
+        }
     }
 }

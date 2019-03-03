@@ -17,6 +17,7 @@ import { RangeWidget } from './rangeWidget';
 import { IdWidget } from './idWidget';
 import { ButtonWidget } from './buttonWidget';
 import { ArrComponent } from './arrComponent';
+import { ImageWidget } from './imageWidget';
 
 const widgetsFactory: {[type: string]: {widget?: TypeWidget, dataTypes?: DataType[]}} = {
     id: {
@@ -77,6 +78,10 @@ const widgetsFactory: {[type: string]: {widget?: TypeWidget, dataTypes?: DataTyp
     checkbox: {
         dataTypes: ['boolean', 'integer', 'number'],
         widget: CheckBoxWidget
+    },
+    image: {
+        dataTypes: ['string'],
+        widget: ImageWidget,
     },
     checkboxes: {
 

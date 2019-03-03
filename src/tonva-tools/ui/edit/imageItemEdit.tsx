@@ -43,7 +43,7 @@ export class ImageItemEdit extends ItemEdit {
     }
 
     private page = observer((props:{resolve:(value:any)=>void, reject: (resean?:any)=>void}):JSX.Element => {
-        let {resolve, reject} = props;
+        let {resolve} = props;
         let right = <button
             className="btn btn-sm btn-success"
             disabled={!this.isChanged}
