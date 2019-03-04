@@ -6,6 +6,7 @@ import { Context } from '../context';
 import { ItemSchema } from '../../schema';
 import { Rule, RuleRequired, RuleCustom, FieldRule } from '../rules';
 import { computed, observable, reaction } from 'mobx';
+import { observer } from 'mobx-react';
 
 export abstract class Widget {
     protected name: string;
@@ -168,7 +169,7 @@ export abstract class Widget {
 
     protected abstract render():JSX.Element;
 
-    renderContainer():JSX.Element {
+    container = observer(():JSX.Element => {
         if (this.visible === false) return null;
         let {form, inNode} = this.context;
         if (inNode === true) return this.render();
@@ -185,7 +186,7 @@ export abstract class Widget {
             if (label !== null) label = <>{label}&nbsp;<span className="text-danger">*</span></>;
         }
         return form.FieldContainer(label, this.render());
-    }
+    })
 
     protected renderTemplet():JSX.Element | undefined {
         if (this.children !== undefined) {

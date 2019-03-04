@@ -26,11 +26,6 @@ export interface FormProps {
     FieldContainer?: (label:string|JSX.Element, content:JSX.Element) => JSX.Element;
     FieldClass?: string;
     ButtonClass?: string;
-/*    
-    ArrContainer?: (label:any, content:JSX.Element) => JSX.Element;
-    RowContainer?: (content:JSX.Element) => JSX.Element;
-    RowSeperator?: JSX.Element;
-*/
 }
 
 export class Form extends React.Component<FormProps> {
@@ -197,6 +192,20 @@ export class Form extends React.Component<FormProps> {
             <this.formContext.renderErrors />
             {this.Container(this.content)}
         </ContextContainer.Provider>;
+    }
+
+    async buttonClick(buttonName:string) {
+        this.formContext.checkRules()
+        if (this.formContext.hasError === true) return;
+
+        let {onButtonClick} = this.formContext.form.props;
+        if (onButtonClick === undefined) {
+            alert(`you should define form onButtonClick`);
+            return;
+        }
+        let ret = await onButtonClick(buttonName, this.formContext);
+        if (ret === undefined) return;
+        this.formContext.setError(buttonName, ret);
     }
 
     protected DefaultContainer = (content:JSX.Element): JSX.Element => {

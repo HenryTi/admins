@@ -10,6 +10,7 @@ export class ListPage extends VPage<UQController> {
         this.openPage(this.page);
     }
     private newItem = () => {
+        this.controller.uq = undefined;
         this.openVPage(NewPage);
     }
     private page = ():JSX.Element => {

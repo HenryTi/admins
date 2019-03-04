@@ -518,9 +518,9 @@ export class Nav {
         }
     }
 
-    async showLogin(callback?: (user:User)=>Promise<void>, withBack?:boolean) {
+    async showLogin(callback?: (user:User)=>Promise<void>, top?:any, withBack?:boolean) {
         let lv = await import('../entry/login');
-        let loginView = <lv.default withBack={withBack} callback={callback} />;
+         let loginView = <lv.default withBack={withBack} callback={callback} top={top} />;
         if (withBack !== true) {
             this.nav.clear();
             this.pop();

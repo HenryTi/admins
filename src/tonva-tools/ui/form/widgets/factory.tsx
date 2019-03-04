@@ -156,13 +156,16 @@ export function factory(context: Context, itemSchema: ItemSchema, children:React
     let widget = new typeWidget(context, itemSchema, fieldProps, children);
     widgets[name] = widget;
 
+    return <widget.container />;
+    /*
     if (isRow === false) {
-        let WidgetElement = observer(() => widget.renderContainer());
+        let WidgetElement = observer(() => widget.container());
         return <WidgetElement />;
     }
     else {
-        let widgetElement = widget.renderContainer();
+        let widgetElement = widget.container();
         return widgetElement;
     }
+    */
 }
 

@@ -18,7 +18,7 @@ export interface Values {
     mobile?: string;
     email?: string;
 }
-
+/*
 class AccountInput extends TextWidget {
     @observable private buttonDisabled: boolean = true;
     private onClick = () => {
@@ -56,7 +56,7 @@ class AccountInput extends TextWidget {
         </>;
     }
 }
-
+*/
 export class RegisterController extends Controller {
     account: string;
     type:'mobile'|'email';
@@ -185,7 +185,7 @@ class AccountPage extends VPage<RegisterController> {
         {name: 'verify', type: 'submit'},
     ]
     private uiSchema: UiSchema;
-            
+
     protected res: RegisterRes = resLang(registerRes);
     async open() {
         this.uiSchema = {
