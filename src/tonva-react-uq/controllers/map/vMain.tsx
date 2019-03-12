@@ -25,7 +25,7 @@ export class VMapMain extends VEntity<Map, MapUI, CMap> {
         let {tuid, box, children, isLeaf, keyIndex, values} = item;
         let keyUI = this.controller.keyUIs[keyIndex];
         let {content:keyContent, valuesContent, none:keyNone} = keyUI;
-        let add, remove;
+        let add:any, remove:any;
         if (this.isFrom === false) {
             add = <button className="btn btn-link btn-sm" onClick={()=>this.controller.addClick(item)}>
                 <FA name="plus" />
@@ -34,7 +34,7 @@ export class VMapMain extends VEntity<Map, MapUI, CMap> {
                 <FA className="text-info" name="trash" />
             </button>;
         }
-        let right;
+        let right:any;
         if (isLeaf === false) {
             if (keyIndex === 0)
                 right = add;
@@ -44,7 +44,7 @@ export class VMapMain extends VEntity<Map, MapUI, CMap> {
         else if (keyIndex > 0) {
             right = remove;
         }
-        let content, border, valuesView;
+        let content:any, border:any, valuesView:any;
         if (isLeaf === true) {
             content = undefined; //<div className="ml-5">leaf</div>;
             if (values) {
@@ -61,12 +61,13 @@ export class VMapMain extends VEntity<Map, MapUI, CMap> {
                 item={{onClick:undefined, render:this.itemRender}}
                 none={none} />
         }
+        let left = <div className="py-1 pr-3">{tv(box, keyContent, this.x)}</div>;
         return <div className="d-flex flex-column">
-            <LMR className={className('px-3', 'py-2', border)} 
+            <LMR className={className('px-3', 'py-2', border)}
+                left={left}
                 right={right}
             >
-                <div className="py-1">{tv(box, keyContent, this.x)}</div>
-                <div className="py-1 font-weight-bold">{valuesView}</div>
+                <div className="py-1">{valuesView}</div>
             </LMR>
             {content}
         </div>;

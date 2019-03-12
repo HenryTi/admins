@@ -55,7 +55,7 @@ class VOrganization extends VPage<COrganization> {
 
     protected appPage = () => {
         let {links, label} = this.controller;
-        return <Page header={label} logout={()=>{}}>
+        return <Page header={label} logout={async ()=>{}}>
             <List items={links} item={{render: this.renderRow}} />
         </Page>;
     };

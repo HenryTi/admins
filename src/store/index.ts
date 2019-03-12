@@ -1,6 +1,6 @@
 import {observable, autorun} from 'mobx';
 import _ from 'lodash';
-import {meInFrame, host} from 'tonva-tools';
+import {appInFrame, host} from 'tonva-tools';
 import {mainApi, devApi} from '../api';
 import {Unit, UnitApps, App, Api, UnitAdmin, UnitApp, Role, RoleMember} from '../model';
 import {Admins} from './admins';
@@ -8,7 +8,7 @@ import {Dev} from './dev';
 import {CacheUnits, CacheUqs, CacheApps, CacheServers} from './cacheIds';
 
 export class Store {
-    private get unitId():number {return meInFrame.unit;};
+    private get unitId():number {return appInFrame.unit;};
     admins:Admins;
     dev:Dev;
     cacheUnits: CacheUnits;
@@ -39,11 +39,11 @@ export class Store {
 
     logout() {
         //meInFrame.app = undefined;
-        meInFrame.hash = undefined;
+        appInFrame.hash = undefined;
         //let unitId = process.env.REACT_APP_DEBUG_UNITID;
         //if (unitId !== undefined)
         //    meInFrame.unit = Number(unitId);
-        meInFrame.unit = undefined;
+        appInFrame.unit = undefined;
         this.init();
         this.memberCount = undefined;
         this.apps = undefined;

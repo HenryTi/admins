@@ -33,6 +33,7 @@ export class LocalData {
     logoutClear() {
         [
             this.user,
+            this.unit,
             this.homeTabCur
         ].map(d => d.clear());
     }

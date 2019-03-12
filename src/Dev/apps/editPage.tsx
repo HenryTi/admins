@@ -27,7 +27,7 @@ const idPickServerProps: IdPickProps = {
         return <div className="px-3 py-2"><ServerCaption {...item} /></div>;
     },
 };
-
+/*
 const formRows:FormRow[] = [
     {
         label: '名称', 
@@ -67,7 +67,7 @@ const formRows:FormRow[] = [
         field: {name: 'public', type: 'bool', defaultValue: 1}
     },
 ];
-
+*/
 const schema:ItemSchema[] = [
     {name: 'name', type: 'string', maxLength: 100, required: true} as StringSchema,
     {name: 'discription', type: 'string', maxLength: 250} as StringSchema,

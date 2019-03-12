@@ -11,7 +11,7 @@ export class UpdownWidget extends NumberWidget {
             || key===109 || key===189;
     }
     
-    protected onKeyDown = (evt:React.KeyboardEvent<HTMLInputElement>) => {
+    protected internalOnKeyDown(evt:React.KeyboardEvent<HTMLInputElement>) {
         let key = evt.keyCode;
         event.returnValue = this.isValidKey(key);
     }

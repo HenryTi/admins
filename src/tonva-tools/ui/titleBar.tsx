@@ -1,20 +1,18 @@
 import * as React from 'react';
 import _ from 'lodash';
 import {nav, mobileHeaderStyle} from './nav';
-import { Page } from './page';
 
 export interface TitleBarProps {
     back?: 'back' | 'close' | 'none';
     center: string | JSX.Element;
     right?: JSX.Element;
-    logout?: boolean | (()=>void);
+    logout?: boolean | (()=>Promise<void>);
 }
 export interface TitleBarState {
     hasBack: boolean;
 }
 export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
-    private navChangeHandler: ()=>void;
-    constructor(props) {
+    constructor(props: TitleBarProps) {
         super(props);
         this.navChange = this.navChange.bind(this);
         this.state = {
@@ -40,6 +38,8 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
         window.open(document.location.href);
     }
     private logoutClick = () => {
+        nav.showLogout(this.logout);
+        /*
         nav.push(<Page header="安全退出" back="close">
             <div className="m-5 border border-info bg-white rounded p-3 text-center">
                 <div>退出当前账号不会删除任何历史数据，下次登录依然可以使用本账号</div>
@@ -48,13 +48,14 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
                 </div>
             </div>
         </Page>);
+        */
     }
-    private logout() {
+    private logout = async () => {
         let {logout} = this.props;
         if (typeof logout === 'function') {
-            logout(); 
+            await logout(); 
         }
-        nav.logout(undefined);
+        await nav.logout(undefined);
     }
     render() {
         let b = this.state.hasBack || self != top;
@@ -64,15 +65,18 @@ export class TitleBar extends React.Component<TitleBarProps, TitleBarState> {
             if (typeof logout === 'boolean' && logout === true
                 || typeof logout === 'function')
             {
-                let {nick, name} = nav.user;
-                debugLogout = <div className="d-flex align-items-center">
-                    <small className="text-light">{nick || name}</small>
-                    <a className="dropdown-toggle btn btn-secondary btn-sm ml-2"
-                        role="button"
-                        onClick={this.logoutClick}>
-                        <i className="fa fa-sign-out" />
-                    </a>
-                </div>;
+                let {user} = nav;
+                if (user !== undefined) {
+                    let {nick, name} = user;
+                    debugLogout = <div className="d-flex align-items-center">
+                        <small className="text-light">{nick || name}</small>
+                        <a className="dropdown-toggle btn btn-secondary btn-sm ml-2"
+                            role="button"
+                            onClick={this.logoutClick}>
+                            <i className="fa fa-sign-out" />
+                        </a>
+                    </div>;
+                }
             }
         }
         if (b) {

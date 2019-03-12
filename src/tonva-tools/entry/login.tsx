@@ -49,6 +49,11 @@ export default class Login extends React.Component<LoginProps> {
         console.log("onLoginSubmit: user=%s pwd:%s", user.name, user.token);
         await nav.logined(user, this.props.callback);
     }
+    private onEnter = async (name:string, context:Context):Promise<string> => {
+        if (name === 'password') {
+            return await this.onSubmit('login', context);
+        }
+    }
     private clickReg = () => {
         //nav.replace(<RegisterView />);
         let register = new RegisterController(undefined);
@@ -70,14 +75,17 @@ export default class Login extends React.Component<LoginProps> {
             header = '登录';
         }
         let {top} = this.props;
-        if (top !== undefined) top = tonvaTop;
+        if (top === undefined) top = tonvaTop;
         return <Page header={header} footer={footer}>
             <div className="d-flex h-100 flex-column justify-content-center align-items-center">
                 <div className="flex-fill" />
                 <div className="w-20c">
                     {top}
                     <div className="h-2c" />
-                    <Form schema={schema} uiSchema={this.uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
+                    <Form schema={schema} uiSchema={this.uiSchema} 
+                        onButtonClick={this.onSubmit} 
+                        onEnter={this.onEnter}
+                        requiredFlag={false} />
                     <button className="btn btn-link btn-block"
                         onClick={() => this.clickForget()}>
                         忘记密码

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import _ from 'lodash';
-import { UqApi, Controller, UnitxApi, meInFrame, resLang, nav } from 'tonva-tools';
+import { UqApi, Controller, UnitxApi, appInFrame, resLang, nav } from 'tonva-tools';
 import { Entities, TuidMain, Action, Sheet, Query, Book, Map, Entity, Tuid, History, Pending } from '../../entities';
 import { CLink } from '../link';
 import { CBook, BookUI } from '../book';
@@ -125,7 +125,7 @@ export class CUq extends Controller /* implements Uq*/ {
         if (uq === '$$$/$unitx') {
             // 这里假定，点击home link之后，已经设置unit了
             // 调用 UnitxApi会自动搜索绑定 unitx service
-            uqApi = new UnitxApi(meInFrame.unit);
+            uqApi = new UnitxApi(appInFrame.unit);
         }
         else {
             uqApi = new UqApi(baseUrl, uqOwner, uqName, acc, true);

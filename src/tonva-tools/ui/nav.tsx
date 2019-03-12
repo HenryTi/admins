@@ -1,13 +1,13 @@
 import * as React from 'react';
-import {observable} from 'mobx';
+import {observable, has} from 'mobx';
 import {User, Guest/*, UserInNav*/} from '../user';
 import {Page} from './page';
 import {netToken} from '../net/netToken';
 import FetchErrorView from './fetchErrorView';
 import {FetchError} from '../fetchError';
-import {appUrl, setMeInFrame, logoutUqTokens} from '../net/appBridge';
+import {appUrl, setAppInFrame, logoutUqTokens, getExHash, getExHashPos} from '../net/appBridge';
 import {LocalData} from '../local';
-import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, meInFrame, isDevelopment, host} from '../net';
+import {guestApi, logoutApis, setCenterUrl, setCenterToken, WSChannel, appInFrame, isDevelopment, host} from '../net';
 import { WsBase, wsBridge } from '../net/wsChannel';
 import { resOptions } from './res';
 import { Loading } from './loading';
@@ -258,7 +258,7 @@ export class NavView extends React.Component<Props, State> {
     clear() {
         let len = this.stack.length;
         while (this.stack.length > 0) this.popAndDispose();
-        this.refresh();
+        //this.refresh();
         if (len > 1) {
             //window.removeEventListener('popstate', this.navBack);
             //window.history.back(len-1);
@@ -319,10 +319,11 @@ export class NavView extends React.Component<Props, State> {
                 break;
             case 2:
                 elWait = <li className="va-wait va-wait2">
-                    <i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                    <span className="sr-only">Loading...</span>
+                    <Loading />
                 </li>;
                 break;
+                //<i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                //<span className="sr-only">Loading...</span>
         }
         if (fetchError)
             elError = <FetchErrorView clearError={this.clearError} {...fetchError} />
@@ -394,7 +395,7 @@ export class Nav {
         await this.ws.receive(msg);
     }
 
-    private async getUnitName() {
+    private async getPredefinedUnitName() {
         try {
             let unitRes = await fetch('unit.json', {});
             //if (unitRes)
@@ -407,17 +408,17 @@ export class Nav {
         }
     }
 
-    private async loadUnit() {
+    private async loadPredefinedUnit() {
         let unitName:string;
         let unit = this.local.unit.get();
         if (unit !== undefined) {
             if (isDevelopment !== true) return unit.id;
-            unitName = await this.getUnitName();
+            unitName = await this.getPredefinedUnitName();
             if (unitName === undefined) return;
             if (unit.name === unitName) return unit.id;
         }
         else {
-            unitName = await this.getUnitName();
+            unitName = await this.getPredefinedUnitName();
             if (unitName === undefined) return;
         }
         let unitId = await guestApi.unitFromName(unitName);
@@ -427,59 +428,70 @@ export class Nav {
         return unitId;
     }
 
-    private isInFrame:boolean;
+    hashParam: string;
     private centerHost: string;
     async start() {
-        nav.clear();
-        nav.push(<Page header={false}><Loading /></Page>);
-        await host.start();
-        let {url, ws, resHost} = host;
-        this.centerHost = url;
-        this.resUrl = 'http://' + resHost + '/res/';
-        this.wsHost = ws;
-        setCenterUrl(url);
-        
-        let unit = await this.loadUnit();
-        meInFrame.unit = unit;
+        try {
+            let hash = document.location.hash;
+            if (hash !== undefined && hash.length > 0) {
+                let pos = getExHashPos();
+                if (pos < 0) pos = undefined;
+                this.hashParam = hash.substring(1, pos);
+            }
+            nav.clear();
+            this.startWait();
+            await host.start();
+            let {url, ws, resHost} = host;
+            this.centerHost = url;
+            this.resUrl = 'http://' + resHost + '/res/';
+            this.wsHost = ws;
+            setCenterUrl(url);
+            
+            let guest:Guest = this.local.guest.get();
+            if (guest === undefined) {
+                guest = await guestApi.guest();
+            }
+            nav.setGuest(guest);
 
-        let guest:Guest = this.local.guest.get();
-        if (guest === undefined) {
-            guest = await guestApi.guest();
-        }
-        nav.setGuest(guest);
-
-        let hash = document.location.hash;
-        // document.title = document.location.origin;
-        console.log("url=%s hash=%s", document.location.origin, hash);
-        this.isInFrame = hash !== undefined && hash !== '' && hash.startsWith('#tv');
-        if (this.isInFrame === true) {
-            let mif = setMeInFrame(hash);
-            if (mif !== undefined) {
-                this.ws = wsBridge;
-                console.log('this.ws = wsBridge in sub frame');
-                //nav.user = {id:0} as User;
-                if (self !== window.parent) {
-                    window.parent.postMessage({type:'sub-frame-started', hash: mif.hash}, '*');
+            let exHash = getExHash();
+            let appInFrame = setAppInFrame(exHash);
+            if (exHash !== undefined && window !== window.parent) {
+                // is in frame
+                if (appInFrame !== undefined) {
+                    this.ws = wsBridge;
+                    console.log('this.ws = wsBridge in sub frame');
+                    //nav.user = {id:0} as User;
+                    if (self !== window.parent) {
+                        window.parent.postMessage({type:'sub-frame-started', hash: appInFrame.hash}, '*');
+                    }
+                    // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
+                    //await this.showAppView();
+                    return;
                 }
-                // 下面这一句，已经移到 appBridge.ts 里面的 initSubWin，也就是响应从main frame获得user之后开始。
-                //await this.showAppView();
+            }
+
+            let predefinedUnit = await this.loadPredefinedUnit();
+            appInFrame.predefinedUnit = predefinedUnit;
+
+            let user: User = this.local.user.get();
+            if (user === undefined) {
+                let {notLogined} = this.nav.props;
+                if (notLogined !== undefined) {
+                    await notLogined();
+                }
+                else {
+                    await nav.showLogin(undefined);
+                }
                 return;
             }
-        }
 
-        let user: User = this.local.user.get();
-        if (user === undefined) {
-            let {notLogined} = this.nav.props;
-            if (notLogined !== undefined) {
-                await notLogined();
-            }
-            else {
-                await nav.showLogin(undefined);
-            }
-            return;
+            await nav.logined(user);
         }
-
-        await nav.logined(user);
+        catch (err) {
+        }
+        finally {
+            this.endWait();
+        }
     }
 
     async showAppView() {
@@ -503,6 +515,7 @@ export class Nav {
     }
 
     async logined(user: User, callback?: (user:User)=>Promise<void>) {
+        logoutApis();
         let ws:WSChannel = this.ws = new WSChannel(this.wsHost, user.token);
         ws.connect();
 
@@ -540,10 +553,10 @@ export class Nav {
     }
 
     async logout(callback?:()=>Promise<void>) { //notShowLogin?:boolean) {
+        appInFrame.unit = undefined;
         this.local.logoutClear();
         this.user = undefined; //{} as User;
         logoutApis();
-        logoutUqTokens();
         let guest = this.local.guest.get();
         setCenterToken(0, guest && guest.token);
         this.ws = undefined;

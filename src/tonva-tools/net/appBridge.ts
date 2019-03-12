@@ -25,6 +25,7 @@ export interface AppInFrame {
     unit: number;       // unit id
     page?: string;
     param?: string[];
+    predefinedUnit?: number;  // 比如像Cart这样的应用，直接让用户访问的，就需要在unit.json里面定义unitName
 }
 const appsInFrame:{[key:string]:AppInFrame} = {};
 
@@ -37,7 +38,7 @@ class AppInFrameClass implements AppInFrame {
     param?: string[];
 }
 
-export let meInFrame:AppInFrame = new AppInFrameClass();
+export let appInFrame:AppInFrame = new AppInFrameClass();
 /* {
     hash: undefined,
     get unit():number {return } undefined, //debugUnitId,
@@ -115,9 +116,9 @@ async function initSubWin(message:any) {
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<UqToken> {
     let appInFrame = appsInFrame[hash];
     if (appInFrame === undefined) return {name:apiName, url:undefined, urlDebug:undefined, token:undefined};
-    let {unit} = appInFrame;
+    let {unit, predefinedUnit} = appInFrame;
     let parts = apiName.split('/');
-    let ret = await uqTokenApi.uq({unit: unit, uqOwner: parts[0], uqName: parts[1]});
+    let ret = await uqTokenApi.uq({unit: unit||predefinedUnit, uqOwner: parts[0], uqName: parts[1]});
     if (ret === undefined) {
         console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
         throw 'api not found';
@@ -139,14 +140,35 @@ async function onAppApiReturn(message:any) {
     action.resolve(action);
 }
 
-export function setMeInFrame(appHash: string):AppInFrame {
-    let parts = appHash.split('-');
-    let len = parts.length;
-    meInFrame.hash = parts[0].substr(3);
-    if (len>0) meInFrame.unit = Number(parts[1]);
-    if (len>1) meInFrame.page = parts[2];
-    if (len>2) meInFrame.param = parts.slice(3);
-    return meInFrame;
+export function setAppInFrame(appHash: string):AppInFrame {
+    if (appHash) {
+        let parts = appHash.split('-');
+        let len = parts.length;
+        if (len > 0) {
+            let p = 1;
+            appInFrame.hash = parts[p++];
+            if (len>0) appInFrame.unit = Number(parts[p++]);
+            if (len>1) appInFrame.page = parts[p++];
+            if (len>2) appInFrame.param = parts.slice(p++);
+        }
+    }
+    return appInFrame;
+}
+
+export function getExHashPos():number {
+    let hash = document.location.hash;
+    if (hash !== undefined && hash.length > 0) {
+        let pos = hash.lastIndexOf('#tv-');
+        if (pos < 0) pos = hash.lastIndexOf('#tvdebug-');
+        return pos;
+    }
+    return -1;
+}
+
+export function getExHash():string {
+    let pos = getExHashPos();
+    if (pos < 0) return undefined;
+    return document.location.hash.substring(pos);
 }
 
 export function appUrl(url: string, unitId: number, page?:string, param?:any[]):{url:string; hash:string} {
@@ -159,7 +181,7 @@ export function appUrl(url: string, unitId: number, page?:string, param?:any[]):
             break;
         }
     }
-    url += '#tv' + u + '-' + unitId;
+    url += '#tv-' + u + '-' + unitId;
     if (page !== undefined) {
         url += '-' + page;
         if (param !== undefined) {
@@ -171,21 +193,12 @@ export function appUrl(url: string, unitId: number, page?:string, param?:any[]):
     return {url: url, hash: u};
 }
 
-export async function loadAppUqs(appOwner:string, appName): Promise<App> {
-    let centerAppApi = new CenterAppApi('tv/', undefined);
-    let unit = meInFrame.unit;
-    let ret = await centerAppApi.uqs(unit, appOwner, appName);
-    centerAppApi.checkUqs(unit, appOwner, appName).then(v => {
-        if (v === false) nav.start();
-    });
-    return ret;
-}
-
 export async function appUq(uq:string, uqOwner:string, uqName:string): Promise<UqToken> {
     let uqToken = uqTokens[uq];
     if (uqToken !== undefined) return uqToken;
     if (!isBridged()) {
-        uqToken = await uqTokenApi.uq({unit: meInFrame.unit, uqOwner:uqOwner, uqName:uqName});
+        let {unit, predefinedUnit} = appInFrame;
+        uqToken = await uqTokenApi.uq({unit: unit || predefinedUnit, uqOwner:uqOwner, uqName:uqName});
         if (uqToken === undefined) {
             let err = 'unauthorized call: uqTokenApi center return undefined!';
             throw err;
@@ -198,7 +211,7 @@ export async function appUq(uq:string, uqOwner:string, uqName:string): Promise<U
         uqTokens[uq] = uqToken;
         return uqToken;
     }
-    console.log("appApi parent send: %s", meInFrame.hash);
+    console.log("appApi parent send: %s", appInFrame.hash);
     uqToken = {
         name: uq,
         url: undefined,
@@ -221,7 +234,7 @@ export async function appUq(uq:string, uqOwner:string, uqName:string): Promise<U
         (window.opener || window.parent).postMessage({
             type: 'app-api',
             apiName: uq,
-            hash: meInFrame.hash,
+            hash: appInFrame.hash,
         }, "*");
     });
 }

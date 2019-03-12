@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {observable, IReactionDisposer, autorun} from 'mobx';
+import {observable, IReactionDisposer, autorun, isObservable} from 'mobx';
 import classNames from 'classnames';
 import { Schema, ItemSchema, ArrSchema } from '../schema';
 import { UiSchema, TempletType } from '../schema';
@@ -10,6 +10,7 @@ import { FormRes, formRes } from './formRes';
 import { resLang } from '../res';
 
 export type FormButtonClick = (name:string, context: Context) => Promise<any>;
+export type InputEnter = (name:string, context: Context) => Promise<any>;
 
 export interface FormProps {
     className?: string;
@@ -17,6 +18,7 @@ export interface FormProps {
     uiSchema?: UiSchema;
     formData?: any;
     onButtonClick?: FormButtonClick;
+    onEnter?: InputEnter;
     fieldLabelSize?: number;            // col-sm-2 for label
     requiredFlag?: boolean;             // default=true
     beforeShow?: (formContext:FormContext) => void;
@@ -34,10 +36,11 @@ export class Form extends React.Component<FormProps> {
     readonly uiSchema: UiSchema;
     readonly res?: FormRes;
     protected formContext: FormContext;
-    private content: any;
-    private formData: any;
+    //private content: any;
+    //private formData: any;
     private disposer: IReactionDisposer;
-    @observable readonly data:any;
+    //@observable 
+    readonly data:any;
 
     readonly Container: (content:JSX.Element) => JSX.Element;
     readonly FieldContainer: (label:any, content:JSX.Element) => JSX.Element;
@@ -51,19 +54,13 @@ export class Form extends React.Component<FormProps> {
         super(props);
         let {schema, uiSchema, formData, 
             Container, FieldContainer, FieldClass, 
-            ButtonClass, 
-            res,
-            //ArrContainer, RowContainer, //ArrFieldContainer, 
-            //RowSeperator,
+            ButtonClass, res,
         } = props;
         this.Container = Container || this.DefaultContainer;
         this.FieldContainer = FieldContainer || this.DefaultFieldContainer;
         this.FieldClass = FieldClass!==undefined && FieldClass!==''&&FieldClass!==null? FieldClass : this.DefaultFieldClass;
         this.res = res || this.DefaultRes;
         this.ButtonClass = ButtonClass || this.DefaultButtonClass;
-        //this.ArrContainer = ArrContainer || this.DefaultArrContainer;
-        //this.RowContainer = RowContainer || this.DefaultRowContainer;
-        //this.RowSeperator = RowSeperator || this.DefaultRowSeperator;
 
         this.schema = schema;
         this.itemSchemas = {};
@@ -71,38 +68,34 @@ export class Form extends React.Component<FormProps> {
             this.itemSchemas[itemSchema.name] = itemSchema;
         }
         this.uiSchema = uiSchema;
-        this.formData = formData;
-        this.disposer = autorun(this.calcSelectOrDelete);
+
+        //this.formData = formData;
+        this.disposer = autorun(this.watch);
         this.data = {};
-        this.initData(formData);
-        let inNode:boolean = this.props.children !== undefined || this.uiSchema && this.uiSchema.Templet !== undefined;
-        //this.formContext = new FormContext(this, inNode);
+        // this.initRender();
+    }
+
+    private renderContent():any {
+        this.initData(this.props.formData);
         let {children} = this.props;
-        //let content:JSX.Element; //, inNode:boolean;
-        //let formContext: FormContext;
         if (children !== undefined) {
-            //inNode = true;
-            this.content = <>{children}</>;
             this.formContext = new FormContext(this, true);
+            return <>{children}</>;
         }
-        else {
-            let Templet: TempletType;
-            if (this.uiSchema !== undefined) {
-                Templet = this.uiSchema.Templet;
-            }
-            if (Templet !== undefined) {
-                // inNode = true;
-                this.content = typeof(Templet) === 'function'? Templet(this.data) : Templet;
-                this.formContext = new FormContext(this, true);
-            }
-            else {
-                // inNode = false;
-                this.formContext = new FormContext(this, false);
-                this.content = <>{this.schema.map((v, index) => {
-                    return <React.Fragment key={index}>{factory(this.formContext, v, children)}</React.Fragment>
-                })}</>;
-            }
+
+        let Templet: TempletType;
+        if (this.uiSchema !== undefined) {
+            Templet = this.uiSchema.Templet;
         }
+        if (Templet !== undefined) {
+            this.formContext = new FormContext(this, true);
+            return typeof(Templet) === 'function'? Templet(this.data) : Templet;
+        }
+
+        this.formContext = new FormContext(this, false);
+        return <>{this.schema.map((v, index) => {
+            return <React.Fragment key={index}>{factory(this.formContext, v, children)}</React.Fragment>
+        })}</>;
     }
 
     private initData(formData: any) {
@@ -115,44 +108,52 @@ export class Form extends React.Component<FormProps> {
     private initDataItem(itemSchema: ItemSchema, data:any, formData: any):any {
         let {name, type} = itemSchema;
         if (type === 'button') return;
-        if (type === 'arr') {
-            let arrItem:ArrSchema = itemSchema as ArrSchema;
-            let {arr:arrItems} = arrItem;
-            if (arrItems === undefined) return;
-            let arrDict = arrItem.itemSchemas = {};
-            for (let item of arrItems) {
-                arrDict[item.name] = item;
-            }
-            let val:any[] = formData[name];
-            if (val === undefined) val = [];
-            else if (Array.isArray(val) === false) val = [val];
-            let arr:any[] = [];
-            for (let row of val) {
-                let {$isSelected, $isDeleted} = row;
-                let r = {
-                    $source: row,
-                    $isSelected: $isSelected,
-                    $isDeleted: $isDeleted,
-                };
-                for (let item of arrItems) {
-                    this.initDataItem(item, r, row);
-                    /*
-                    let {name:nm} = item;
-                    let v = row[nm];
-                    if (v === undefined) v = null;
-                    r[nm] = v;
-                    */
-                }
-                arr.push(r);
-            }
-            data[name] = observable(arr);
+        if (type !== 'arr') {
+            data[name] = formData[name];
             return;
         }
-        data[name] = formData[name];
+
+        let arrItem:ArrSchema = itemSchema as ArrSchema;
+        let {arr:arrItems} = arrItem;
+        if (arrItems === undefined) return;
+        let arrDict = arrItem.itemSchemas = {};
+        for (let item of arrItems) {
+            arrDict[item.name] = item;
+        }
+        let val:any[] = formData[name];
+        if (val === undefined) val = [];
+        else if (Array.isArray(val) === false) val = [val];
+        let arr:any[] = [];
+        for (let row of val) {
+            let {$isSelected, $isDeleted} = row;
+            let r = {
+                $source: row,
+                $isSelected: $isSelected,
+                $isDeleted: $isDeleted,
+            };
+            for (let item of arrItems) {
+                this.initDataItem(item, r, row);
+                /*
+                let {name:nm} = item;
+                let v = row[nm];
+                if (v === undefined) v = null;
+                r[nm] = v;
+                */
+            }
+            arr.push(r);
+        }
+        //data[name] = observable(arr);
+        data[name] = arr;
+        return;
     }
 
-    private calcSelectOrDelete = () => {
-        if (this.formData === undefined) return;
+    private watch = () => {
+        let {formData} = this.props;
+        if (formData === undefined) return;
+        //this.initData(formData);
+        this.calcSelectOrDelete();
+    }
+    private calcSelectOrDelete() {
         for (let itemSchema of this.schema) {
             this.arrItemOperated(itemSchema);
         }
@@ -184,13 +185,14 @@ export class Form extends React.Component<FormProps> {
     }
 
     componentWillUnmount() {
-        this.disposer();
+        if (this.disposer !== undefined) this.disposer();
     }
 
     render() {
+        let content = this.renderContent();
         return <ContextContainer.Provider value={this.formContext}>
             <this.formContext.renderErrors />
-            {this.Container(this.content)}
+            {this.Container(content)}
         </ContextContainer.Provider>;
     }
 
@@ -213,12 +215,7 @@ export class Form extends React.Component<FormProps> {
             {content}
         </form>;
     }
-    /*
-    protected DefaultArrFieldContainer = (itemName:string, content:JSX.Element, context:RowContext): JSX.Element => {
-        return this.InnerFieldContainer(itemName, content, context);
-    }*/
     protected DefaultFieldContainer = (label:string|JSX.Element, content:JSX.Element): JSX.Element => {
-        //return this.InnerFieldContainer(itemName, content, context);
         let {fieldLabelSize} = this.props;
 
         if (fieldLabelSize > 0) {

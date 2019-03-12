@@ -1,4 +1,4 @@
-import {CenterApi, User, meInFrame} from 'tonva-tools';
+import {CenterApi, User, appInFrame} from 'tonva-tools';
 import { string } from 'prop-types';
 
 class MainApi extends CenterApi {
@@ -27,7 +27,7 @@ class MainApi extends CenterApi {
     }
 
     async sendMessage(toUser:number, type:string, content:any) {
-        let {unit} = meInFrame;
+        let {unit} = appInFrame;
         let adminApp = 0;
         return await this.post('tie/send-message', {
             type: type, 

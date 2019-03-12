@@ -18,8 +18,8 @@ function convertUIKeyToLowercase(obj: any) {
 }
 
 // const appName = 'JKDev/jkOrder';
-export async function startApp(appName:string, ui: AppUI) {
+export async function startApp(ui: AppUI) {
     convertUIKeyToLowercase(ui);
-    let cApp = new (ui && ui.CApp || CApp)(appName, ui || {uqs:{}} );
+    let cApp = new (ui && ui.CApp || CApp)(ui);
     await cApp.start();
 }

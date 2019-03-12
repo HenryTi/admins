@@ -1,7 +1,7 @@
 import * as React from 'react';
 import _ from 'lodash';
 import { observable } from 'mobx';
-import { nav, Page, Controller, meInFrame, VPage } from 'tonva-tools';
+import { nav, Controller } from 'tonva-tools';
 import { DevModel } from '../../model';
 import { UqUpload, UpUploadProps } from './uqUpload';
 import { devApi } from 'api';

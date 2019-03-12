@@ -33,7 +33,7 @@ export abstract class Tuid extends Entity {
         this.buildIdBoxer();
     }
 
-    abstract get Main();
+    abstract get Main():Tuid;
 
     private buildIdBoxer() {
         this.BoxId = function():void {};

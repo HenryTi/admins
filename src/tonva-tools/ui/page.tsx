@@ -86,7 +86,7 @@ export interface PageProps extends ScrollProps {
     sideBar?: JSX.Element;
     footer?: JSX.Element;
     tabs?: Tab[];
-    logout?: boolean | (()=>void);
+    logout?: boolean | (()=>Promise<void>);
 }
 export interface PageState {
     cur?: Tab;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, meInFrame, Controller, VPage, Image, Edit, ItemSchema, UiSchema, StringSchema, ImageSchema, UiImageItem, UiTextItem} from  'tonva-tools'; 
+import {nav, Page, appInFrame, Controller, VPage, Image, Edit, ItemSchema, UiSchema, StringSchema, ImageSchema, UiImageItem, UiTextItem} from  'tonva-tools'; 
 import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
 import {StringValueEdit} from './tools';
 import {Unit, UnitApps, UnitAdmin, DevModel} from './model';
@@ -27,7 +27,7 @@ export class CAdmin extends Controller {
         let adminUnits = this.adminUnits = ret[0];
         console.log('loadAdminUnits', adminUnits);
         if (adminUnits.length === 1) {
-            meInFrame.unit = adminUnits[0].id;
+            appInFrame.unit = adminUnits[0].id;
             await store.loadUnit();
         }
     }
@@ -106,14 +106,14 @@ export class VAdmin extends VPage<CAdmin> {
         </LMR>;
     }
     onRowClick = async (item: UnitAdmin) => {
-        meInFrame.unit = item.id; // 25;
+        appInFrame.unit = item.id; // 25;
         await store.loadUnit();
         this.closePage();
         this.openPageElement(<AdminPage />);
     }
 }
 
-const logout = () => {
+const logout = async () => {
     store.logout();
 }
 

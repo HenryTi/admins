@@ -1,5 +1,5 @@
 import React from "react";
-import { Page, Controller, meInFrame, VPage } from "tonva-tools";
+import { Page, Controller, appInFrame, VPage } from "tonva-tools";
 import { List, Muted, LMR, FA } from "tonva-react-form";
 import { VOpBinding } from './vOpBinding';
 import { CAction, CQuery, centerApi, entityIcons, ControllerUq } from "tonva-react-uq";
@@ -37,7 +37,7 @@ export class COpBinding extends ControllerUq {
     }
 
     private async buildAppsUqs() {
-        let unit = meInFrame.unit;
+        let unit = appInFrame.unit;
         let ret:any[][] = await centerApi.get('/unit/apps-uqs', {unit: unit});
         this.apps = ret[0];
         let uqs: Uq[] = ret[1];
@@ -191,7 +191,7 @@ export class COpBinding extends ControllerUq {
     }
 
     async callSearchUser(uq:Uq): Promise<any> {
-        let user = await this.vCall(VSearchUser, meInFrame.unit);
+        let user = await this.vCall(VSearchUser, appInFrame.unit);
         return user;
     }
 

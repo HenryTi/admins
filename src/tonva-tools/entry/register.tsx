@@ -179,9 +179,6 @@ export class ForgetController extends RegisterController {
 class AccountPage extends VPage<RegisterController> {
     private schema: Schema = [
         {name: 'user', type: 'string', required: true, maxLength: 100} as StringSchema,
-        //{name: 'verify', type: 'string', required: true, maxLength: 6} as StringSchema,
-        //{name: 'pwd', type: 'string', required: true, maxLength: 100} as StringSchema,
-        //{name: 'rePwd', type: 'string', required: true, maxLength: 100} as StringSchema,
         {name: 'verify', type: 'submit'},
     ]
     private uiSchema: UiSchema;
@@ -208,7 +205,10 @@ class AccountPage extends VPage<RegisterController> {
                 style={{marginLeft:'auto', marginRight:'auto'}}>
                 {tonvaTop}
                 <div className="h-3c" />
-                <Form schema={this.schema} uiSchema={this.uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
+                <Form schema={this.schema} uiSchema={this.uiSchema} 
+                    onButtonClick={this.onSubmit}
+                    onEnter={this.onEnter} 
+                    requiredFlag={false} />
             </div>
         </Page>;
     }
@@ -233,6 +233,12 @@ class AccountPage extends VPage<RegisterController> {
         this.controller.type = type;
         let ret = await this.controller.checkAccount();
         if (ret !== undefined) context.setError(user, ret);
+    }
+
+    private onEnter = async (name:string, context:Context):Promise<string> => {
+        if (name === 'user') {
+            return await this.onSubmit('verify', context);
+        }
     }
 }
 
@@ -273,6 +279,12 @@ class VerifyPage extends VPage<RegisterController> {
         }
         this.controller.toPassword();
     }
+
+    private onEnter = async (name:string, context:Context):Promise<string> => {
+        if (name === 'verify') {
+            return await this.onSubmit('submit', context);
+        }
+    }
     private page = ():JSX.Element => {
         let typeText:string, extra:any;
         switch (this.controller.type) {
@@ -290,7 +302,9 @@ class VerifyPage extends VPage<RegisterController> {
                 {extra}
                 <div className="h-1c" />
                 <Form schema={this.schema} uiSchema={this.uiSchema} 
-                    onButtonClick={this.onSubmit} requiredFlag={false} />
+                    onButtonClick={this.onSubmit} 
+                    onEnter={this.onEnter}
+                    requiredFlag={false} />
             </div>
         </Page>
     }
@@ -324,6 +338,11 @@ class PasswordPage extends VPage<RegisterController> {
         this.controller.password = pwd;
         return await this.controller.execute();
     }
+    private onEnter = async (name:string, context:Context):Promise<string> => {
+        if (name === 'rePwd') {
+            return await this.onSubmit('submit', context);
+        }
+    }
     private page = ():JSX.Element => {
         return <Page header={this.controller.passwordPageCaption}>
             <div className="w-max-20c my-5 py-5"
@@ -332,7 +351,9 @@ class PasswordPage extends VPage<RegisterController> {
                 <div className="py-2 px-3 my-2 text-primary bg-light"><b>{this.controller.account}</b></div>
                 <div className="h-1c" />
                 <Form schema={this.schema} uiSchema={this.uiSchema}                    
-                    onButtonClick={this.onSubmit} requiredFlag={false} />
+                    onButtonClick={this.onSubmit}
+                    onEnter={this.onEnter}
+                    requiredFlag={false} />
             </div>
         </Page>
     }
@@ -361,69 +382,3 @@ class RegSuccess extends VPage<RegisterController> {
         );
     }
 }
-
-
-/*
-export default class Register extends React.Component {
-    async onSubmit(name:string, context:Context):Promise<string> {
-        let values = context.form.data;
-        let {user, pwd, rePwd, country, mobile, email} = values;
-        if (pwd !== rePwd) {
-            context.setValue('pwd', '');
-            context.setValue('rePwd', '');
-            return '密码错误，请重新输入密码！';
-        }
-        let ret = await userApi.register({
-            nick: undefined,
-            user: user, 
-            pwd: pwd,
-            country: undefined,
-            mobile: undefined,
-            email: undefined,
-        });
-        let msg:any;
-        switch (ret) {
-            default: throw 'unknown return';
-            case 0:
-                nav.clear();
-                nav.show(<RegSuccess user={user} pwd={pwd} />);
-                return;
-            case 1:
-                msg = '用户名 ' + user;
-                break;
-            case 2:
-                msg = '手机号 +' + country + ' ' + mobile;
-                break;
-            case 3:
-                msg = '电子邮件 ' + email;
-                break;
-        }
-        return msg + ' 已经被注册过了';
-    }
-    click() {
-        nav.replace(<LoginView />);
-    }
-
-    render() {
-        return <Page header='账号注册'>
-            <div style={{
-                maxWidth:'25em',
-                margin: '3em auto',
-                padding: '0 3em',
-            }}>
-                <div className='container' style={{display:'flex', position:'relative'}}>
-                    <img className='App-logo' src={logo} style={{height:'60px', position:'absolute'}}/>
-                    <span style={{flex:1,
-                        fontSize: 'x-large',
-                        alignSelf: 'center',
-                        textAlign: 'center',
-                        margin: '10px',
-                    }}>同花</span>
-                </div>
-                <div style={{height:'20px'}} />
-                <Form schema={schema} uiSchema={uiSchema} onButtonClick={this.onSubmit} requiredFlag={false} />
-            </div>
-        </Page>;
-    }
-}
-*/

@@ -34,12 +34,12 @@ export abstract class Controller {
     protected onDispose() {
     }
 
-    protected async openVPage(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<void> {
-        await (new vp(this)).open(param);
+    protected async openVPage<C extends Controller>(vp: new (controller: C)=>VPage<C>, param?:any):Promise<void> {
+        await (new vp((this as any) as C)).open(param);
     }
 
-    protected renderView(view: new (coordinator: Controller)=>View<Controller>, param?:any) {
-        return (new view(this)).render(param);
+    protected renderView<C extends Controller>(view: new (controller: C)=>View<C>, param?:any) {
+        return (new view((this as any) as C)).render(param);
     }
 
     async event(type:string, value:any) {
@@ -100,11 +100,11 @@ export abstract class Controller {
         });
     }
 
-    async vCall(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<any> {
+    async vCall<C extends Controller>(vp: new (controller: C)=>VPage<C>, param?:any):Promise<any> {
         if (this._resolve_$ === undefined) this._resolve_$ = [];
         return new Promise<any> (async (resolve, reject) => {
             this._resolve_$.push(resolve);
-            await (new vp(this)).open(param);
+            await (new vp(this as any)).open(param);
         });
     }
 
@@ -112,7 +112,7 @@ export abstract class Controller {
         if (this._resolve_$ === undefined) return;
         let resolve = this._resolve_$.pop();
         if (resolve === undefined) {
-            alert('the Coordinator call already returned, or not called');
+            alert('the Controller call already returned, or not called');
             return;
         }
         resolve(value);
@@ -165,11 +165,11 @@ export abstract class View<C extends Controller> {
 
     abstract render(param?:any): JSX.Element;
 
-    protected renderVm(vm: new (coordinator: Controller)=>View<C>, param?:any) {
+    protected renderVm(vm: new (controller: C)=>View<C>, param?:any) {
         return (new vm(this.controller)).render(param);
     }
 
-    protected async openVPage(vp: new (coordinator: Controller)=>VPage<Controller>, param?:any):Promise<void> {
+    protected async openVPage(vp: new (controller: C)=>VPage<C>, param?:any):Promise<void> {
         await (new vp(this.controller)).open(param);
     }
 
@@ -224,14 +224,10 @@ export abstract class View<C extends Controller> {
 }
 
 export abstract class VPage<C extends Controller> extends View<C> {
-    constructor(coordinator: C) {
-        super(coordinator);
-    }
-
     abstract open(param?:any):Promise<void>;
 
     render(param?:any):JSX.Element {return null;}
 }
 
-export type TypeVPage<C extends Controller> = new (coordinator: C)=>VPage<C>;
+export type TypeVPage<C extends Controller> = new (controller: C)=>VPage<C>;
 

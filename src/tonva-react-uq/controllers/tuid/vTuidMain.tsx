@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SearchBox, List, Muted } from 'tonva-react-form';
+import { SearchBox, List, Muted, LMR } from 'tonva-react-form';
 import { TuidMain, Entity } from '../../entities';
 import { Page } from 'tonva-tools';
 import { CLink } from '../link';
@@ -26,22 +26,28 @@ export class VTuidMain extends VEntity<TuidMain, TuidUI, CTuidMain> {
 
     protected get view() {
         let {label, proxyLinks, isFrom} = this.controller;
-        let newButton;
-        if (isFrom === false) newButton = <button className="btn btn-primary ml-3" onClick={this.onNew}>新增</button>;
-        return () => <Page header={label}>
-            {proxyLinks === undefined ?
-            <>
-                <SearchBox className="w-100" onSearch={this.onSearch} placeholder={'搜索'+label} />
-                <div className='my-3'>
-                    {newButton}
-                    <button className="btn btn-primary ml-3" onClick={this.onList}>列表</button>
-                </div>
-            </> :
-            <List className="my-2"
+        let newButton:any;
+        if (isFrom === false) newButton = <button className="btn btn-outline-success ml-2" onClick={this.onNew}>新增</button>;
+        let content:any;
+        if (proxyLinks === undefined) {
+            let right = <>
+                {newButton}
+                <button className="btn btn-outline-info ml-2" onClick={this.onList}>全部</button>
+            </>;
+            content = <LMR className='m-3' right={right}>
+                <SearchBox className="w-100" size="md"
+                    onSearch={this.onSearch} 
+                    placeholder={'搜索'+label} />
+            </LMR>;
+        }
+        else {
+            content = <List className="my-2"
                 header={<Muted>{label} 代理下列Tuid</Muted>}
                 items={proxyLinks}
                 item={{render: this.entityRender, onClick:this.entityClick}} />
-            }
+        }
+        return () => <Page header={label}>
+            {content}
         </Page>;
     }
 }

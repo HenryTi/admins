@@ -86,6 +86,14 @@ export const TabCaptionComponent = (label:string, icon:string, color:string) => 
         this.selectedTab = tab;
     }
 
+    showTab(tabName: string) {
+        let tab = this.tabs.find(v => v.name === tabName);
+        if (tab === undefined) return;
+        if (this.selectedTab !== undefined) this.selectedTab.selected = false;
+        tab.selected = true;
+        this.selectedTab = tab;
+    }
+
     render() {
         return <div className="tab">
             <div className={this.contentBack} style={{height: 'calc(100% - ' + this.size + ')'}}>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {Page} from 'tonva-tools';
-import {Fields, FormRow, FormView, TonvaForm, IdPick, IdPickFace, PropGrid, Prop, 
-    Media, MultiStep, SubmitResult, Step} from 'tonva-react-form';
+import {Fields, MultiStep, SubmitResult, Step} from 'tonva-react-form';
 
 export default class  TestTonvaMultiForm extends React.Component {
     private fields:Fields = {

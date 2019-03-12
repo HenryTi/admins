@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {observer} from 'mobx-react';
-import {List, Media, LMR, FA, TonvaForm, SubmitResult, FormRow, 
-    PropGrid, Prop, Badge, StackedFA} from 'tonva-react-form';
+import {List, LMR} from 'tonva-react-form';
 import {nav, Page} from 'tonva-tools';
-import {StringValueEdit} from '../tools';
 import {Role, UnitApp} from '../model';
 import {store} from '../store';
 import {mainApi} from '../api';
