@@ -350,11 +350,16 @@ export class NavView extends React.Component<Props, State> {
     }
 }
 
+export interface NavSettings {
+    loginTop?: JSX.Element;
+}
+
 export class Nav {
     private nav:NavView;
     private ws: WsBase;
     private wsHost: string;
     private local: LocalData = new LocalData();
+    private navSettings: NavSettings;
     @observable user: User/*InNav*/ = undefined;
     language: string;
     culture: string;
@@ -426,6 +431,10 @@ export class Nav {
             this.local.unit.set({id: unitId, name: unitName});
         }
         return unitId;
+    }
+
+    setSettings(settings?: NavSettings) {
+        this.navSettings = settings;
     }
 
     hashParam: string;
@@ -531,9 +540,15 @@ export class Nav {
         }
     }
 
-    async showLogin(callback?: (user:User)=>Promise<void>, top?:any, withBack?:boolean) {
+    loginTop(defaultTop:JSX.Element) {
+        return (this.navSettings && this.navSettings.loginTop) || defaultTop;
+    }
+
+    async showLogin(callback?: (user:User)=>Promise<void>, withBack?:boolean) {
         let lv = await import('../entry/login');
-         let loginView = <lv.default withBack={withBack} callback={callback} top={top} />;
+        let loginView = <lv.default 
+            withBack={withBack} 
+            callback={callback} />;
         if (withBack !== true) {
             this.nav.clear();
             this.pop();

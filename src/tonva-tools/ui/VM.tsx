@@ -92,9 +92,9 @@ export abstract class Controller {
     get isCalling():boolean {return this._resolve_$ !== undefined}
 
     private _resolve_$:((value:any) => void)[];
-    async call(param?:any):Promise<any> {
+    async call<T>(param?:any):Promise<T> {
         if (this._resolve_$ === undefined) this._resolve_$ = [];
-        return new Promise<any> (async (resolve, reject) => {
+        return new Promise<T> (async (resolve, reject) => {
             this._resolve_$.push(resolve);
             await this.start(param);
         });
@@ -180,6 +180,10 @@ export abstract class View<C extends Controller> {
             return;
         }*/
         await this.controller.event(type, value);
+    }
+
+    async vCall<C extends Controller>(vp: new (controller: C)=>VPage<C>, param?:any):Promise<any> {
+        return await this.controller.vCall(vp, param);
     }
 
     protected returnCall(value:any) {

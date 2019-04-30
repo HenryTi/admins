@@ -31,8 +31,6 @@ export function serializeJson(obj:any):string {
     
     function serializeObj(obj:any, retObj:any) {
         for (let i in obj) {
-            //if (i === '_tuid') continue;
-            //if (i === 'waitingIds') debugger;
             retObj[i] = serial(obj[i]);
         }
     }

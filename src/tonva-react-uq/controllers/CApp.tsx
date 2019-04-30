@@ -1,10 +1,9 @@
 import * as React from 'react';
 import _ from 'lodash';
-import { Page, loadAppUqs, nav, appInFrame, Controller, TypeVPage, VPage, resLang, getExHash, isDevelopment} from 'tonva-tools';
+import { Page, loadAppUqs, nav, appInFrame, Controller, TypeVPage, VPage, resLang, getExHash, isDevelopment, NavSettings, App} from 'tonva-tools';
 import { List, LMR, FA } from 'tonva-react-form';
-import { CUq, EntityType, UqUI } from './uq';
+import { CUq, UqUI } from './uq';
 import { centerApi } from '../centerApi';
-import { LocalData } from 'tonva-tools/local';
 
 export interface RoleAppUI {
     CApp?: typeof CApp;
@@ -14,7 +13,7 @@ export interface RoleAppUI {
     res?: any;
 }
 
-export interface AppUI extends RoleAppUI {
+export interface AppUI extends RoleAppUI, NavSettings {
     appName: string; // 格式: owner/appName
     roles?: {[role:string]: RoleAppUI | (()=>Promise<RoleAppUI>)};
 }
@@ -29,6 +28,7 @@ export class CApp extends Controller {
 
     constructor(ui:AppUI) {
         super(resLang(ui && ui.res));
+        nav.setSettings(ui);
         let tonvaApp = ui.appName;
         if (tonvaApp === undefined) {
             throw 'appName like "owner/app" must be defined in UI';
@@ -54,16 +54,17 @@ export class CApp extends Controller {
         await cApp.start(keepNavBackButton);    
     }
 
-    protected async loadUqs(): Promise<string[]> {
+    protected async loadUqs(app:App): Promise<string[]> {
         let retErrors:string[] = [];
         let unit = appInFrame.unit;
-        let app = await loadAppUqs(this.appOwner, this.appName);
+        //let app = await loadAppUqs(this.appOwner, this.appName);
         let {id, uqs} = app;
         this.id = id;
 
         let promises: PromiseLike<string>[] = [];
         let promiseChecks: PromiseLike<boolean>[] = [];
         let roleAppUI = await this.buildRoleAppUI();
+        this.ui = roleAppUI;
         for (let appUq of uqs) {
             let {id:uqId, uqOwner, uqName, access} = appUq;
             let uq = uqOwner + '/' + uqName;
@@ -95,35 +96,39 @@ export class CApp extends Controller {
         return retErrors;
     }
 
-    private async buildRoleAppUI():Promise<RoleAppUI> {
+    private async buildRoleAppUI():Promise<AppUI> {
         if (!this.ui) return undefined;
         let {hashParam} = nav;
         if (!hashParam) return this.ui;
         let {roles} = this.ui;
-        let ret:RoleAppUI = {} as any;
+        let roleAppUI = roles && roles[hashParam];
+        if (!roleAppUI) return this.ui;
+        let ret:AppUI = {} as any;
         for (let i in this.ui) {
             if (i === 'roles') continue;
-            ret[i] = _.cloneDeep(this.ui[i]);
+            ret[i] = this.ui[i];
         }
-        let roleAppUI = roles && roles[hashParam];
         if (typeof roleAppUI === 'function') roleAppUI = await roleAppUI();
         _.merge(ret, roleAppUI);
         return ret;
     }
 
-    async getImportUq(uqOwner:string, uqName:string):Promise<CUq> {
+    getImportUq(uqOwner:string, uqName:string):CUq {
         let uq = uqOwner + '/' + uqName;
         let cUq = this.cImportUqs[uq];
         if (cUq !== undefined) return cUq;
         let ui = this.ui && this.ui.uqs && this.ui.uqs[uq];
         let uqId = -1; // unknown
-        this.cImportUqs[uq] = cUq = this.newCUq(uq, uqId, undefined, ui || {});
+        this.cImportUqs[uq] = cUq = this.getCUq(uq);
+        //this.newCUq(uq, uqId, undefined, ui || {});
+        /*
         let retError = await cUq.loadSchema();
         if (retError !== undefined) {
             console.error(retError);
             debugger;
             return;
         }
+        */
         return cUq;
     }
 
@@ -141,16 +146,17 @@ export class CApp extends Controller {
         return ret;
     }
 
-    getCUq(apiName:string):CUq {
-        return this.cUqCollection[apiName];
+    getCUq(uq:string):CUq {
+        return this.cUqCollection[uq];
     }
 
     protected get VAppMain():TypeVPage<CApp> {return (this.ui&&this.ui.main) || VAppMain}
     protected async beforeStart():Promise<boolean> {
         try {
-            if (isDevelopment === true) {
+            let app = await loadAppUqs(this.appOwner, this.appName);
+            // if (isDevelopment === true) {
+            // 这段代码原本打算只是在程序员调试方式下使用，实际上，也可以开放给普通用户，production方式下
                 let {predefinedUnit} = appInFrame;
-                let app = await loadAppUqs(this.appOwner, this.appName);
                 let {id} = app;
                 this.id = id;
                 let {user} = nav;
@@ -179,9 +185,9 @@ export class CApp extends Controller {
                             return false;
                     }
                 }
-            }
+            //}
 
-            let retErrors = await this.loadUqs();
+            let retErrors = await this.loadUqs(app);
             if (retErrors !== undefined) {
                 this.openPage(<Page header="ERROR">
                     <div className="m-3">
@@ -208,9 +214,6 @@ export class CApp extends Controller {
             this.clearPrevPages();
         }
         await this.showMainPage();
-    }
-    async load() {
-        await this.beforeStart();
     }
 
     render(): JSX.Element {

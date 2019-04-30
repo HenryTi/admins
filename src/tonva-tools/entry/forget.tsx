@@ -1,7 +1,5 @@
 import * as React from 'react';
-import {nav, Page, Controller, VPage, Schema, StringSchema, UiSchema, UiTextItem, UiButton, resLang, Form, Context, NumSchema, UiPasswordItem} from '../ui';
-import { tonvaTop, getSender } from './tools';
-import userApi from './userApi';
+import {Page} from '../ui';
 
 export default class Forget extends React.Component<{}, null> {
     render() {

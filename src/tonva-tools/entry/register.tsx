@@ -1,14 +1,9 @@
 import * as React from 'react';
 import {nav, Page, Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context, resLang, StringSchema, Controller, VPage, UiCustom, UiInputItem, NumSchema, View} from '../ui';
-//import LoginView from './login';
 import userApi from './userApi';
-//import RegSuccess from './regSuccess';
 import '../css/va-form.css';
 import { RegisterRes, registerRes } from './res';
 import { tonvaTop, getSender } from './tools';
-import { Widget, NumberWidget, TextWidget } from '../ui/form/widgets';
-import { observable } from 'mobx';
-//const logo = require('../img/logo.svg');
 
 export interface Values {
     user: string;
@@ -203,7 +198,7 @@ class AccountPage extends VPage<RegisterController> {
         return <Page header={this.controller.accountPageCaption}>
             <div className="w-max-20c my-5 py-5"
                 style={{marginLeft:'auto', marginRight:'auto'}}>
-                {tonvaTop}
+                {tonvaTop()}
                 <div className="h-3c" />
                 <Form schema={this.schema} uiSchema={this.uiSchema} 
                     onButtonClick={this.onSubmit}

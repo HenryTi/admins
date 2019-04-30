@@ -153,7 +153,6 @@ export class CUq extends Controller /* implements Uq*/ {
             if (this.schemaLoaded === true) return;
             await this.loadEntites();
             if (this.id === undefined) this.id = this.entities.uqId;
-
             for (let i in this.ui) {
                 let g = this.ui[i];
                 if (g === undefined) continue;
@@ -171,8 +170,6 @@ export class CUq extends Controller /* implements Uq*/ {
         catch(err) {
             console.error(err);
             return this.error = err;
-            //debugger;
-            //return err.message;
         }
     }
 

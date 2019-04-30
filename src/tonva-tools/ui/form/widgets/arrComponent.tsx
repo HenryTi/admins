@@ -111,7 +111,9 @@ export const ArrComponent = observer((
             }
             let editContainer = selectable===true || deletable===true?
                 (content:any) => <fieldset disabled={isDeleted}><div className={classNames('d-flex', {'deleted':isDeleted, 'row-selected':row.$isSelected})}>
-                    {selectCheck}<div className="flex-grow-1">{content}</div>{deleteIcon}
+                    {selectCheck}
+                    <div className={selectable===true && deletable===true? "form-row-content":"form-row-content-1"}>{content}</div>
+                    {deleteIcon}
                 </div></fieldset>
                 :
                 (content:any) => content;

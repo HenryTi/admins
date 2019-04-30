@@ -254,6 +254,10 @@ export class UqApi extends ApiBase {
         return await this.get('sheet/' + name + '/statecount');
     }
 
+    async mySheets(name:string, data:object) {
+        return await this.post('sheet/' + name + '/my-sheets', data);
+    }
+
     async getSheet(name:string, id:number):Promise<any> {
         return await this.get('sheet/' + name + '/get/' + id);
     }

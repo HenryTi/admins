@@ -127,6 +127,12 @@ export class Sheet extends Entity {
             return {state: n, count: count} 
         });
     }
+
+    async mySheets(state:string, pageStart:number, pageSize:number):Promise<any[]> {
+        await this.loadSchema();
+        let ret = await this.tvApi.mySheets(this.name, {state:state, pageStart:pageStart, pageSize:pageSize});
+        return ret;
+    }
 }
 
 export class PageStateItems<T> extends PageItems<T> {

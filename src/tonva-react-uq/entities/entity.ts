@@ -27,7 +27,7 @@ export abstract class Entity {
     public face: any;           // 对应字段的label, placeHolder等等的中文，或者语言的翻译
 
     protected get tvApi() {return this.entities.uqApi;}
-    async getApiFrom() {return this.entities.uqApi;}
+    getApiFrom() {return this.entities.uqApi;}
 
     private fieldMaps: {[arr:string]: FieldMap} = {};
     fieldMap(arr?:string): FieldMap {
@@ -56,14 +56,20 @@ export abstract class Entity {
         if (this.schema !== undefined) return;
         let schema = await this.entities.uqApi.schema(this.name);
         this.setSchema(schema);
+        this.buildFieldsTuid();
     }
 
     public setSchema(schema:any) {
         if (schema === undefined) return;
         if (this.schema !== undefined) return;
         this.schema = schema;
-        let {name, fields, arrs, returns} = schema;
+        let {name} = schema;
         if (name !== this.name) this.jName = name;
+        this.buildFieldsTuid();
+    }
+
+    public buildFieldsTuid() {
+        let {fields, arrs, returns} = this.schema;
         this.entities.buildFieldTuid(this.fields = fields);
         this.entities.buildArrFieldsTuid(this.arrFields = arrs, fields);
         this.entities.buildArrFieldsTuid(this.returns = returns, fields);
@@ -109,7 +115,7 @@ export abstract class Entity {
         let result = {};
         let fields = this.fields;
         if (fields !== undefined) this.buildFieldsParams(result, fields, params);
-        let arrs = this.arrFields; 
+        let arrs = this.arrFields;
         if (arrs !== undefined) {
             for (let arr of arrs) {
                 let {name, fields} = arr;
@@ -156,7 +162,7 @@ export abstract class Entity {
         }
         return ret.join('');
     }
-    
+
     private escape(row:any, field:Field):any {
         let d = row[field.name];
         switch (typeof d) {
@@ -179,7 +185,7 @@ export abstract class Entity {
             case 'undefined': return '';
         }
     }
-    
+
     private packRow(result:string[], fields:Field[], data:any) {
         let len = fields.length;
         if (len === 0) return;
@@ -191,7 +197,7 @@ export abstract class Entity {
         }
         result.push(ret + ln);
     }
-    
+
     private packArr(result:string[], fields:Field[], data:any[]) {
         if (data !== undefined) {
             for (let row of data) {
@@ -200,7 +206,7 @@ export abstract class Entity {
         }
         result.push(ln);
     }
-    
+
     unpackSheet(data:string):any {
         let ret = {} as any; //new this.newMain();
         //if (schema === undefined || data === undefined) return;
@@ -215,7 +221,7 @@ export abstract class Entity {
         }
         return ret;
     }
-    
+
     unpackReturns(data:string):any {
         let ret = {} as any;
         //if (schema === undefined || data === undefined) return;
@@ -231,37 +237,44 @@ export abstract class Entity {
         }
         return ret;
     }
-    
-    private unpackRow(ret:any, fields:Field[], data:string, p:number):number {
+
+    protected unpackRow(ret:any, fields:Field[], data:string, p:number):number {
         let ch0 = 0, ch = 0, c = p, i = 0, len = data.length, fLen = fields.length;
         for (;p<len;p++) {
             ch0 = ch;
             ch = data.charCodeAt(p);
             if (ch === 9) {
                 let f = fields[i];
+                let {name} = f;
                 if (ch0 !== 8) {
                     if (p>c) {
                         let v = data.substring(c, p);
-                        ret[f.name] = this.to(ret, v, f);
+                        ret[name] = this.to(ret, v, f);
                     }
                 }
                 else {
-                    ret[f.name] = null;
+                    ret[name] = null;
                 }
                 c = p+1;
                 ++i;
-                if (i>=fLen) break;
+                if (i>=fLen) {
+                    p = data.indexOf('\n', c);
+                    if (p >= 0) ++p;
+                    else p = len;
+                    break;
+                }
             }
             else if (ch === 10) {
                 let f = fields[i];
+                let {name} = f;
                 if (ch0 !== 8) {
                     if (p>c) {
                         let v = data.substring(c, p);
-                        ret[f.name] = this.to(ret, v, f);
+                        ret[name] = this.to(ret, v, f);
                     }
                 }
                 else {
-                    ret[f.name] = null;
+                    ret[name] = null;
                 }
                 ++p;
                 ++i;
@@ -279,6 +292,7 @@ export abstract class Entity {
             case 'time':
                 let date = new Date(Number(v));
                 return date;
+            case 'id':
             case 'tinyint':
             case 'smallint':
             case 'int':

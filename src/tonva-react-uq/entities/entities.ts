@@ -9,7 +9,7 @@ import { Map } from './map';
 import { Pending } from './pending';
 import { CUq } from '../controllers';
 
-export type FieldType = 'tinyint' | 'smallint' | 'int' | 'bigint' | 'dec' | 'char' | 'text' 
+export type FieldType = 'id' | 'tinyint' | 'smallint' | 'int' | 'bigint' | 'dec' | 'char' | 'text'
     | 'datetime' | 'date' | 'time';
 
 export function fieldDefaultValue(type:FieldType) {
@@ -21,7 +21,7 @@ export function fieldDefaultValue(type:FieldType) {
         case 'dec':
             return 0;
         case 'char':
-        case 'text': 
+        case 'text':
             return '';
         case 'datetime':
         case 'date':
@@ -144,14 +144,14 @@ export class Entities {
     }
 
     private buildTuids(tuids:any) {
-        let proxyColl = {} as any;
+        //let proxyColl = {} as any;
         for (let i in tuids) {
             let schema = tuids[i];
-            let {name, typeId, proxies} = schema;
+            let {name, typeId/*, proxies*/} = schema;
             let tuid = this.newTuid(i, typeId);
             tuid.sys = true;
             //tuid.setSchema(schema);
-            if (proxies !== undefined) proxyColl[i] = proxies;
+            //if (proxies !== undefined) proxyColl[i] = proxies;
         }
         for (let i in tuids) {
             let schema = tuids[i];
@@ -160,6 +160,7 @@ export class Entities {
             //tuid.sys = true;
             tuid.setSchema(schema);
         }
+        /*
         for (let i in proxyColl) {
             let proxies:string[] = proxyColl[i];
             let tuid = this.tuids[i];
@@ -167,6 +168,10 @@ export class Entities {
             for (let p of proxies) {
                 tuid.proxies[p] = this.tuids[p];
             }
+        }*/
+        for (let i in this.tuids) {
+            let tuid = this.tuids[i];
+            tuid.buildFieldsTuid();
         }
     }
 
@@ -246,7 +251,7 @@ export class Entities {
         let id = Number(parts[1]);
         switch (type) {
             case 'uq': this.uqId = id; break;
-            case 'tuid': 
+            case 'tuid':
                 let tuid = this.newTuid(name, id);
                 tuid.sys = false;
                 break;

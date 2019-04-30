@@ -49,11 +49,11 @@ export abstract class CTuid<T extends Tuid> extends CEntity<T, TuidUI> {
     }
 }
 
-export class CTuidMain extends CTuid<TuidMain> {
+export abstract class CTuidBase extends CTuid<TuidMain> {
     constructor(cUq: CUq, entity: TuidMain, ui: TuidUI, res:any) {
         super(cUq, entity, ui, res);
-        let tuid = this.entity;
-        this.proxies = tuid.proxies;
+        //let tuid = this.entity;
+        //this.proxies = tuid.proxies;
         if (this.proxies !== undefined) {
             this.proxyLinks = [];
             for (let i in this.proxies) {
@@ -63,26 +63,26 @@ export class CTuidMain extends CTuid<TuidMain> {
         }
     }
 
-    async from():Promise<CTuidMain> {
-        let ret = await this.entity.cFrom();
+    from():CTuidBase {
+        let ret = this.entity.cFrom();
         if (ret === undefined) return this;
         return ret;
     }
 
-    async cUqFrom():Promise<CUq> {
-        return await this.entity.cUqFrom();
+    cUqFrom():CUq {
+        return this.entity.cUqFrom();
     }
-    async cEditFrom(): Promise<CTuidEdit> {
-        let cUq = await this.entity.cUqFrom();
-        return await cUq.cTuidEditFromName(this.entity.name);
+    cEditFrom(): CTuidEdit {
+        let cUq = this.entity.cUqFrom();
+        return cUq.cTuidEditFromName(this.entity.name);
     }
-    async cInfoFrom(): Promise<CTuidInfo> {
-        let cUq = await this.entity.cUqFrom();
-        return await cUq.cTuidInfoFromName(this.entity.name);
+    cInfoFrom(): CTuidInfo {
+        let cUq = this.entity.cUqFrom();
+        return cUq.cTuidInfoFromName(this.entity.name);
     }
-    async cSelectFrom(): Promise<CTuidSelect> {
-        let cUq = await this.entity.cUqFrom();
-        return await cUq.cTuidSelectFromName(this.entity.name);
+    cSelectFrom(): CTuidSelect {
+        let cUq = this.entity.cUqFrom();
+        return cUq.cTuidSelectFromName(this.entity.name);
     }
 
     getLable(tuid:Tuid):string {
@@ -113,28 +113,52 @@ export class CTuidMain extends CTuid<TuidMain> {
     }
 
     protected async onEvent(type:string, value:any) {
-        let v: TypeVPage<CTuidMain>;
+        //let v: TypeVPage<CTuidMain>;
         switch (type) {
             default: return;
-            case 'new': v = this.VTuidEdit; break;
-            case 'list': v = this.VTuidList; break;
-            case 'edit': await this.edit(value); return;
+            case 'new': await this.onNew(); break;
+            case 'list': await this.onList(); break;
+            case 'edit': await this.onEdit(value); return;
             case 'item-changed': this.itemChanged(value); return;
             case 'info': 
                 let cTuidInfo = new CTuidInfo(this.cUq, this.entity, this.ui, this.res);
                 await cTuidInfo.start(value);
                 return;
         }
-        await this.openVPage(v, value);
+        //await this.openVPage(v, value);
     }
 
-    protected async edit(id:number) {
+    protected async edit(values:any) {
+        let cTuidEdit = this.ui && this.ui.CTuidEdit;
+        if (cTuidEdit === undefined) {
+            await this.openVPage(this.VTuidEdit, values);
+        }
+        else {
+            await (new cTuidEdit(this.cUq, this.entity, this.ui, this.res)).start(values);
+        }
+    }
+
+    private async onNew() {
+        await this.edit(undefined);
+    }
+
+    private async onList() {
+        let cTuidList = this.ui && this.ui.CTuidList;
+        if (cTuidList === undefined) {
+            await this.openVPage(this.VTuidList, undefined);
+        }
+        else {
+            await (new cTuidList(this.cUq, this.entity, this.ui, this.res)).start(undefined);
+        }
+    }
+
+    protected async onEdit(id:number) {
         let values:any = undefined;
         if (id !== undefined) {
             values = await this.entity.load(id);
         }
-        let v = this.VTuidEdit;
-        await this.openVPage(v, values);
+        this.edit(values);
+        //await this.openVPage(this.VTuidEdit, values);
     }
 
     private itemChanged({id, values}:{id:number, values: any}) {
@@ -147,14 +171,33 @@ export class CTuidMain extends CTuid<TuidMain> {
     }
 }
 
-export class CTuidEdit extends CTuidMain {
+export class CTuidMain extends CTuidBase {
+    protected async internalStart(param?:any):Promise<void> {
+        this.isFrom = this.entity.schemaFrom !== undefined;
+        await this.openVPage(this.VTuidMain);
+    }
+
+}
+
+export class CTuidEdit extends CTuidBase {
     protected async internalStart(id:number):Promise<void> {
-        await this.edit(id);
+        this.isFrom = this.entity.schemaFrom !== undefined;
+        if (typeof(id) === 'number') {
+            await this.onEdit(id);
+        }
+        else {
+            await this.edit(id);
+        }
+    }
+
+    protected async edit(values:any) {
+        await this.openVPage(this.VTuidEdit, values);
     }
 }
 
-export class CTuidList extends CTuidMain {
+export class CTuidList extends CTuidBase {
     protected async internalStart(id:number):Promise<void> {
+        this.isFrom = this.entity.schemaFrom !== undefined;
         await this.openVPage(this.VTuidList);
     }
 }

@@ -127,14 +127,15 @@ export abstract class EditBasePage extends VPage<AppController> {
     async open() {
         this.openPage(this.page);
     }
+    /*
     protected onSubmit = async (values:any):Promise<SubmitResult> => {
         await this.controller.saveApp(values);
         nav.pop();
         return;
-    }
+    }*/
     private onButtonClick = async (name:string, context: Context) => {
         let {data} = context;
-        let app = _.clone(this.controller.app);
+        let app:DevModel.App = _.clone(this.controller.app) || {} as any;
         _.merge(app, data);
         await this.controller.saveApp(app);
         nav.pop();

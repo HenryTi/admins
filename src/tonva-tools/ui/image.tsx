@@ -12,7 +12,7 @@ export function Image(props: ImageProps) {
     let {className, style, src} = props;
     if (!src) {
         return <div className={classNames(className, 'image-none')} style={style}>
-            <i className="fa fa-camera" />
+            <i className="fa fa-file-o" />
         </div>;
     }
     if (src.startsWith(':') === true) {
