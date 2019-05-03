@@ -124,14 +124,14 @@ export class ServiceInfo extends React.Component {
                 label: 'URL',
                 onClick: ()=>nav.push(<StringValueEdit 
                     title="修改URL"
-                    value={url}
+                    value={cur.url}
                     onChanged={this.onUrlChanged} 
                     info="好的名字便于理解" />)
             },
             {
                 type: 'component',
                 label: '服务器',
-                component: <ServerSpan id={server} />
+                component: <ServerSpan id={cur.server} />
             },
         ];
         let typeName;

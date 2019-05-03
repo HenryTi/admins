@@ -152,7 +152,7 @@ export class ServiceInfo extends React.Component {
     render() {
         let uq = store.dev.uqs.cur;
         let cur = store.dev.services.cur;
-        let {type, name, discription, server, url, db, db_type, connection} = cur;
+        //let {type, name, discription, server, url, db, db_type, connection} = cur;
         let rows:Prop[] = [
             '',
             /*
@@ -169,13 +169,13 @@ export class ServiceInfo extends React.Component {
                 label: 'URL',
                 onClick: ()=>nav.push(<StringValueEdit 
                     title="修改URL"
-                    value={url}
+                    value={cur.url}
                     onChanged={this.onUrlChanged} />)
             },
             {
                 type: 'component',
                 label: '服务器',
-                component: <ServerSpan id={server} />
+                component: <ServerSpan id={cur.server} />
             },
             {
                 type: 'string',
@@ -183,7 +183,7 @@ export class ServiceInfo extends React.Component {
                 label: '数据库类型',
                 onClick: ()=>nav.push(<StringValueEdit 
                     title="数据库类型"
-                    value={db_type}
+                    value={cur.db_type}
                     onChanged={this.onDbTypeChanged} />)
             },
             {
@@ -192,7 +192,7 @@ export class ServiceInfo extends React.Component {
                 label: '数据库名',
                 onClick: ()=>nav.push(<StringValueEdit 
                     title="数据库名字"
-                    value={db}
+                    value={cur.db}
                     onChanged={this.onDbChanged} />)
             },
             {
@@ -201,7 +201,7 @@ export class ServiceInfo extends React.Component {
                 label: '连接字符串',
                 onClick: ()=>nav.push(<TextValueEdit
                     title="连接字符串"
-                    value={connection}
+                    value={cur.connection}
                     onChanged={this.onConnectionChanged} />)
             },
         ];
