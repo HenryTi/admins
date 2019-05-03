@@ -16,6 +16,9 @@ export class ServicePage extends VPage<UQController> {
         return await this.controller.changeServiceProp(this.service, prop, value);
     }
     private onUrlChanged = async (value:any, orgValue:any):Promise<string|void> => {
+        if ((value as string).indexOf('/uq/')<0) {
+            return 'URL必须包含/uq/';
+        }
         let ret = await this.changeProp('url', value);
         if (ret === 0) {
             return 'URL已经被使用了';

@@ -414,7 +414,7 @@ export class UqTokenApi extends CenterApi {
             let uq = this.local.uqs[un];
             if (uq !== undefined) {
                 let {tick, value} = uq;
-                if ((nowTick - tick) < 24*3600*1000) {
+                if (value !== undefined && (nowTick - tick) < 24*3600*1000) {
                     return _.clone(value);
                 }
             }

@@ -91,6 +91,11 @@ export class NewServicePage extends VPage<UQController> {
         this.openPage(this.page);
     }
     private onSubmit = async (values:any):Promise<SubmitResult | undefined> => {
+        if (values.url.indexOf('/uq/')<0) {
+            this.tonvaForm.formView.setError('url', 'service url 必须包含/uq/');
+            return;
+        }
+
         values.type = 2; // uq type, to be removed
         values.bindId = this.controller.uq.id;
         let ret = await this.controller.saveService(values);

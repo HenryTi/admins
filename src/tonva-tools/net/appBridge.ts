@@ -116,9 +116,9 @@ async function initSubWin(message:any) {
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<UqToken> {
     let appInFrame = appsInFrame[hash];
     if (appInFrame === undefined) return {name:apiName, url:undefined, urlDebug:undefined, token:undefined};
-    let {unit, predefinedUnit} = appInFrame;
+    let unit = getUnit();
     let parts = apiName.split('/');
-    let ret = await uqTokenApi.uq({unit: unit||predefinedUnit, uqOwner: parts[0], uqName: parts[1]});
+    let ret = await uqTokenApi.uq({unit: unit, uqOwner: parts[0], uqName: parts[1]});
     if (ret === undefined) {
         console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
         throw 'api not found';
@@ -193,14 +193,23 @@ export function appUrl(url: string, unitId: number, page?:string, param?:any[]):
     return {url: url, hash: u};
 }
 
+function getUnit():number {
+    let {unit, predefinedUnit} = appInFrame;
+    let realUnit = unit || predefinedUnit;
+    if (realUnit === undefined) {
+        throw 'no unit defined in unit.json or not logined in';
+    }
+    return realUnit;
+}
+
 export async function appUq(uq:string, uqOwner:string, uqName:string): Promise<UqToken> {
     let uqToken = uqTokens[uq];
     if (uqToken !== undefined) return uqToken;
     if (!isBridged()) {
-        let {unit, predefinedUnit} = appInFrame;
-        uqToken = await uqTokenApi.uq({unit: unit || predefinedUnit, uqOwner:uqOwner, uqName:uqName});
+        let unit = getUnit();
+        uqToken = await uqTokenApi.uq({unit:unit, uqOwner:uqOwner, uqName:uqName});
         if (uqToken === undefined) {
-            let err = 'unauthorized call: uqTokenApi center return undefined!';
+            let err = `appUq(unit=${unit}, '${uqOwner}/${uqName}') - unauthorized call: uqTokenApi center return undefined!`;
             throw err;
         }
         if (uqToken.token === undefined) uqToken.token = centerToken;
