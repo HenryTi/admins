@@ -49,7 +49,7 @@ export class ServicePage extends VPage<UQController> {
     }
     private page = () => {
         let {uq} = this.controller;
-        let {type, name, discription, server, url, db, db_type, connection} = this.service;
+        //let {type, name, discription, server, url, db, db_type, connection} = this.service;
         let rows:Prop[] = [
             '',
             /*
@@ -66,13 +66,13 @@ export class ServicePage extends VPage<UQController> {
                 label: 'URL',
                 onClick: ()=>nav.push(<StringValueEdit 
                     title="修改URL"
-                    value={url}
+                    value={this.service.url}
                     onChanged={this.onUrlChanged} />)
             },
             {
                 type: 'component',
                 label: '服务器',
-                component: <ServerSpan id={server} />
+                component: <ServerSpan id={this.service.server} />
             },
             {
                 type: 'string',
@@ -80,7 +80,7 @@ export class ServicePage extends VPage<UQController> {
                 label: '数据库类型',
                 onClick: ()=>nav.push(<StringValueEdit 
                     title="数据库类型"
-                    value={db_type}
+                    value={this.service.db_type}
                     onChanged={this.onDbTypeChanged} />)
             },
             {
@@ -89,7 +89,7 @@ export class ServicePage extends VPage<UQController> {
                 label: '数据库名',
                 onClick: ()=>nav.push(<StringValueEdit 
                     title="数据库名字"
-                    value={db}
+                    value={this.service.db}
                     onChanged={this.onDbChanged} />)
             },
             {
@@ -98,7 +98,7 @@ export class ServicePage extends VPage<UQController> {
                 label: '连接字符串',
                 onClick: ()=>nav.push(<TextValueEdit
                     title="连接字符串"
-                    value={connection}
+                    value={this.service.connection}
                     onChanged={this.onConnectionChanged} />)
             },
         ];
