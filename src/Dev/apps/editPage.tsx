@@ -70,6 +70,7 @@ const formRows:FormRow[] = [
 */
 const schema:ItemSchema[] = [
     {name: 'name', type: 'string', maxLength: 100, required: true} as StringSchema,
+    {name: 'caption', type: 'string', maxLength: 100} as StringSchema,
     {name: 'discription', type: 'string', maxLength: 250} as StringSchema,
     {name: 'url', type: 'string', maxLength: 200} as StringSchema,
     {name: 'public', type: 'boolean'} as BoolSchema,
@@ -115,6 +116,7 @@ export abstract class EditBasePage extends VPage<AppController> {
     private uiSchema:UiSchema = {
         items: {
             name: {widget: 'text', label: '名称'} as UiTextItem,
+            caption: {widget: 'text', label: '标题'} as UiTextItem,
             discription: {widget: 'textarea', label: '描述', rows: 5} as UiTextAreaItem,
             url: {widget: 'text', label: 'URL', placeholder: 'http(s)://APP地址'} as UiTextItem,
             'public': {widget: 'checkbox', label: '公开', } as UiCheckItem,

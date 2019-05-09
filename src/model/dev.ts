@@ -17,6 +17,7 @@ export namespace DevModel {
 
     export interface App extends ObjBase {
         name: string;
+        caption: string;
         discription: string;
         icon: string;
         "public": number;

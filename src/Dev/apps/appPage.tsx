@@ -27,7 +27,7 @@ export class AppPage extends VPage<AppController> {
 
     private page = observer(():JSX.Element => {
         let {app} = this.controller;
-        let {unit, name, discription, icon, server, date_init, date_update} = app;
+        let {unit, name, caption, discription, icon, server, date_init, date_update} = app;
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
@@ -39,12 +39,14 @@ export class AppPage extends VPage<AppController> {
         ];
 
         let right = <DropdownActions actions={menuItems} />;
-
+        let spanCaption = caption?
+            <>{name}: <b>{caption}</b></> :
+            <b>{name}</b>;
         let rows:Prop[] = [
             '',
             {
                 type: 'component', 
-                component: <Media icon={icon} main={name} discription={disp} />
+                component: <Media icon={icon} main={spanCaption} discription={disp} />
             },
             '',
             {

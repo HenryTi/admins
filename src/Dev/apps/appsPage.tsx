@@ -20,16 +20,19 @@ export class AppsPage extends VPage<AppController> {
         </Page>
     }
     private appRow = (item:DevModel.App):JSX.Element => {
-        let {name, discription, icon, url, urlDebug} = item;
+        let {name, caption, discription, icon, url, urlDebug} = item;
         let left = <Badge size="sm"><Image src={icon} /></Badge>;
         let right = <div className="text-muted small text-right">
             {url || '-'}<br/>
             {urlDebug}
         </div>;
+        let spanCaption = caption?
+            <>{name}: <b>{caption}</b></> :
+            <b>{name}</b>;
         return <LMR className="py-2 px-3 align-items-stretch"
             left={left} right={right}>
             <div className="px-3">
-                <div><b>{name}</b></div>
+                <div>{spanCaption}</div>
                 <div><Muted>{discription}</Muted></div>
             </div>
         </LMR>;
