@@ -297,3 +297,7 @@ export class VTextField extends VStringField {
 export class VDateTimeField extends VStringField {
 
 }
+
+export class VDateField extends VStringField {
+
+}

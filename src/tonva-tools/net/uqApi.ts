@@ -419,6 +419,12 @@ export class UqTokenApi extends CenterApi {
                 }
             }
             let ret = await this.get('app-uq', params);
+            if (ret === undefined) {
+                let {unit, uqOwner, uqName} = params;
+                let err = `center get app-uq(unit=${unit}, '${uqOwner}/${uqName}') - not exists or no unit-service`;
+                throw err;
+            }
+
             this.local.uqs[un] = {
                 tick: nowTick,
                 value: ret,

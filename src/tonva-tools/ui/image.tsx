@@ -6,10 +6,11 @@ export interface ImageProps {
     src: string;
     className?: string;
     style?: React.CSSProperties;
+    altImage?: string;
 }
 
 export function Image(props: ImageProps) {
-    let {className, style, src} = props;
+    let {className, style, src, altImage} = props;
     if (!src) {
         return <div className={classNames(className, 'image-none')} style={style}>
             <i className="fa fa-file-o" />
@@ -18,5 +19,7 @@ export function Image(props: ImageProps) {
     if (src.startsWith(':') === true) {
         src = nav.resUrl + src.substr(1);
     }
-    return <img src={src} className={className} style={style} />;
+    return <img src={src} className={className} 
+        style={style}
+        onError={evt=>evt.currentTarget.src=altImage} />;
 }

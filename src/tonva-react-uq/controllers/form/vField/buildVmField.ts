@@ -1,4 +1,4 @@
-import { VField, VIntField, VDecField, VStringField, VTextField, VDateTimeField } from './vField';
+import { VField, VIntField, VDecField, VStringField, VTextField, VDateTimeField, VDateField } from './vField';
 import { Field } from '../../../entities';
 import { FieldRes } from '../vBand';
 import { VForm } from '../vForm';
@@ -29,6 +29,9 @@ export function buildVField(form:VForm, field: Field, fieldUI: FieldUI, fieldRes
             break;
         case 'datetime':
             vField = VDateTimeField;
+            break;
+        case 'date':
+            vField = VDateField;
             break;
     }
     return new vField(form, field, fieldUI, fieldRes);

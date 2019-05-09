@@ -337,7 +337,7 @@ class VAppMain extends VPage<CApp> {
         return this.appContent();
     }
 
-    protected appPage() {
+    protected appPage = () => {
         let {caption} = this.controller;
         return <Page header={caption} logout={async()=>{appInFrame.unit = undefined}}>
             {this.appContent()}

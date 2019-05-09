@@ -119,10 +119,6 @@ async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<Uq
     let unit = getUnit();
     let parts = apiName.split('/');
     let ret = await uqTokenApi.uq({unit: unit, uqOwner: parts[0], uqName: parts[1]});
-    if (ret === undefined) {
-        console.log('apiTokenApi.api return undefined. api=%s, unit=%s', apiName, unit);
-        throw 'api not found';
-    }
     return {name: apiName, url: ret.url, urlDebug:ret.urlDebug, token: ret.token};
 }
 
@@ -208,10 +204,6 @@ export async function appUq(uq:string, uqOwner:string, uqName:string): Promise<U
     if (!isBridged()) {
         let unit = getUnit();
         uqToken = await uqTokenApi.uq({unit:unit, uqOwner:uqOwner, uqName:uqName});
-        if (uqToken === undefined) {
-            let err = `appUq(unit=${unit}, '${uqOwner}/${uqName}') - unauthorized call: uqTokenApi center return undefined!`;
-            throw err;
-        }
         if (uqToken.token === undefined) uqToken.token = centerToken;
         let {url, urlDebug} = uqToken;
         let realUrl = host.getUrlOrDebug(url, urlDebug);
