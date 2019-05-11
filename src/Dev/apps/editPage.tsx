@@ -27,47 +27,7 @@ const idPickServerProps: IdPickProps = {
         return <div className="px-3 py-2"><ServerCaption {...item} /></div>;
     },
 };
-/*
-const formRows:FormRow[] = [
-    {
-        label: '名称', 
-        field: {name: 'name', type: 'string', maxLength: 100, required: true},
-    },
-    {
-        label: '描述',
-        field: {name: 'discription', type: 'string', maxLength: 250},
-        face: {type: 'textarea'}
-    },
-    {
-        label: '图标',
-        field: {name: 'icon', type: 'string', maxLength: 250},
-    },
-    {
-        label: 'URL',
-        field: {name: 'url', type: 'string', maxLength: 200},
-    },
-    {
-        label: '服务器',
-        field: {name: 'server', type: 'id'},
-        face: {
-            type: 'pick-id', 
-            initCaption: '请选择服务器', 
-            pick: createIdPick(idPickServerProps),
-            fromPicked: (item:DevModel.Server)=>{
-                return {
-                    id: item.id, 
-                    caption: <ServerCaption {...item} />,
-                };
-            },
-            itemFromId: (id:number)=>store.cacheServers.get(id),
-        },
-    },
-    {
-        label: '公开',
-        field: {name: 'public', type: 'bool', defaultValue: 1}
-    },
-];
-*/
+
 const schema:ItemSchema[] = [
     {name: 'name', type: 'string', maxLength: 100, required: true} as StringSchema,
     {name: 'caption', type: 'string', maxLength: 100} as StringSchema,
@@ -129,12 +89,6 @@ export abstract class EditBasePage extends VPage<AppController> {
     async open() {
         this.openPage(this.page);
     }
-    /*
-    protected onSubmit = async (values:any):Promise<SubmitResult> => {
-        await this.controller.saveApp(values);
-        nav.pop();
-        return;
-    }*/
     private onButtonClick = async (name:string, context: Context) => {
         let {data} = context;
         let app:DevModel.App = _.clone(this.controller.app) || {} as any;
@@ -144,12 +98,6 @@ export abstract class EditBasePage extends VPage<AppController> {
     }
     protected page: ()=>JSX.Element;
     protected form = observer(() => {
-        /*
-        return <TonvaForm
-            className="m-3"
-            formRows={formRows} 
-            onSubmit={this.onSubmit} initValues={initValues} />
-        */
         return <Form fieldLabelSize={2}
             className="m-3" 
             schema={schema} 

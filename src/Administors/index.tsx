@@ -88,14 +88,16 @@ export default class AdministorsPage extends React.Component {
         return <Page header="管理员" right={right}>
             {ownersView}
             {adminsView}
-            <div className="card mx-1 my-4">
+            <div className="card mx-1 my-4 p-3">
                 <div className="card-title">说明</div>
                 <div className="card-body">
                     <ul style={{paddingLeft:'1em'}}>
-                        <li><div className="card-text">管理组包括主人、高管、管理员</div></li>
-                        <li><div className="card-text">小号主人可以增减高管</div></li>
-                        <li><div className="card-text">高管可以增减管理员</div></li>
-                        <li><div className="card-text">管理员可以管理小号，程序的开发，以及用户</div></li>
+                        <li className="card-text">管理组包括主人、高管、管理员</li>
+                        <li className="card-text">小号主人可以增减高管</li>
+                        <li className="card-text">高管可以增减管理员</li>
+                        <li className="card-text">管理员可以管理小号，程序的开发，以及用户</li>
+                        <li className="card-text">开发号高管可以增减编辑APP，UQ，Server，Service</li>
+                        <li className="card-text">开发号管理员可以编译指定UQ，BUS</li>
                     </ul>
                 </div>
             </div>

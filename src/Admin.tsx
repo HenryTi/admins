@@ -228,36 +228,35 @@ default class AdminPage extends React.Component {
             if ((type & 1) !== 0) {
                 // dev unit
                 let {counts} = dev;
-                //if (counts !== undefined) {
-                let devItems:(DevItem<DevModel.ObjBase>|string)[] = [
-                    '开发号管理',
-                    {
-                        title: 'APP', 
-                        count: counts && counts.app, 
-                        icon: 'tablet', 
-                        onClick: () => new AppController(undefined).start(unit.id),
-                    },
-                    {
-                        title: 'UQ', 
-                        count: counts && counts.uq, 
-                        icon: 'database', 
-                        onClick: () => new UQController(undefined).start(unit.id),
-                    },
-                    {
-                        title: 'BUS', 
-                        count: counts && counts.bus, 
-                        icon: 'cogs', 
-                        objProps: busesProps,
-                    },
-                    {
-                        title: 'Server', 
-                        count: counts && counts.server, 
-                        icon: 'server', 
-                        objProps: serversProps,
-                    },
-                ];
-                items.push(...devItems);
-            //}
+
+                let appAction:DevItem<DevModel.ObjBase> = {
+                    title: 'APP', 
+                    count: counts && counts.app, 
+                    icon: 'tablet', 
+                    onClick: () => new AppController(undefined).start(unit.id),
+                };
+                let uqAction:DevItem<DevModel.ObjBase> = {
+                    title: 'UQ', 
+                    count: counts && counts.uq, 
+                    icon: 'database', 
+                    onClick: () => new UQController(undefined).start(unit.id),
+                };
+                let busAction:DevItem<DevModel.ObjBase> = {
+                    title: 'BUS', 
+                    count: counts && counts.bus, 
+                    icon: 'cogs', 
+                    objProps: busesProps,
+                };
+                let serverAction:DevItem<DevModel.ObjBase> = {
+                    title: 'Server', 
+                    count: counts && counts.server, 
+                    icon: 'server', 
+                    objProps: serversProps,
+                };
+                items.push('开发号管理')
+                if (isOwner>0) items.push(appAction);
+                items.push(uqAction, busAction);
+                if (isOwner>0) items.push(serverAction);
             }
         }
         return items;

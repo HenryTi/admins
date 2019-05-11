@@ -5,6 +5,7 @@ import { IdDates, UnitSpan, ServerSpan } from 'tools';
 import { Prop, Media, LMR, FA, PropGrid, Muted, List, EasyDate, DropdownActions } from 'tonva-react-form';
 import { DevModel } from 'model';
 import { EditPage } from './editPage';
+import { store } from 'store';
 
 export class UQPage extends VPage<UQController> {
     async open() {
@@ -25,6 +26,7 @@ export class UQPage extends VPage<UQController> {
 
     private page = ():JSX.Element => {
         let {onUqUpload, serviceClick, uq, services} = this.controller;
+        let {isOwner} = store.unit;
         let {id, name, discription, access, unit, date_init, date_update} = uq;
         let disp = <div>
             <div>{discription}</div>
@@ -34,7 +36,7 @@ export class UQPage extends VPage<UQController> {
             {caption:'修改UQ', action:this.editItem, icon:'edit' },
             {caption:'删除', action:this.deleteItem, icon:'trash-o' }
         ];
-        let right = <DropdownActions actions={menuItems} />;
+        let right = isOwner>0 && <DropdownActions actions={menuItems} />;
         let rows:Prop[] = [
             '',
             {
@@ -65,17 +67,22 @@ export class UQPage extends VPage<UQController> {
             }</div> },
             */
         ];
+        let btnAddService = isOwner>0 && <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={()=>this.controller.showNewServicePage()}>
+            增加
+        </button>;
+        
+        let onServiceClick:any;
+        if (isOwner>0) onServiceClick = serviceClick;
+
         return <Page header={'UQ - ' + name} right={right}>
             <PropGrid rows={rows} values={uq} />
             <div className="d-flex mx-3 mt-3 mb-1 align-items-end">
                 <Muted style={{display:'block', flex:1}}>Service</Muted>
-                <button
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={()=>this.controller.showNewServicePage()}>
-                    增加
-                </button>
+                {btnAddService}
             </div>
-            <List items={services} item={{render:this.renderService, onClick:serviceClick}} />
+            <List items={services} item={{render:this.renderService, onClick:onServiceClick}} />
         </Page>;
     }
     private renderService(service:DevModel.Service, index:number):JSX.Element {

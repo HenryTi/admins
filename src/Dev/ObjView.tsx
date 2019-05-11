@@ -5,6 +5,7 @@ import {nav, Page} from 'tonva-tools';
 import {FormRow, TonvaForm, Step, MultiStep, DropdownActions, Action, List, FA, SubmitResult} from 'tonva-react-form';
 import {DevModel} from '../model';
 import { ObjViewProps } from './ObjViewProps';
+import { store } from 'store';
 
 @observer
 export class ObjView<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
@@ -24,7 +25,8 @@ export class ObjView<T extends DevModel.ObjBase> extends React.Component<ObjView
     }
     render() {
         let {title, items} = this.props;
-        let right = <button className='btn btn-secondary btn-sm' onClick={()=>this.newItem()}><FA name="plus" /></button>;
+        let {isOwner} = store.unit;
+        let right = isOwner>0 && <button className='btn btn-secondary btn-sm' onClick={()=>this.newItem()}><FA name="plus" /></button>;
         return <Page header={title} right={right}>
             <List items={items().items}
                 item={{render: this.props.row, onClick: this.itemClick}}

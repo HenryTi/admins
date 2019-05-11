@@ -4,6 +4,7 @@ import { UQController } from '.';
 import { List, LMR, Badge, Muted, FA } from 'tonva-react-form';
 import { DevModel } from 'model';
 import { NewPage } from './editPage';
+import { store } from 'store';
 
 export class ListPage extends VPage<UQController> {
     async open(param:any) {
@@ -15,7 +16,8 @@ export class ListPage extends VPage<UQController> {
     }
     private page = ():JSX.Element => {
         let {uqList: list, listRowClick} = this.controller;
-        let right = <button className='btn btn-secondary btn-sm' onClick={()=>this.newItem()}><FA name="plus" /></button>;
+        let {isOwner} = store.unit;
+        let right = isOwner>0 && <button className='btn btn-secondary btn-sm' onClick={()=>this.newItem()}><FA name="plus" /></button>;
         return <Page header="UQ" right={right}>
             <List items={list} item={{render: this.listRow, onClick: listRowClick}} />
         </Page>
