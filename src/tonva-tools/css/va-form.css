@@ -135,6 +135,15 @@
 .w-max-2c {
   max-width: 2rem !important;
 }
+.w-2-5c {
+  width: 2.5rem !important;
+}
+.w-min-2-5c {
+  min-width: 2.5rem !important;
+}
+.w-max-2-5c {
+  max-width: 2.5rem !important;
+}
 .w-3c {
   width: 3rem !important;
 }
@@ -234,6 +243,15 @@
 }
 .h-max-2c {
   max-height: 2rem !important;
+}
+.h-2-5c {
+  height: 2.5rem !important;
+}
+.h-min-2-5c {
+  min-height: 2.5rem !important;
+}
+.h-max-2-5c {
+  max-height: 2.5rem !important;
 }
 .h-3c {
   height: 3rem !important;

@@ -12,8 +12,8 @@ export default class NewFellowPage extends React.Component<{isOwner:boolean, isA
     ]
     private uiSchema: UiSchema = {
         items: {
-            user: {widget:'text', maxLength: 100, placeholder: '用户名', label: '邀请成员'} as UiTextItem,
-            submit: {widget:'button', label: '邀请'}
+            user: {widget:'text', maxLength: 100, placeholder: '用户名', label: '管理员'} as UiTextItem,
+            submit: {widget:'button', label: '添加', className: 'btn btn-primary'}
         }
     }
     /*

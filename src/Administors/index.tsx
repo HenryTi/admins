@@ -21,15 +21,12 @@ export default class AdministorsPage extends React.Component {
         nav.push(<EditAdmin />);
     }
     private row = ({icon, name, nick}:UnitAdmin) => {
-        let content;
-        if (nick === undefined) {
-            content = <b>{name}</b>;
-        }
-        else {
-            content = <><b>{nick}</b> &nbsp; <small className="text-muted">{name}</small></>;
-        }
-        return <LMR className="py-2 px-3 align-items-stretch"
-            left={<Badge size="sm"><Image className="w-3c h-3c" src={icon} /></Badge>}>
+        let content = nick?
+            <><b>{nick}</b> &nbsp; <small className="text-muted">{name}</small></>
+            :
+            <b>{name}</b>;
+        let left = <Image className="w-2-5c h-2-5c" src={icon} />; 
+        return <LMR className="py-2 px-3 align-items-stretch" left={left}>
             <div className="px-3">{content}</div>
         </LMR>;
     }
@@ -63,7 +60,7 @@ export default class AdministorsPage extends React.Component {
         if (unit.isOwner === 1) showAdmins = true;
         if (showOwners === true) {
             let header = <LMR 
-                className="px-3 small"
+                className="px-3 py-1 small"
                 left="高管" 
                 right={<a className="small" href='#' onClick={this.onNewOwner}>新增</a>} />;
             ownersView = <List 
@@ -75,7 +72,7 @@ export default class AdministorsPage extends React.Component {
         }
         if (showAdmins === true) {
             let header = <LMR 
-                className="px-3 small"
+                className="px-3 py-1 small"
                 left="管理员" 
                 right={<a className="small" href='#' onClick={this.onNewAdmin}>新增</a>} />;
             adminsView = <List 
@@ -88,10 +85,10 @@ export default class AdministorsPage extends React.Component {
         return <Page header="管理员" right={right}>
             {ownersView}
             {adminsView}
-            <div className="card mx-1 my-4 p-3">
-                <div className="card-title">说明</div>
-                <div className="card-body">
-                    <ul style={{paddingLeft:'1em'}}>
+            <div className="my-4 p-3">
+                <div className="ml-2 mb-2">说明</div>
+                <div className="">
+                    <ul className="pl-2">
                         <li className="card-text">管理组包括主人、高管、管理员</li>
                         <li className="card-text">小号主人可以增减高管</li>
                         <li className="card-text">高管可以增减管理员</li>

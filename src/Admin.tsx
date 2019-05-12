@@ -107,6 +107,7 @@ export class VAdmin extends VPage<CAdmin> {
     }
     onRowClick = async (item: UnitAdmin) => {
         appInFrame.unit = item.id; // 25;
+        store.init();
         await store.loadUnit();
         this.closePage();
         this.openPageElement(<AdminPage />);
@@ -150,12 +151,6 @@ default class AdminPage extends React.Component {
         let {unit, dev} = store;
         let {isAdmin, isOwner, type} = unit;
         this.caption = typeCaptions[type];
-        /*
-        switch (type) {
-            case 1: this.caption = '开发号'; break;
-            case 2: this.caption = '小号'; break;
-            case 3: this.caption = '系统号'; break;
-        }*/
         if ((type & 1) !== 0) {
             await store.dev.loadCounts();
         }
@@ -399,10 +394,13 @@ class UnitProps extends React.Component {
     }
     //<PropGrid rows={this.rows} values={store.unit} alignValue="right" />
     render() {
+        let unit:Unit = store.unit;
+        let {isRoot, isOwner} = unit;
         return <Page header="小号信息">
             <Edit schema={this.schema} uiSchema={this.uiSchema}
                 data={store.unit}
-                onItemChanged={this.onItemChanged} />
+                onItemChanged={this.onItemChanged}
+                stopEdit={!(isRoot>0 && isOwner>0)} />
         </Page>;
     }
 }

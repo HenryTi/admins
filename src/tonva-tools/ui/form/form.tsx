@@ -213,7 +213,7 @@ export class Form extends React.Component<FormProps> {
     }
 
     protected DefaultContainer = (content:JSX.Element): JSX.Element => {
-        return <form className={classNames(this.props.className)}>
+        return <form className={classNames(this.props.className)} onSubmit={e=>e.preventDefault()}>
             {content}
         </form>;
     }
