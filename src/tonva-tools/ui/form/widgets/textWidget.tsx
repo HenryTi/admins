@@ -20,8 +20,10 @@ export class TextWidget extends Widget {
         if (onEnter === undefined) return;
 
         this.changeValue(evt.currentTarget.value, true);
-        this.checkRules();
-        this.context.checkContextRules();
+
+        //this.checkRules();
+        //this.context.checkContextRules();
+        this.input.blur();
 
         let ret = await onEnter(this.name, this.context);
         if (ret !== undefined) {
@@ -40,7 +42,7 @@ export class TextWidget extends Widget {
     protected onFocus(evt: React.FocusEvent<any>) {
         this.clearError();
         this.context.removeErrorWidget(this);
-        this.context.removeErrors();
+        this.context.clearErrors();
     }
     protected onChange(evt: React.ChangeEvent<any>) {
     }

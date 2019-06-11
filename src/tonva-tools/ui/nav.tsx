@@ -414,6 +414,10 @@ export class Nav {
     }
 
     private async loadPredefinedUnit() {
+        let envUnit = process.env.REACT_APP_UNIT;
+        if (envUnit !== undefined) {
+            return Number(envUnit);
+        }
         let unitName:string;
         let unit = this.local.unit.get();
         if (unit !== undefined) {

@@ -34,7 +34,7 @@ export class CheckBoxWidget extends Widget {
     }
 
     protected onClick = () => {
-        this.context.removeErrors();
+        this.context.clearErrors();
     }
 
     render() {

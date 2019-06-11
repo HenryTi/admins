@@ -1,10 +1,14 @@
 import * as React from 'react';
+import _ from 'lodash';
 import { Schema, UiSchema, ItemSchema, UiItem, UiTextItem } from '../schema';
 import { observer } from 'mobx-react';
 import { ItemEdit } from './itemEdit';
 import { StringItemEdit } from './stringItemEdit';
 import { ImageItemEdit } from './imageItemEdit';
 import { Image } from '../image';
+import { RadioItemEdit } from './radioItemEdit';
+import { SelectItemEdit } from './selectItemEdit';
+import { UiSelectBase } from '../form/uiSchema';
 
 export interface EditProps {
     className?: string;
@@ -48,8 +52,10 @@ export class Edit extends React.Component<EditProps> {
 
         elItems.push(this.topBorder);
         for (let i=0; i<len; i++) {
+            let itemSchema = schema[i];
             if (i>0) elItems.push(this.sep);
-            elItems.push(this.renderRow(schema[i]));
+            let value = this.props.data[itemSchema.name];
+            elItems.push(this.renderRow(itemSchema, value));
         }
         elItems.push(this.bottomBorder);
 
@@ -58,26 +64,38 @@ export class Edit extends React.Component<EditProps> {
         </div>;
     }
 
-    private renderRow(itemSchema: ItemSchema):JSX.Element {
-        let {name, type} = itemSchema;
+    private renderRow = (itemSchema: ItemSchema, value:any):JSX.Element => {
+        let {name, type, required} = itemSchema;
         let divValue:any;
         let uiItem = this.uiSchema[name];
         let label:string = (uiItem && uiItem.label) || name;
-        let value:any = this.props.data[name];
-        switch (type) {
-            default:
-                divValue = value? <b>{value}</b> : <small className="text-muted">(无)</small>;
-                break;
-            case 'image':
-                divValue = <Image className="w-4c h-4c" src={value} />;
-                break;
+        //let value:any = this.props.data[name];
+        if (uiItem !== undefined && value) {
+            switch (uiItem.widget) {
+                case 'radio':
+                case 'select':
+                    let {list} = uiItem as UiSelectBase;
+                    divValue = <b>{list.find(v => v.value === value).title}</b>;
+                    break;
+            }
         }
+        if (divValue === undefined) {
+            switch (type) {
+                default:
+                    divValue = value? <b>{value}</b> : <small className="text-muted">(无)</small>;
+                    break;
+                case 'image':
+                    divValue = <Image className="w-4c h-4c" src={value} />;
+                    break;
+            }
+        }
+        let requireFlag = required===true && <span className="text-danger">*</span>;
         return <div className={this.rowContainerClassName} onClick={async ()=>await this.rowClick(itemSchema, uiItem, label, value)}>
-            <div className="w-6c">{label}</div>
+            <div className="w-6c">{label} {requireFlag}</div>
             <div className="flex-fill d-flex justify-content-end">{divValue}</div>
             {this.props.stopEdit!==true && <div className="w-2c text-right"><i className="fa fa-chevron-right" /></div>}
         </div>;
-    }
+    };
 
     private rowClick = async (itemSchema: ItemSchema, uiItem: UiItem, label:string, value: any) => {
         let {onItemChanged, onItemClick, stopEdit} = this.props;
@@ -88,11 +106,16 @@ export class Edit extends React.Component<EditProps> {
             return;
         }
         let itemEdit:ItemEdit = createItemEdit(itemSchema, uiItem, label, value);
+        if (itemEdit === undefined) {
+            alert('undefined: let itemEdit:ItemEdit = createItemEdit(itemSchema, uiItem, label, value);');
+            return;
+        }
         try {
             changeValue = await itemEdit.start();
             if (changeValue != value) {
                 if (onItemChanged === undefined) {
                     alert(`${itemSchema.name} value changed, new: ${changeValue}, pre: ${value}`);
+                    this.props.data[itemSchema.name] = changeValue;
                 }
                 else {
                     await onItemChanged(itemSchema, changeValue, value);
@@ -101,6 +124,7 @@ export class Edit extends React.Component<EditProps> {
             await itemEdit.end();
         }
         catch (err) {
+            // 如果直接back，会触发reject，就到这里了
             console.log('no value changed');
         }
     }
@@ -110,11 +134,14 @@ function createItemEdit(itemSchema: ItemSchema, uiItem:UiItem, label:string, val
     let itemEdit: new (itemSchema: ItemSchema, uiItem:UiItem, label:string, value: any) => ItemEdit;
     if (uiItem !== undefined) {
         switch (uiItem.widget) {
+            default: break;
             case 'text': itemEdit = StringItemEdit; break;
             case 'image': itemEdit = ImageItemEdit; break;
+            case 'radio': itemEdit = RadioItemEdit; break;
+            case 'select': itemEdit = SelectItemEdit; break;
         }
     }
-    else {
+    if (itemEdit === undefined) {
         switch (itemSchema.type) {
             case 'string': itemEdit = StringItemEdit; break;
             case 'image': itemEdit = ImageItemEdit; break;

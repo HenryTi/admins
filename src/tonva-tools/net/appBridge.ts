@@ -11,11 +11,7 @@ export interface UqToken {
     urlDebug: string;
     token: string;
 }
-interface UqTokenAction extends UqToken {
-    resolve: (value?: UqToken | PromiseLike<UqToken>) => void;
-    reject: (reason?: any) => void;
-}
-const uqTokens:{[uqName:string]: UqTokenAction}  = {};
+const uqTokens:{[uqName:string]: UqToken}  = {};
 export function logoutUqTokens() {
     for (let i in uqTokens) uqTokens[i] = undefined;
 }
@@ -73,9 +69,7 @@ window.addEventListener('message', async function(evt) {
             bridgeCenterApiReturn(message);
             break;
         case 'app-api':
-            console.log("receive PostMessage: %s", JSON.stringify(message));
             let ret = await onReceiveAppApiMessage(message.hash, message.apiName);
-            console.log("onReceiveAppApiMessage: %s", JSON.stringify(ret));
             (evt.source as Window).postMessage({
                 type: 'app-api-return', 
                 apiName: message.apiName,
@@ -116,24 +110,36 @@ async function initSubWin(message:any) {
 async function onReceiveAppApiMessage(hash: string, apiName: string): Promise<UqToken> {
     let appInFrame = appsInFrame[hash];
     if (appInFrame === undefined) return {name:apiName, url:undefined, urlDebug:undefined, token:undefined};
-    let unit = getUnit();
+    //let unit = getUnit();
+    let {unit, predefinedUnit} = appInFrame;
+    unit = unit || predefinedUnit;
+    if (!unit) {
+        console.error('no unit defined in unit.json or not logined in', unit);
+    }
     let parts = apiName.split('/');
-    let ret = await uqTokenApi.uq({unit: unit, uqOwner: parts[0], uqName: parts[1]});
+    let param = {unit: unit, uqOwner: parts[0], uqName: parts[1]};
+    console.log('uqTokenApi.uq onReceiveAppApiMessage', param);
+    let ret = await uqTokenApi.uq(param);
     return {name: apiName, url: ret.url, urlDebug:ret.urlDebug, token: ret.token};
 }
 
 async function onAppApiReturn(message:any) {
     let {apiName, url, urlDebug, token} = message;
-    let action = uqTokens[apiName];
+    let action = uqTokenActions[apiName];
     if (action === undefined) {
         throw 'error app api return';
         //return;
     }
     let realUrl = host.getUrlOrDebug(url, urlDebug);
     console.log('onAppApiReturn(message:any): url=' + url + ', debug=' + urlDebug + ', real=' + realUrl);
-    action.url = realUrl;
-    action.token = token;
-    action.resolve(action);
+    //action.url = realUrl;
+    //action.token = token;
+    action.resolve({
+        name: apiName,
+        url: realUrl,
+        urlDebug: urlDebug,
+        token: token,
+    } as UqToken);
 }
 
 export function setAppInFrame(appHash: string):AppInFrame {
@@ -198,6 +204,54 @@ function getUnit():number {
     return realUnit;
 }
 
+interface UqTokenAction {
+    resolve: (value?: UqToken | PromiseLike<UqToken>) => void;
+    reject: (reason?: any) => void;
+}
+const uqTokenActions:{[uq:string]: UqTokenAction} = {};
+export async function buildAppUq(uq:string, uqOwner:string, uqName:string):Promise<void> {
+    if (!isBridged()) {
+        let unit = getUnit();
+        let uqToken = await uqTokenApi.uq({unit:unit, uqOwner:uqOwner, uqName:uqName});
+        if (uqToken.token === undefined) uqToken.token = centerToken;
+        let {url, urlDebug} = uqToken;
+        let realUrl = host.getUrlOrDebug(url, urlDebug);
+        console.log('realUrl: %s', realUrl);
+        uqToken.url = realUrl;
+        uqTokens[uq] = uqToken;
+        return uqToken;
+    }
+    console.log("**** before buildAppUq ****", appInFrame);
+    let bp = uqTokenActions[uq];
+    if (bp !== undefined) return;
+    return new Promise<void>((resolve, reject) => {
+        uqTokenActions[uq] = {
+            resolve: async (at:any) => {
+                let {url, urlDebug, token} = await at;
+                uqTokens[uq] = {
+                    name: uq,
+                    url: url,
+                    urlDebug: urlDebug,
+                    token: token,
+                };
+                uqTokenActions[uq] = undefined;
+                console.log("**** after buildAppUq ****", appInFrame);
+                resolve();
+            },
+            reject: reject,
+        };
+        (window.opener || window.parent).postMessage({
+            type: 'app-api',
+            apiName: uq,
+            hash: appInFrame.hash,
+        }, "*");
+    });
+}
+
+export function appUq(uq:string):UqToken {
+    return uqTokens[uq];
+}
+/*
 export async function appUq(uq:string, uqOwner:string, uqName:string): Promise<UqToken> {
     let uqToken = uqTokens[uq];
     if (uqToken !== undefined) return uqToken;
@@ -239,7 +293,7 @@ export async function appUq(uq:string, uqOwner:string, uqName:string): Promise<U
         }, "*");
     });
 }
-
+*/
 interface BridgeCenterApi {
     id: string;
     resolve: (value?:any)=>any;

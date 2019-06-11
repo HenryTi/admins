@@ -83,6 +83,20 @@ export abstract class Context {
         if (widget !== undefined) widget.setVisible(value);
     }
 
+    async submit(buttonName: string) {
+        this.checkRules()
+        if (this.hasError === true) return;
+        let {onButtonClick} = this.form.props;
+        if (onButtonClick === undefined) {
+            alert(`button ${buttonName} clicked. you should define form onButtonClick`);
+            return;
+        }
+        let ret = await onButtonClick(buttonName, this);
+        if (ret === undefined) return;
+        this.setError(buttonName, ret);
+
+    }
+
     checkFieldRules() {
         for (let i in this.widgets) {
             this.widgets[i].checkRules();
@@ -97,8 +111,8 @@ export abstract class Context {
     }
 
     checkContextRules() {
+        this.clearErrors();
         if (this.rules === undefined) return;
-        this.clearContextErrors();
         for (let rule of this.rules) {
             let ret = rule(this);
             if (ret === undefined) continue;
@@ -117,7 +131,7 @@ export abstract class Context {
             let arrRowContexts = this.subContexts[i];
             for (let j in arrRowContexts) {
                 let rowContext = arrRowContexts[j];
-                rowContext.removeErrors();
+                rowContext.clearErrors();
                 rowContext.checkContextRules();
             }
         }
@@ -131,11 +145,26 @@ export abstract class Context {
     }
 
     clearContextErrors() {
-        for (let i in this.widgets) this.widgets[i].clearContextError();
+        for (let i in this.widgets) {
+            let widget = this.widgets[i];
+            if (widget === undefined) continue;
+            widget.clearContextError();
+        }
+    }
+
+    clearWidgetsErrors() {
+        for (let i in this.widgets) {
+            let widget = this.widgets[i];
+            if (widget === undefined) continue;
+            widget.clearError();
+        }
     }
 
     checkRules() {
+        this.clearErrors();
+        this.clearWidgetsErrors();
         this.checkFieldRules();
+        if (this.hasError === true) return;
         this.checkContextRules();
     }
 
@@ -165,14 +194,10 @@ export abstract class Context {
         return this.checkHasError();
     };
 
-    removeErrors() {
+    clearErrors() {
         this.errors.splice(0);
         this.errorWidgets.splice(0);
-        for (let i in this.widgets) {
-            let widget = this.widgets[i];
-            if (widget === undefined) continue;
-            widget.clearContextError();
-        }
+        this.clearContextErrors();
     }
 
     renderErrors = observer((): JSX.Element => {
@@ -215,10 +240,9 @@ export class RowContext extends Context {
         return items[itemName]
     }
     get arrName():string {return this.arrSchema.name}
-    //get data() {return this.row.data;}
-    removeErrors() {
-        super.removeErrors();
-        this.parentContext.removeErrors();
+    clearErrors() {
+        super.clearErrors();
+        this.parentContext.clearErrors();
     }
 
     get parentData():any {return this.parentContext.data;}
@@ -235,7 +259,7 @@ export class FormContext extends Context {
         if (uiSchema === undefined) return undefined;
         let {items} = uiSchema;
         if (items === undefined) return undefined;
-        return items[itemName]
+        return items[itemName];
     }
 }
 

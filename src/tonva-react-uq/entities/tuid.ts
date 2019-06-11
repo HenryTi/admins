@@ -28,18 +28,20 @@ export abstract class Tuid extends Entity {
     unique: string[];
     schemaFrom: {owner:string; uq:string};
 
-    constructor(entities:Entities, name:string, typeId:number) {
+    constructor(entities:Entities, owner:TuidMain, name:string, typeId:number) {
         super(entities, name, typeId);
-        this.buildIdBoxer();
+        this.owner = owner;
+        //this.buildIdBoxer();
     }
 
     abstract get Main():Tuid;
 
     private buildIdBoxer() {
+        if (this.BoxId !== undefined) return;
         this.BoxId = function():void {};
         let prototype = this.BoxId.prototype;
         Object.defineProperty(prototype, '_$tuid', {
-            value: this.from(),
+            value: this, //.from(),
             writable: false,
             enumerable: false,
         });
@@ -64,6 +66,7 @@ export abstract class Tuid extends Entity {
     boxId(id:number):BoxId {
         if (typeof id === 'object') return id as any;
         this.useId(id);
+        this.buildIdBoxer();
         let ret:BoxId = new this.BoxId();
         ret.id = id;
         return ret;
@@ -208,7 +211,7 @@ export abstract class Tuid extends Entity {
             _tuid.useId(tuidValue[f.name]);
         }
     }
-    from(): TuidMain {return;}
+    from(): Tuid {return;}
     private unpackTuidIds(values:any[]|string):any[] {
         if (this.schemaFrom === undefined) {
             let {mainFields} = this.schema;
@@ -261,12 +264,20 @@ export abstract class Tuid extends Entity {
         let api = this.getApiFrom();
         let values = await api.tuidGet(this.name, id);
         if (values === undefined) return;
-        values._$tuid = this;
+        for (let f of this.schema.fields) {
+            let {tuid} = f;
+            if (tuid === undefined) continue;
+            let t = this.entities.getTuid(tuid);
+            if (t === undefined) continue;
+            let n = f.name;
+            values[n] = t.boxId(values[n]);
+        }
+        //values._$tuid = this;
         this.cacheValue(values);
         this.cacheTuidFieldValues(values);
         return values;
     }
-    protected getDiv(divName:string):TuidDiv {return;}
+    getDiv(divName:string):TuidDiv {return;}
     private cacheTuidFieldValues(values:any) {
         let {fields, arrs} = this.schema;
         this.cacheFieldsInValue(values, fields);
@@ -375,14 +386,13 @@ export class TuidMain extends Tuid {
             this.divs = {};
             for (let arr of arrs) {
                 let {name} = arr;
-                let tuidDiv = new TuidDiv(this.entities, name, this.typeId);
-                tuidDiv.owner = this;
+                let tuidDiv = new TuidDiv(this.entities, this, name, this.typeId);
                 this.divs[name] = tuidDiv;
                 tuidDiv.setSchema(arr);
             }
         }
     }
-    protected getDiv(divName:string):TuidDiv {return this.divs[divName];}
+    getDiv(divName:string):TuidDiv {return this.divs[divName];}
     /* 努力回避async里面的super调用，edge不兼容
     async cacheIds():Promise<void> {
         await super.cacheIds();
@@ -467,7 +477,10 @@ export class TuidMain extends Tuid {
 
 export class TuidDiv extends Tuid {
     get Main() {return this.owner}
-
+    from(): Tuid {
+        let from = this.owner.from();
+        return from.getDiv(this.name);
+    }
     getApiFrom() {
         return this.owner.getApiFrom();
     }

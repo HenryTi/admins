@@ -3,7 +3,7 @@ import {IComputedValue} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import _ from 'lodash';
-import {TitleBar} from './titleBar';
+import {PageHeader} from './pageHeader';
 
 export interface ScrollProps {
     onScroll?: (e:any) => void;
@@ -87,6 +87,7 @@ export interface PageProps extends ScrollProps {
     footer?: JSX.Element;
     tabs?: Tab[];
     logout?: boolean | (()=>Promise<void>);
+    headerClassName?: string;
 }
 export interface PageState {
     cur?: Tab;
@@ -158,7 +159,7 @@ export class Page extends React.Component<PageProps, PageState> {
     }
 
     private renderTabs(footer: JSX.Element) {
-        const {header, back, right, keepHeader} = this.props;
+        const {header, back, right, keepHeader, headerClassName} = this.props;
         let cur = this.state.cur;
         let tabs = <div>{
                 this.state.tabs.map((tab, index) => {
@@ -183,17 +184,16 @@ export class Page extends React.Component<PageProps, PageState> {
                     </div>
                 })
             }</div>;
-        let titleBar;
-        if (header !== false) {
-            titleBar = <TitleBar 
+        let pageHeader = header !== false &&
+            <PageHeader 
                 back={back} 
                 center={keepHeader===true? (header as string) : (cur && (cur.header || cur.title))}
-                right={right} 
+                right={right}
+                className={headerClassName}
             />;
-        }
 
         return <article className='page-container'>
-            {titleBar}
+            {pageHeader}
             <section className="position-relative">
             {this.props.sideBar}
             {
@@ -218,18 +218,17 @@ export class Page extends React.Component<PageProps, PageState> {
         </article>;
     }
     private renderSingle(footer: JSX.Element) {
-        const {back, header, right, onScroll, onScrollTop, onScrollBottom, children} = this.props;
-        let titleBar;
-        if (header !== false)
-            titleBar = <TitleBar 
-                back={back} 
-                center={header as any}
-                right={right}
-                logout={this.props.logout}
-            />;
+        const {back, header, right, onScroll, onScrollTop, onScrollBottom, children, headerClassName} = this.props;
+        let pageHeader = header !== false && <PageHeader 
+            back={back} 
+            center={header as any}
+            right={right}
+            logout={this.props.logout}
+            className={headerClassName}
+        />;
         return (
             <article className='page-container' onTouchStart={this.onTouchStart}>
-                {titleBar}
+                {pageHeader}
                 <section className="position-relative">
                     {this.props.sideBar}
                     <ScrollView
@@ -247,8 +246,7 @@ export class Page extends React.Component<PageProps, PageState> {
 
     render() {
         const {footer} = this.props;
-        let elFooter;
-        if (footer !== undefined) elFooter = <footer>{footer}</footer>;
+        let elFooter = footer !== undefined && <footer>{footer}</footer>;
         if (this.tabs !== undefined)
             return this.renderTabs(elFooter);
         else

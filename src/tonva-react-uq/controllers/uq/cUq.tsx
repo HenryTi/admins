@@ -145,6 +145,7 @@ export class CUq extends Controller /* implements Uq*/ {
     private schemaLoaded:boolean = false;
 
     protected async loadEntites() {
+        await this.entities.init();
         await this.entities.loadAccess();
     }
 

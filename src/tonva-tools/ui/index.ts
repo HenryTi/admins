@@ -1,5 +1,5 @@
 export * from './nav';
-export * from './titleBar';
+export * from './pageHeader';
 export * from './page';
 export * from './VM';
 export * from './schema';
@@ -10,3 +10,4 @@ export * from './tabs';
 export * from './loading';
 export * from './image';
 export * from './resUploader';
+export * from './rules';

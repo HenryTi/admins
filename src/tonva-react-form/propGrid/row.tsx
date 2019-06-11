@@ -1,7 +1,5 @@
 import * as React from 'react';
-import {observer} from 'mobx-react';
-import * as className from 'classnames';
-import {ListView} from '../listView';
+import className from 'classnames';
 import {PropGridProps} from './PropGrid';
 import {LabeledProp, StringProp, NumberProp, ListProp, ComponentProp} from './propView';
 
@@ -13,7 +11,7 @@ export abstract class PropRow {
 export class PropBorder extends PropRow {
     render(key:string): JSX.Element {
         return <div key={'_b_' + key} className="">
-            <div className="col-sm-12">
+            <div className="w-100">
                 <div style={{borderTop: '1px solid #f0f0f0'}} />
             </div>
         </div>;
@@ -45,11 +43,13 @@ export abstract class LabeledPropRow extends PropRow {
     protected gridProps: PropGridProps;
     protected prop: LabeledProp;
     protected content: any;
+    protected col: string;
     //protected values: any;
     constructor(gridProps:PropGridProps, prop: LabeledProp) {
         super();
         this.gridProps = gridProps;
         this.prop = prop;
+        this.col = gridProps.labelFixLeft === true? 'col' : 'col-sm';
         //this.values = values;
     }
     render(key:string):any {
@@ -67,12 +67,12 @@ export abstract class LabeledPropRow extends PropRow {
     protected renderLabel():any {
         let {label} = this.prop;
         if (label === undefined) return null;
-        return <label className="col-sm-2 col-form-label">
+        return <label className={this.col + '-3 col-form-label'}>
             {label}
         </label>;
     }
     protected renderProp():any {
-        let {label, full} = this.prop as any;
+        let {label} = this.prop;
         let align, vAlign;
         switch (this.gridProps.alignValue) {
             case 'left': align = valueAlignStart; break;
@@ -86,11 +86,7 @@ export abstract class LabeledPropRow extends PropRow {
             case 'bottom': vAlign = 'align-items-end'; break;
             case 'stretch': vAlign = 'align-items-stretch'; break;
         }
-        let col:string;
-        if (full !== true)
-            col = label===undefined? 'col-sm-12':'col-sm-10';
-        else
-            col = 'w-100';
+        let col:string = this.col + (label===undefined? '-12':'-9');
         let cn = className(align, vAlign, col, 'd-flex');
         return <div className={cn}>
             {this.renderPropBody()}
@@ -154,19 +150,29 @@ export class ComponentPropRow extends LabeledPropRow {
         let {component} = this.prop;
         return component;
     }
-}
-
-export class PropContainer extends PropRow {
-    render(key:string): JSX.Element {
-        return <div className="bg-white">
-            <label className="col-sm-2 col-form-label">
-                AAABBBCCC
-            </label>
-            <div className="col-sm-10">
-                <div className="form-control-plaintext">
-                    dsfasfa sdf asdf a
-                </div>
-            </div>
+    protected renderProp():any {
+        let {label, full} = this.prop;
+        let align, vAlign;
+        switch (this.gridProps.alignValue) {
+            case 'left': align = valueAlignStart; break;
+            case 'center': align = valueAlignCenter; break;
+            case 'right': align = valueAlignEnd; break;
+        }
+        switch (this.prop.vAlign) {
+            case 'top': vAlign = 'align-items-start'; break;
+            default:
+            case 'center': vAlign = 'align-items-center'; break;
+            case 'bottom': vAlign = 'align-items-end'; break;
+            case 'stretch': vAlign = 'align-items-stretch'; break;
+        }
+        let col:string;
+        if (full !== true)
+            col = this.col + (label===undefined? '-12':'-9');
+        else
+            col = 'w-100';
+        let cn = className(align, vAlign, col, 'd-flex');
+        return <div className={cn}>
+            {this.renderPropBody()}
         </div>;
     }
 }

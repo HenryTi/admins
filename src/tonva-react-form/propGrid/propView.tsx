@@ -1,20 +1,21 @@
-import {ListViewProps} from '../listView';
-import {PropGridProps} from './PropGrid';
-import {PropRow, PropBorder, PropGap, PropContainer,
-    StringPropRow, NumberPropRow, ListPropRow, ComponentPropRow} from './row';
+import { PropGridProps } from './PropGrid';
+import {
+    PropRow, PropBorder, PropGap, 
+    StringPropRow, NumberPropRow, ListPropRow, ComponentPropRow
+} from './row';
 
 export interface Format {
 
 }
 
 export interface PropBase {
-    onClick?: ()=>void;
+    onClick?: () => void;
 }
 
 export interface LabeledProp extends PropBase {
     label?: string;
     bk?: string;
-    vAlign?: 'top'|'bottom'|'center'|'stretch';
+    vAlign?: 'top' | 'bottom' | 'center' | 'stretch';
 }
 
 export interface StringProp extends LabeledProp {
@@ -35,7 +36,7 @@ export interface FormatProp extends LabeledProp {
 export interface ListProp extends LabeledProp {
     type: 'list';
     list: string | any[];  // string 表示名字，否则就是值
-    row: new (props:any) => React.Component;
+    row: new (props: any) => React.Component;
 }
 
 export interface ComponentProp extends LabeledProp {
@@ -47,12 +48,12 @@ export interface ComponentProp extends LabeledProp {
 export type Prop = StringProp | NumberProp | FormatProp | ListProp | ComponentProp | string;
 
 export class PropView {
-    private gridProps:PropGridProps
+    private gridProps: PropGridProps
     private props: Prop[];
     //private values:any;
     private rows: PropRow[];
 
-    constructor(gridProps:PropGridProps, props:Prop[]) {
+    constructor(gridProps: PropGridProps, props: Prop[]) {
         this.gridProps = gridProps;
         this.props = props;
         //this.values = values;
@@ -61,7 +62,7 @@ export class PropView {
 
     private buildRows() {
         this.rows = [];
-        let isGap:boolean = true;
+        let isGap: boolean = true;
         for (let prop of this.props) {
             if (typeof prop === 'string') {
                 this.rows.push(new PropGap(prop));

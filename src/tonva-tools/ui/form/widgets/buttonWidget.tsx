@@ -12,11 +12,9 @@ export class ButtonWidget extends Widget {
         this.clearContextError();
         let {name, type} = this.itemSchema;
         if (type === 'submit') {
-            this.context.checkRules()
-            if (this.context.hasError === true) {
-                return;
-            }
+            await this.context.submit(name);
         }
+        /*
         let {onButtonClick} = this.context.form.props;
         if (onButtonClick === undefined) {
             alert(`button ${name} clicked. you should define form onButtonClick`);
@@ -25,6 +23,7 @@ export class ButtonWidget extends Widget {
         let ret = await onButtonClick(name, this.context);
         if (ret === undefined) return;
         this.context.setError(name, ret);
+        */
     }
 
     private observerRender = observer(() => {

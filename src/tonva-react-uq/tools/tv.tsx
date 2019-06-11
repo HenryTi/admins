@@ -2,6 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { BoxId, Tuid } from "../entities";
 import { PureJSONContent } from '../controllers';
+import { FA } from 'tonva-react-form';
 
 type TvTemplet = (values?:any, x?:any) => JSX.Element;
 
@@ -15,6 +16,7 @@ interface Props {
 function boxIdContent(bi: number|BoxId, ui:TvTemplet, x:any) {
     if (typeof bi === 'number') return <>{bi}</>;
     let {id, _$tuid, _$com} = bi as BoxId;
+    if (id === undefined || id === null) return;
     let t:Tuid = _$tuid;
     if (t === undefined) {
         if (ui !== undefined) return ui(bi, x);
@@ -25,7 +27,12 @@ function boxIdContent(bi: number|BoxId, ui:TvTemplet, x:any) {
         com = bi._$com = t.getTuidContent();
     }
     let val = t.valueFromId(id);
-    if (typeof val === 'number') val = {id: val};
+    if (val === undefined) {
+        return <>[<FA className="text-danger" name="bug" /> no {t.name} on id={id}]</>;
+    }
+    switch (typeof val) {
+        case 'number': val = {id: val}; break;
+    }
     if (ui !== undefined) {
         let ret = ui(val, x);
         if (ret !== undefined) return ret;
@@ -35,6 +42,14 @@ function boxIdContent(bi: number|BoxId, ui:TvTemplet, x:any) {
 }
 
 const Tv = observer(({tuidValue, ui, x, nullUI}:Props) => {
+    if (tuidValue === undefined) {
+        if (nullUI === undefined) return <>[undefined]</>;
+        return nullUI();
+    }
+    if (tuidValue === null) {
+        if (nullUI === undefined) return <>[null]</>;
+        return nullUI();
+    }
     let ttv = typeof tuidValue;
     switch (ttv) {
         default:
@@ -45,16 +60,13 @@ const Tv = observer(({tuidValue, ui, x, nullUI}:Props) => {
                 if (ret !== undefined) return ret;
                 return <>{tuidValue}</>;
             }
-        case 'undefined':
-            break;
         case 'object':
-            if (tuidValue !== null) return boxIdContent(tuidValue, ui, x);
-            break;
+            let divObj = boxIdContent(tuidValue, ui, x);
+            if (divObj !== undefined) return divObj;
+            return nullUI();
         case 'number':
             return <>id...{tuidValue}</>;
-    }       
-    if (nullUI === undefined) return <>.</>;
-    return nullUI();
+    }
 });
 
 export const tv = (tuidValue:number|BoxId, ui?:TvTemplet, x?:any, nullUI?:()=>JSX.Element):JSX.Element => {

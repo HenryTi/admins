@@ -314,13 +314,19 @@ default class AdminPage extends React.Component {
         let header:any, top:any;
         if (unit !== undefined) {
             let {name, nick, icon, discription} = unit;
-            header = nick || name;
-            if (this.caption !== undefined) header = this.caption + ' - ' + header;            
+            let title:string, vice:any;
+            if (nick) {
+                title = nick;
+                vice = <h6><small className='text-secondary'>{name}</small></h6>;
+            }
+            else {
+                title = name;
+            }
+            if (this.caption !== undefined) header = this.caption + ' - ' + title;
             top = <LMR className='px-3 my-4 bg-white py-2 cursor-pointer' onClick={()=>nav.push(<UnitProps />)}
                 left={<div><Image className="w-3c h-3c" src={icon} /></div>}>
                 <div className="px-3">
-                    <h6 className='text-dark'>{name}</h6>
-                    <h6><small className='text-secondary'>{nick}</small></h6>
+                    <LMR right={vice}><h6 className='text-dark font-weight-bold'>{title}</h6></LMR>
                     <div className='small text-info'>{discription}</div>
                 </div>
             </LMR>;
