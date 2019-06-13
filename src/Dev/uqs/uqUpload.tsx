@@ -10,15 +10,15 @@ interface State {
     text?: string;
 }
 
-export interface UpUploadProps {
+export interface UqUploadProps {
     uq: DevModel.UQ;
     services: DevModel.Service[];
 }
 
-export class UqUpload extends React.Component<UpUploadProps, State> {
+export class UqUpload extends React.Component<UqUploadProps, State> {
     private fileInput: HTMLInputElement;
 
-    constructor(props) {
+    constructor(props:UqUploadProps) {
         super(props);
         this.state = {
             files: undefined,
@@ -149,6 +149,7 @@ class UqPage extends React.Component<UqPgeProps> {
 }
 
 interface CompileResultProps {
+    uq: DevModel.UQ;
     res: Response;
     abortController: AbortController;
 }
@@ -293,8 +294,10 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         }
     }
     render() {
+        let {uq} = this.props;
         let {seconds, texts} = this.state;
-        return <Page header={seconds>=0? "编译完成" : "编译中..."} back="close">
+        let header = uq.name + ' - ' + (seconds>=0? "编译完成" : "编译中...");
+        return <Page header={header} back="close">
             <div id='topDiv' />
             <div id='scrollDiv'
                 onDoubleClick={this.doubleClick} 

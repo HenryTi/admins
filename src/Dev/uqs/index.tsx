@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { observable } from 'mobx';
 import { nav, Controller } from 'tonva-tools';
 import { DevModel } from '../../model';
-import { UqUpload, UpUploadProps } from './uqUpload';
+import { UqUpload, UqUploadProps } from './uqUpload';
 import { devApi } from 'api';
 import { NewServicePage } from './newServicePage';
 import { ServicePage } from './servicePage';
