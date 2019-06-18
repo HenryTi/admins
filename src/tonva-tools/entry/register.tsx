@@ -360,7 +360,7 @@ class RegSuccess extends VPage<RegisterController> {
     }
 
     private page = () => {
-        const {account, successText} = this.controller;
+        const {account, successText, login} = this.controller;
         return (
         <Page header={false}>
             <div className="container w-max-30c">
@@ -368,7 +368,7 @@ class RegSuccess extends VPage<RegisterController> {
                     <div className="py-5">
                         账号 <strong className="text-primary">{account} </strong> {successText}！
                     </div>
-                    <button className="btn btn-success btn-block" onClick={() => this.controller.login()}>
+                    <button className="btn btn-success btn-block" type="button" onClick={login}>
                         直接登录
                     </button>
                 </form>
