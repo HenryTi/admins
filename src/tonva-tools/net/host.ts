@@ -33,8 +33,22 @@ const hosts:{[name:string]:HostValue} = {
     }
 }
 
-function centerUrlFromHost(host:string) {return `http://${host}/`}
-function centerWsFromHost(host:string) {return `ws://${host}/tv/`}
+function centerUrlFromHost(host:string) {
+    if (host.startsWith('https://') === true) {
+        if (host.endsWith('/')) return host;
+        return host + '/';
+    }
+    return `http://${host}/`;
+}
+function centerWsFromHost(host:string) {
+    let https = 'https://';
+    if (host.startsWith(https) === true) {
+        host = host.substr(https.length);
+        if (host.endsWith('/') === true) host = host.substr(0, host.length-1);
+        return 'wss://' + host + '/tv/';
+    }
+    return `ws://${host}/tv/`
+}
 
 const fetchOptions = {
     method: "GET",
