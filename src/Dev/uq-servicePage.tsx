@@ -1,9 +1,10 @@
 import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Step, Field, Prop, PropGrid, Media, 
-    TonvaForm, FormRow, SubmitResult, Muted, TextAreaFace, StringFace} from 'tonva-react-form';
-import {nav, Page} from 'tonva-tools';
+import {Prop, PropGrid, Media, Muted} from 'tonva';
+import {Step, Field, 
+    TonvaForm, FormRow, SubmitResult, TextAreaFace, StringFace} from 'tonva-form';
+import {nav, Page} from 'tonva';
 import {ServerSpan, StringValueEdit, TextValueEdit} from '../tools';
 import {DevModel} from '../model';
 import {store} from '../store';

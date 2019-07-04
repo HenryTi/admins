@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {List, LMR, FA, Media, Muted, PropGrid, Prop} from 'tonva-react-form';
-import {nav, Page} from 'tonva-tools';
+import {List, LMR, FA, Media, Muted, PropGrid, Prop} from 'tonva';
+import {nav, Page} from 'tonva';
 import {Role} from '../model';
 import {store} from '../store';
 import {appIcon, appItemIcon} from '../consts';

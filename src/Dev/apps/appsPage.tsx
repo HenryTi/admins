@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { VPage, Page, Image } from "tonva-tools";
+import { VPage, Page, Image } from 'tonva';
 import { AppController } from '.';
-import { List, LMR, Badge, Muted, FA } from 'tonva-react-form';
+import { List, LMR, Badge, Muted, FA } from 'tonva';
 import { DevModel } from 'model';
 import { NewPage } from './editPage';
 

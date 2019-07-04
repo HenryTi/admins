@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {nav, Page} from 'tonva-tools';
-import {FormRow, TonvaForm, Step, MultiStep, DropdownActions, Action, List, FA, SubmitResult} from 'tonva-react-form';
+import {nav, Page} from 'tonva';
+import {FormRow, TonvaForm, Step, MultiStep, SubmitResult} from 'tonva-form';
+import {DropdownActions, Action, List, FA} from 'tonva';
 import {DevModel} from '../model';
 import { ObjViewProps } from './ObjViewProps';
 import { store } from 'store';
@@ -67,7 +68,7 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
                 onSubmit={this.onSubmit} initValues={items().cur} />;
         }
         else {
-            content = "ObjViewProps: no steps and no formRows";
+            content = 'ObjViewProps: no steps and no formRows';
         }
         return <Page header={'新增'+title}>
             {content}

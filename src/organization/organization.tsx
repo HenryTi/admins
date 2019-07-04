@@ -1,13 +1,20 @@
 import * as React from 'react';
-import { Page, VPage } from 'tonva-tools';
-import { List, FA } from 'tonva-react-form';
-import { CUq, Link, CLink, CApp } from "tonva-react-uq";
-import ui from './ui';
+import { Page, VPage } from 'tonva';
+import { List, FA } from 'tonva';
+import { CUq, Link, CLink, CApp } from 'tonva';
 import { COpBinding } from './op';
 
+const uqData = {
+    id: 0,
+    uqOwner: '$$$',
+    uqName: '$unitx',
+    access: undefined
+
+};
+
 export class COrganization extends CUq {
-    constructor() {
-        super(undefined, '$$$/$unitx', 0, 0, undefined, ui);
+    constructor(cApp: CApp) {
+        super(cApp, uqData, {}); // 0, undefined, ui);
     }
 
     label = '岗位权限';
@@ -19,13 +26,17 @@ export class COrganization extends CUq {
         //nav.clear();
     }
 
+    /*
     protected async loadEntites() {
         // 只有赋Entity权限的地方，需要取全部的Entities，其它地方默认取user access，this.entities.loadAccess()
-        await this.entities.loadEntities();
+        throw 'await this.entities.loadEntities();';
+        // await this.entities.loadEntities();
     }
+    */
 
     protected async internalStart() {
-        await this.loadSchema();
+        //throw 'await this.uq.loadSchema();';
+        //await this.uq.loadSchema();
         this.links= [
             '',
             new CLink(new COpBinding(this, this.res)),

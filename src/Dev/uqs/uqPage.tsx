@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { VPage, Page, nav } from 'tonva-tools';
-import { UQController } from '.';
+import { VPage, Page, nav } from 'tonva';
+import { UQController } from './uqController';
 import { IdDates, UnitSpan, ServerSpan } from 'tools';
-import { Prop, Media, LMR, FA, PropGrid, Muted, List, EasyDate, DropdownActions } from 'tonva-react-form';
+import { Prop, Media, LMR, FA, PropGrid, Muted, List, EasyDate, DropdownActions } from 'tonva';
 import { DevModel } from 'model';
 import { EditPage } from './editPage';
 import { store } from 'store';

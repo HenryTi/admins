@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { VPage, Page, Image, nav } from "tonva-tools";
-import { UsersController, User } from "./cUsers";
-import { SearchBox } from 'tonva-react-form';
+import { VPage, Page, Image, nav } from 'tonva';
+import { UsersController, User } from './cUsers';
+import { SearchBox } from 'tonva';
 import { mainApi } from 'api';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';

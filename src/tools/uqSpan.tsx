@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import * as classNames from 'classnames';
-import {Prop, Media, PropGrid} from 'tonva-react-form';
-import {nav, Page}  from 'tonva-tools';
+import {Prop, Media, PropGrid} from 'tonva';
+import {nav, Page}  from 'tonva';
 import {appIcon, appItemIcon} from 'consts';
 import {store} from 'store';
 import {IdDates} from './idDates';

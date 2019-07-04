@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { nav, NavView } from 'tonva-tools';
+import { nav, NavView } from 'tonva';
 import { CAdmin } from './Admin';
 import './App.css';
 

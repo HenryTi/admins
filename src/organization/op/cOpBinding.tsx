@@ -1,12 +1,12 @@
-import React from "react";
-import { Page, Controller, appInFrame, VPage } from "tonva-tools";
-import { List, Muted, LMR, FA } from "tonva-react-form";
+import React from 'react';
+import { Page, Controller, appInFrame, VPage } from 'tonva';
+import { List, Muted, LMR, FA } from 'tonva';
 import { VOpBinding } from './vOpBinding';
-import { CAction, CQuery, centerApi, entityIcons, ControllerUq } from "tonva-react-uq";
-import { Organization, Team, Section, Post, Sheet, App, Uq, To, Entity, EntityBlock } from "./model";
-import { VAllPosts } from "./vAllPosts";
-import { VFullFunction } from "./vFullFunction";
-import { VSearchUser } from "./vSearchUser";
+import { CAction, CQuery, centerApi, entityIcons, ControllerUq } from 'tonva';
+import { Organization, Team, Section, Post, Sheet, App, Uq, To, Entity, EntityBlock } from './model';
+import { VAllPosts } from './vAllPosts';
+import { VFullFunction } from './vFullFunction';
+import { VSearchUser } from './vSearchUser';
 
 // 单据跟操作的绑定设置
 export class COpBinding extends ControllerUq {

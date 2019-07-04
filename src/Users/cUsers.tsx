@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { observable } from 'mobx';
-import { Controller, VPage, Page } from "tonva-tools";
+import { Controller, VPage, Page } from 'tonva';
 import { mainApi } from 'api';
-import { LMR, FA } from 'tonva-react-form';
+import { LMR, FA } from 'tonva';
 import { VApps } from './vApps';
 import { VUsers } from './vUsers';
 import { VApp } from './vApp';

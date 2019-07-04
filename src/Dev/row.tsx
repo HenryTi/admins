@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {LMR, Badge, Muted} from 'tonva-react-form';
+import {LMR, Badge, Muted} from 'tonva';
 
 export interface RowProps {
     icon: string;

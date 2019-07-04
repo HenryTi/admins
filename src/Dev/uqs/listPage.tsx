@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { VPage, Page } from "tonva-tools";
-import { UQController } from '.';
-import { List, LMR, Badge, Muted, FA } from 'tonva-react-form';
+import { VPage, Page } from 'tonva';
+import { UQController } from './uqController';
+import { List, LMR, Badge, Muted, FA } from 'tonva';
 import { DevModel } from 'model';
 import { NewPage } from './editPage';
 import { store } from 'store';

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { DevModel } from "model";
+import { DevModel } from 'model';
 import { IdPickProps, createIdPick } from 'createIdPick';
 import { store } from 'store';
-import { Field, FormRow, StringFace, TextAreaFace, TonvaForm, SubmitResult } from 'tonva-react-form';
-import { UQController } from '.';
-import { VPage, nav, Page } from 'tonva-tools';
+import { Field, FormRow, StringFace, TextAreaFace, TonvaForm, SubmitResult } from 'tonva-form';
+import { UQController } from './uqController';
+import { VPage, nav, Page } from 'tonva';
 
 const ServerCaption = (item:DevModel.Server) => {
     let {discription, cloud, ip} = item;

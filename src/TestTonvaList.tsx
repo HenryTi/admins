@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {Page} from 'tonva-tools';
-import {List, ListProps, LMR, Badge, FA, StackedFA} from 'tonva-react-form';
+import {Page} from 'tonva';
+import {List, ListProps, LMR, Badge, FA, StackedFA} from 'tonva';
 import {appIcon, appItemIcon} from './consts';
 
 interface Item {

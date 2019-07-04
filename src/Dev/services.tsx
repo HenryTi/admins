@@ -1,5 +1,7 @@
+/*
 import * as React from 'react';
-import {Step, Field, Prop, PropGrid, Media} from 'tonva-react-form';
+import {Field, Step} from 'tonva-form';
+import {Prop, PropGrid, Media} from 'tonva';
 import {UnitSpan, IdDates, ServerSpan, UqSpan, AppSpan} from '../tools';
 import {Row} from './row';
 import {appIcon, appItemIcon} from '../consts';
@@ -208,3 +210,4 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
 };
 
 export default servicesProps;
+*/

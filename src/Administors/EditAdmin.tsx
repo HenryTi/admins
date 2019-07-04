@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, Schema, UiSchema, ItemSchema, UiCheckItem, UiButton, ButtonSchema, Form, Context, Image} from 'tonva-tools';
+import {nav, Page, Schema, UiSchema, ItemSchema, UiCheckItem, UiButton, ButtonSchema, Form, Context, Image} from 'tonva';
 import {store} from '../store';
 import { UnitAdmin } from '../model/index';
 //import {mainApi} from '../api';

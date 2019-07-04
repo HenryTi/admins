@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {List, Media, LMR, FA, PropGrid, Prop} from 'tonva-react-form';
-import {nav, Page} from 'tonva-tools';
+import {List, Media, LMR, FA, PropGrid, Prop} from 'tonva';
+import {nav, Page} from 'tonva';
 import {StringValueEdit} from '../tools';
 import {Role, UnitApp} from '../model';
 import {store} from '../store';

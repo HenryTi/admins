@@ -1,4 +1,4 @@
-import { UqUI } from 'tonva-react-uq';
+import { UqUI } from 'tonva';
 import map from './map';
 import tuid from './tuid';
 import query from './query';

@@ -2,11 +2,11 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { List, LMR, SearchBox } from 'tonva-react-form';
+import { List, LMR, SearchBox } from 'tonva';
 import { DevModel } from 'model';
 import { UnitSpan } from 'tools';
 import { store } from 'store';
-import { nav, Page, VPage } from 'tonva-tools';
+import { nav, Page, VPage } from 'tonva';
 import { AppController } from '.';
 
 export class SearchUqPage extends VPage<AppController> {

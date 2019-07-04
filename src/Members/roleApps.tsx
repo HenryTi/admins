@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {List, LMR} from 'tonva-react-form';
-import {nav, Page} from 'tonva-tools';
+import {List, LMR} from 'tonva';
+import {nav, Page} from 'tonva';
 import {Role, UnitApp} from '../model';
 import {store} from '../store';
 import {mainApi} from '../api';

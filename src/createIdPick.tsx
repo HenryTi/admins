@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {nav, Page} from 'tonva-tools';
-import {IdPick, IdPickFace, List, SearchBox} from 'tonva-react-form';
-import {DevModel} from './model';
+import {nav, Page} from 'tonva';
+import {IdPick, IdPickFace} from 'tonva-form';
+import {List, SearchBox} from 'tonva';
 
 export interface IdPickProps {
     caption: string;

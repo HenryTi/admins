@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, appInFrame, Controller, VPage, Image, Edit, ItemSchema, UiSchema, StringSchema, ImageSchema, UiImageItem, UiTextItem} from  'tonva-tools'; 
-import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva-react-form';
+import {nav, Page, appInFrame, Controller, 
+    VPage, Image, Edit, ItemSchema, UiSchema, 
+    StringSchema, ImageSchema, UiImageItem, UiTextItem} from 'tonva'; 
+import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva';
 import {StringValueEdit} from './tools';
 import {Unit, UnitApps, UnitAdmin, DevModel} from './model';
 import {store} from './store';
@@ -14,7 +16,7 @@ import {
     ObjViewProps, ObjView,
     //appsProps, 
     busesProps, 
-    serversProps, /*uqdbsProps, */servicesProps, UQController} from './Dev';
+    serversProps, /*uqdbsProps, servicesProps, */ UQController} from './Dev';
 import { AppController } from './Dev';
 import { UsersController } from 'Users';
 
@@ -188,6 +190,7 @@ default class AdminPage extends React.Component {
         page: Administors,
     };
 
+    /*
     private cOrganization = new COrganization;
     private organizeAction:ActionItem = {
         main: this.cOrganization.label,
@@ -195,6 +198,7 @@ default class AdminPage extends React.Component {
         icon: this.cOrganization.icon,
         controller: this.cOrganization
     };
+    */
 
     private noneAction:ActionItem = {
         main: '请耐心等待分配任务',

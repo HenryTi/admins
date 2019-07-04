@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {nav, Page} from 'tonva-tools';
-import {List, EasyDate, LMR, Muted} from 'tonva-react-form';
+import {nav, Page} from 'tonva';
+import {List, EasyDate, LMR, Muted} from 'tonva';
 import {DevModel} from '../../model';
 import {store} from '../../store';
 

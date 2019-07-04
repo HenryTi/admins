@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { VPage, Page, nav } from "tonva-tools";
-import { AppController, UqAccess } from ".";
-import { LMR } from 'tonva-react-form';
+import { VPage, Page, nav } from 'tonva';
+import { AppController, UqAccess } from '.';
+import { LMR } from 'tonva';
 
 export class UqBindPage extends VPage<AppController> {
     private uqAccess: UqAccess;

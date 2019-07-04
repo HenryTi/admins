@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
 import _ from 'lodash';
-import {FormRow, EasyDate, Media, 
-    Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva-react-form';
+import {EasyDate, Media, 
+    Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva';
 import {UnitSpan, IdDates, ServerSpan} from '../tools';
 import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';

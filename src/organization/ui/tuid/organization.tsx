@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TuidUI } from "tonva-react-uq";
+import { TuidUI } from 'tonva';
 
 const ui:TuidUI = {
     divs: {

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {IObservableArray} from 'mobx';
 import {observer} from 'mobx-react';
-import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid} from 'tonva-react-form';
-import {nav, Page, PageItems, Image} from 'tonva-tools';
+import {SearchBox, Media, List, LMR, Badge, Prop, PropGrid} from 'tonva';
+import {nav, Page, PageItems, Image} from 'tonva';
 import {mainApi} from '../api';
 import {store} from '../store';
 import {UnitApp} from '../model';

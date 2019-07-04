@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { QueryUI } from "tonva-react-uq";
+import { QueryUI } from 'tonva';
 import { observer } from 'mobx-react';
 
 const ui:QueryUI = {

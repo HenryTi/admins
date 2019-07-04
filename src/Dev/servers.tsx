@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Prop, PropGrid, LMR, Muted, FA} from 'tonva-react-form';
+import {Prop, PropGrid, LMR, Muted, FA} from 'tonva';
 import {UnitSpan, IdDates} from '../tools';
 import {DevModel} from '../model';
 import {store} from '../store';

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { VPage, Page, nav } from "tonva-tools";
-import { COpBinding } from "./cOpBinding";
+import { VPage, Page, nav } from 'tonva';
+import { COpBinding } from './cOpBinding';
 import { Uq } from './model';
-import { List, FA, SearchBox } from 'tonva-react-form';
+import { List, FA, SearchBox } from 'tonva';
 import { observable } from 'mobx';
-import { CMap, CQuery, QueryPageItems, Query, Tuid, CTuid } from 'tonva-react-uq';
+import { CMap, CQuery, QueryPageItems, Query, Tuid, CTuid } from 'tonva';
 
 export class PageUsers extends QueryPageItems {
     protected setPageStart(item:any) {

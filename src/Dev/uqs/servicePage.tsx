@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { observable } from 'mobx';
-import { Page, VPage, nav } from "tonva-tools";
-import { UQController } from '.';
+import { Page, VPage, nav } from 'tonva';
+import { UQController } from './uqController';
 import { DevModel } from 'model';
-import { Prop, PropGrid } from 'tonva-react-form';
+import { Prop, PropGrid } from 'tonva';
 import { StringValueEdit, ServerSpan, TextValueEdit } from 'tools';
 
 export class ServicePage extends VPage<UQController> {

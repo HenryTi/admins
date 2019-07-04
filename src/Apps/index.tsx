@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {List, FA, SubmitResult, LMR, Badge} from 'tonva-react-form';
-import {nav, Page, Image} from 'tonva-tools';
+import {List, FA, LMR, Badge} from 'tonva';
+import {nav, Page, Image} from 'tonva';
 import {store} from '../store';
 import {NewApp} from './new';
 import {UnitApp} from '../model';

@@ -1,0 +1,383 @@
+
+/* tab css */
+.tab {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 860px;
+  align-self: center;
+  height: 100%;
+}
+.tab>div:first-child {
+  display: flex;
+  flex: 1 1 auto;
+  height: 3rem; /* 2019-7-2：不知道为什么，只有加了这个，不管是xrem，tab的滚动才成立 */
+}
+.tab>div:last-child {
+  display: flex;
+  align-items: center;
+}
+.tab-sm>div:last-child {
+  height: 2.5rem;
+}
+.tab-md>div:last-child {
+  height: 3.2rem;
+}
+.tab-lg>div:last-child {
+  height: 4rem;
+}
+.tab>div:last-child, .tab>div:last-child>div {
+  display: flex;
+  align-items: center;
+}
+.tab>div:last-child>div {
+  flex-direction: column;
+}
+.tab>div>div {
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+}
+.tab>div>div>div {
+  position: relative;
+}
+.tab>div>div>div>u {
+  position: absolute;
+  right: -0.8rem;
+  top: 0rem;
+  font-size: 0.7rem;
+  background-color: red;
+  display: flex;
+  align-items: center;
+  color: white;
+  min-width: 1rem;
+  padding: 0 3px;
+  height: 1.0rem;
+  text-decoration: none;
+  justify-content: center;
+  border-radius: 0.6rem;
+}
+.tab>div>div>div>u.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  min-width: 0.5rem;
+  right: -0.8rem;
+}
+
+/* form css */
+.border-gray {
+  border-color: #cccccc !important;
+}
+.form-row-checkbox {
+  min-width: 1.8rem;
+  max-width: 1.8rem;
+  padding: 0 0 0 0.2rem;
+  text-align: left;
+  z-index: 999;
+}
+.form-row-checkbox input {
+  height: 1.1rem;
+  width: 1.1rem;
+  min-width: 1.1rem;
+  cursor: pointer;
+}
+.form-row-edit {
+  min-width: 1.8rem;
+  max-width: 1.8rem;
+  padding: 0 0.2rem 0.2rem 0.2rem;
+  text-align: right;
+  cursor: pointer;
+  align-self: end;
+  z-index: 999;
+}
+.form-row-content {
+  flex: 1;
+  width: calc(100% - 3.6rem)
+}
+.form-row-content-1 {
+  flex: 1;
+  width: calc(100% - 1.8rem)
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.row-selected label {
+  font-weight: bold;
+}
+.required-item {
+  border-color: #007bff;
+}
+.deleted, .deleted label, .deleted input {
+  text-decoration: line-through rgb(255, 127, 127);
+  color: gray;
+}
+.w-1c {
+  width: 1rem !important;
+}
+.w-min-1c {
+  min-width: 1rem !important;
+}
+.w-max-1c {
+  max-width: 1rem !important;
+}
+.w-1-2c {
+  width: 1.2rem !important;
+}
+.w-min-1-2c {
+  min-width: 1.2rem !important;
+}
+.w-max-1-2c {
+  max-width: 1.2rem !important;
+}
+.w-1-5c {
+  width: 1.5rem !important;
+}
+.w-min-1-5c {
+  min-width: 1.5rem !important;
+}
+.w-max-1-5c {
+  max-width: 1.5rem !important;
+}
+.w-2c {
+  width: 2rem !important;
+}
+.w-min-2c {
+  min-width: 2rem !important;
+}
+.w-max-2c {
+  max-width: 2rem !important;
+}
+.w-2-5c {
+  width: 2.5rem !important;
+}
+.w-min-2-5c {
+  min-width: 2.5rem !important;
+}
+.w-max-2-5c {
+  max-width: 2.5rem !important;
+}
+.w-3c {
+  width: 3rem !important;
+}
+.w-min-3c {
+  min-width: 3rem !important;
+}
+.w-max-3c {
+  max-width: 3rem !important;
+}
+.w-4c {
+  width: 4rem !important;
+}
+.w-min-4c {
+  min-width: 4rem !important;
+}
+.w-max-4c {
+  max-width: 4rem !important;
+}
+.w-6c {
+  width: 6rem !important;
+}
+.w-min-6c {
+  min-width: 6rem !important;
+}
+.w-max-6c {
+  max-width: 6rem !important;
+}
+.w-8c {
+  width: 8rem !important;
+}
+.w-min-8c {
+  min-width: 8rem !important;
+}
+.w-max-8c {
+  max-width: 8rem !important;
+}
+.w-12c {
+  width: 12rem !important;
+}
+.w-min-12c {
+  min-width: 12rem !important;
+}
+.w-max-12c {
+  max-width: 12rem !important;
+}
+.w-20c {
+  width: 20rem !important;
+}
+.w-max-20c {
+  max-width: 20rem !important;
+}
+.w-min-20c {
+  min-width: 20rem !important;
+}
+.w-30c {
+  width: 20rem !important;
+}
+.w-max-30c {
+  max-width: 30rem !important;
+}
+.w-min-30c {
+  min-width: 30rem !important;
+}
+
+.h-1c {
+  height: 1rem !important;
+}
+.h-min-1c {
+  min-height: 1rem !important;
+}
+.h-max-1c {
+  max-height: 1rem !important;
+}
+.h-1-2c {
+  height: 1.2rem !important;
+}
+.h-min-1-2c {
+  min-height: 1.2rem !important;
+}
+.h-max-1-2c {
+  max-height: 1.2rem !important;
+}
+.h-1-5c {
+  height: 1.5rem !important;
+}
+.h-min-1-5c {
+  min-height: 1.5rem !important;
+}
+.h-max-1-5c {
+  max-height: 1.5rem !important;
+}
+.h-2c {
+  height: 2rem !important;
+}
+.h-min-2c {
+  min-height: 2rem !important;
+}
+.h-max-2c {
+  max-height: 2rem !important;
+}
+.h-2-5c {
+  height: 2.5rem !important;
+}
+.h-min-2-5c {
+  min-height: 2.5rem !important;
+}
+.h-max-2-5c {
+  max-height: 2.5rem !important;
+}
+.h-3c {
+  height: 3rem !important;
+}
+.h-min-3c {
+  min-height: 3rem !important;
+}
+.h-max-3c {
+  max-height: 3rem !important;
+}
+.h-4c {
+  height: 4rem !important;
+}
+.h-min-4c {
+  min-height: 4rem !important;
+}
+.h-max-4c {
+  max-height: 4rem !important;
+}
+.h-6c {
+  height: 6rem !important;
+}
+.h-min-6c {
+  min-height: 6rem !important;
+}
+.h-max-6c {
+  max-height: 6rem !important;
+}
+.h-8c {
+  height: 8rem !important;
+}
+.h-min-8c {
+  min-height: 8rem !important;
+}
+.h-max-8c {
+  max-height: 8rem !important;
+}
+.h-12c {
+  height: 12rem !important;
+}
+.h-min-12c {
+  min-height: 12rem !important;
+}
+.h-max-12c {
+  max-height: 12rem !important;
+}
+.h-20c {
+  height: 20rem !important;
+}
+.h-max-20c {
+  max-height: 20rem !important;
+}
+.h-min-20c {
+  min-height: 20rem !important;
+}
+.h-30c {
+  height: 30rem !important;
+}
+.h-max-30c {
+  max-height: 30rem !important;
+}
+.h-min-30c {
+  min-height: 30rem !important;
+}
+
+.form-inline label.form-check-inline {
+  display: inline-flex;
+  vertical-align: middle;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+}
+.form-check-inline {
+  justify-content: center;
+  align-content: center;
+}
+.form-radio-inline {
+  display: inline-flex;
+  align-items: center;
+  padding-top: 0.375em;
+  padding-bottom: 0.375em;
+  padding-right: 0.75em;
+  margin-bottom: 0;
+  height: calc(2.25rem + 2px);
+  line-height: 1.5;
+}
+span.form-radio-inline {
+  padding-left: 0.75em;
+  vertical-align: middle;
+}
+.form-check-inline input, .form-radio-inline input {
+  height: 1.2em;
+  width: 2em;
+  vertical-align: middle;
+}
+fieldset.edit-container {
+  display: block;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block-start: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  padding-block-end: 0;
+  min-inline-size: min-content;
+}
+.edit-sep-light-gray {
+  border-color: #f8f8f8;
+}
+.image-none {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.3rem;
+  background-color: #f0f0f0;
+  color: #d0d0d0;
+}

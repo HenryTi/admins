@@ -1,5 +1,7 @@
+/*
 import * as React from 'react';
-import {Step, Field, Prop, PropGrid, Media} from 'tonva-react-form';
+import {Prop, PropGrid, Media} from 'tonva';
+import {Field, Step, IdPickFace} from 'tonva-form';
 import {UnitSpan, IdDates, ServerSpan, UqSpan, AppSpan} from '../tools';
 import {Row} from './row';
 import {appIcon, appItemIcon} from '../consts';
@@ -157,7 +159,7 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
                         type: 'pick-id', 
                         initCaption: '请选择APP', 
                         pick: createIdPick(idPickAppProps), //this.idPick,
-                        fromPickedItem: (item:DevModel.App)=>{
+                        fromPicked: (item:DevModel.App)=>{
                             return {id: item.id, caption: item.name + ' ' + item.discription}
                         },
                     },
@@ -178,7 +180,7 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
                         type: 'pick-id', 
                         initCaption: '请选择UQ', 
                         pick: createIdPick(idPickUqProps), //this.idPick,
-                        fromPickedItem: (item:DevModel.UQ)=>{
+                        fromPicked: (item:DevModel.UQ)=>{
                             return {id: item.id, caption: item.name + ' ' + item.discription}
                         },
                     },
@@ -208,3 +210,4 @@ const servicesProps:ObjViewProps<DevModel.Service> = {
 };
 
 export default servicesProps;
+*/

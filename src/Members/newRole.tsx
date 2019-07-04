@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {TonvaForm, SubmitResult, FormRow} from 'tonva-react-form';
-import {nav, Page, ItemSchema, StringSchema, UiSchema, Form, Context} from 'tonva-tools';
+import {TonvaForm, SubmitResult, FormRow} from 'tonva-form';
+import {nav, Page, ItemSchema, StringSchema, UiSchema, Form, Context} from 'tonva';
 import {store} from '../store';
 
 export class NewRole extends React.Component {

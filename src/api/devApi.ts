@@ -1,4 +1,4 @@
-import {CenterApi} from 'tonva-tools';
+import {CenterApi} from 'tonva';
 
 class DevApi extends CenterApi {
     async uqBuilderUrl():Promise<any> {

@@ -141,7 +141,7 @@ class Uqs extends ObjItems<DevModel.UQ> {
     }
     protected async _save(item:DevModel.UQ):Promise<number> {
         //let {access} = item;
-        //if (!access) access = "*";
+        //if (!access) access = "*';
         //let parts = access.split(',').map(v => v.trim()).filter(v => v!=='');
         //item.access = parts.join(',');
         return await devApi.saveUq(item);

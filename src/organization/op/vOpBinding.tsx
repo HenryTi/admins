@@ -1,8 +1,8 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { IObservableValue, observable } from 'mobx';
-import { Page, VPage } from 'tonva-tools';
-import { Muted, LMR, FA, List } from 'tonva-react-form';
+import { Page, VPage } from 'tonva';
+import { Muted, LMR, FA, List } from 'tonva';
 import { COpBinding } from './cOpBinding';
 import { StateTo, Sheet, Organization, Post, Team, Section, To, Entity } from './model';
 

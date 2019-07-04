@@ -1,4 +1,4 @@
-import {CacheIds} from 'tonva-tools';
+import {CacheIds} from 'tonva';
 import {Id, Unit, DevModel} from '../model';
 import {mainApi, devApi} from '../api';
 

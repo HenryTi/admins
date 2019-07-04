@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { VPage, Page } from "tonva-tools";
-import { COpBinding } from "./cOpBinding";
+import { VPage, Page } from 'tonva';
+import { COpBinding } from './cOpBinding';
 import { Entity, EntityBlock, Uq } from './model';
-import { entityIcons, CAction, CQuery } from 'tonva-react-uq';
-import { List, Muted, LMR, FA } from 'tonva-react-form';
+import { entityIcons, CAction, CQuery } from 'tonva';
+import { List, Muted, LMR, FA } from 'tonva';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 

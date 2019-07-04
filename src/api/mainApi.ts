@@ -1,4 +1,4 @@
-import {CenterApi, User, appInFrame} from 'tonva-tools';
+import {CenterApi, User, appInFrame} from 'tonva';
 import { string } from 'prop-types';
 
 class MainApi extends CenterApi {

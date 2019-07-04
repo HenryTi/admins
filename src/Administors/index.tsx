@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, Image} from 'tonva-tools';
+import {nav, Page, Image} from 'tonva';
 import {UnitApps, UnitAdmin} from '../model';
 import {store} from '../store';
 import NewFellow from './NewFellow';
 import EditAdmin from './EditAdmin';
-import {LMR, Badge, List} from 'tonva-react-form';
+import {LMR, Badge, List} from 'tonva';
 
 @observer
 export default class AdministorsPage extends React.Component {

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { UQController } from ".";
-import { VPage, nav, Page } from "tonva-tools";
-import { SubmitResult, TonvaForm } from "tonva-react-form";
+import { UQController } from './uqController';
+import { VPage, nav, Page } from 'tonva';
+import { SubmitResult, TonvaForm } from 'tonva-form';
 
 const formRows = [
     {

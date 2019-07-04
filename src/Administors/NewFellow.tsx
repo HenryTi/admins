@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {observer} from 'mobx-react';
-import {nav, Page, Context, Form, Schema, UiSchema, UiTextItem} from 'tonva-tools';
+import {nav, Page, Context, Form, Schema, UiSchema, UiTextItem} from 'tonva';
 import {store} from '../store';
 
 @observer

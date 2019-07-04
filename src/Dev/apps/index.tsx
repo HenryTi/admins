@@ -1,7 +1,7 @@
 import * as React from 'react';
 import _ from 'lodash';
 import { observable } from 'mobx';
-import { Controller } from "tonva-tools";
+import { Controller } from 'tonva';
 import { DevModel } from 'model';
 import { devApi } from 'api';
 import { AppsPage } from './appsPage';

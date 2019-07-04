@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { nav, Page } from 'tonva-tools';
-import { SearchBox, List } from 'tonva-react-form';
+import { nav, Page } from 'tonva';
+import { SearchBox, List } from 'tonva';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 

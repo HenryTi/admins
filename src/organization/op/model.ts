@@ -1,4 +1,4 @@
-import { IObservableValue } from "mobx";
+import { IObservableValue } from 'mobx';
 
 export interface App {
     id: number;

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TuidUI, CTuidSelect, CQuery, QueryPageItems } from "tonva-react-uq";
-import { PageItems } from "tonva-tools";
+import { TuidUI, CTuidSelect, CQuery, QueryPageItems } from 'tonva';
+import { PageItems } from 'tonva';
 
 class CUserSelect extends CTuidSelect {
     protected buildPageItems():PageItems<any> {

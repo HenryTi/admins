@@ -1,8 +1,9 @@
 import * as React from 'react';
 import _ from 'lodash';
 import { AppController } from '.';
-import { VPage, nav, Page, ItemSchema, UiSchema, StringSchema, BoolSchema, UiTextItem, UiTextAreaItem, UiCheckItem, Form, ButtonSchema, Context, ImageSchema, UiImageItem, IdSchema, UiIdItem } from 'tonva-tools';
-import { SubmitResult, DropdownActions, TonvaForm, FormRow } from 'tonva-react-form';
+import { VPage, nav, Page, ItemSchema, UiSchema, StringSchema, BoolSchema, 
+    UiTextItem, UiTextAreaItem, UiCheckItem, Form, 
+    ButtonSchema, Context, ImageSchema, UiImageItem, IdSchema, UiIdItem } from 'tonva';
 import { createIdPick, IdPickProps } from 'createIdPick';
 import { DevModel } from 'model';
 import { store } from 'store';

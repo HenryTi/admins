@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {EasyDate} from 'tonva-react-form';
+import {EasyDate} from 'tonva';
 
 export interface IdDatesProps {
     date_init: Date;

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
-import {List, LMR, FA, Muted} from 'tonva-react-form';
-import {nav, Page} from 'tonva-tools';
+import {List, LMR, FA, Muted} from 'tonva';
+import {nav, Page} from 'tonva';
 import {Role} from '../model';
 import {store} from '../store';
 import {NewRole} from './newRole';

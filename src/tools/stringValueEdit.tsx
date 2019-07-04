@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {nav, Page} from 'tonva-tools';
+import {nav, Page} from 'tonva';
 
 interface StringValueEditProps {
     title: string;

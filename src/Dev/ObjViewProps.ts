@@ -1,5 +1,6 @@
-import { FormRow, Step, Action } from "tonva-react-form";
-import { ObjItems } from "store/dev";
+import { FormRow, Step } from 'tonva-form';
+import { Action } from 'tonva';
+import { ObjItems } from 'store/dev';
 import {DevModel} from '../model';
 
 export interface ObjViewProps<T extends DevModel.ObjBase> {
