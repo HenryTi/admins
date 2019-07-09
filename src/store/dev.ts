@@ -52,6 +52,9 @@ export abstract class ObjItems<T extends DevModel.ObjBase> {
         }
         return true;
     }
+    async check(item:T):Promise<boolean> {
+        return true;
+    }
     async save(item:T):Promise<T> {
         let values:any = {};
         _.assign(values, item);
@@ -166,6 +169,32 @@ class Buses extends ObjItems<DevModel.Bus> {
     }
     protected _inc() { this.dev.counts.bus++; }
     protected _dec() { this.dev.counts.bus--; }
+    async check(item:DevModel.Bus):Promise<boolean> {
+        let {schema} = item;
+        try {
+            let json = JSON.parse(schema);
+            for (let i in json) {
+                let face = json[i];
+                for (let field of face) {
+                    let {name, type} = field;
+                    if (['id', 'number', 'string'].indexOf(type)<0) {
+                        if (type === 'date') {
+                            alert('不再支持数据类型date，请用number unixtime作为媒介')
+                        }
+                        else {
+                            alert('不支持数据类型 ' + type);
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        catch (err) {
+            alert(err.message);
+            return false;
+        }
+    }
 }
 
 class Servers extends ObjItems<DevModel.Server> {

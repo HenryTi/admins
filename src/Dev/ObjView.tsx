@@ -44,6 +44,7 @@ class New<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> {
         this.onSubmit = this.onSubmit.bind(this);
     }
     async onSubmit(values:any):Promise<SubmitResult> {
+        if (await this.props.items().check(values) === false) return;
         let ret = await this.props.items().saveCur(values);
         if (ret === true) {
             nav.pop();
@@ -115,6 +116,7 @@ class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
     componentWillMount() {
     }
     async onSubmit(values:any):Promise<SubmitResult> {
+        if (await this.props.items().check(values) === false) return;
         await this.props.items().saveCur(values);
         nav.pop();
         return;

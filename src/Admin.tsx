@@ -3,15 +3,16 @@ import {observer} from 'mobx-react';
 import {nav, Page, appInFrame, Controller, 
     VPage, Image, Edit, ItemSchema, UiSchema, 
     StringSchema, ImageSchema, UiImageItem, UiTextItem} from 'tonva'; 
-import {List, LMR, FA, StackedFA, PropGrid, Prop, Muted} from 'tonva';
-import {StringValueEdit} from './tools';
+import {List, LMR, FA} from 'tonva';
+//, StackedFA, PropGrid, Prop, Muted
+//import {StringValueEdit} from './tools';
 import {Unit, UnitApps, UnitAdmin, DevModel} from './model';
 import {store} from './store';
 import Administors from './Administors';
 import AppsPage from './Apps';
 import {Members} from './Members';
 import { mainApi } from 'api';
-import { COrganization } from 'organization';
+//import { COrganization } from 'organization';
 import {
     ObjViewProps, ObjView,
     //appsProps, 
