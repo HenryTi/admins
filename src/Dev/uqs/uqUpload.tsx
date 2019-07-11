@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import {nav, Page} from 'tonva';
+import {nav, Page, FA} from 'tonva';
 import {List, EasyDate, LMR, Muted} from 'tonva';
 import {DevModel} from '../../model';
 import {store} from '../../store';
@@ -324,10 +324,16 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 let c = this.state.collaps[index];
                 if (c === false) c = true;
                 else c = false;
-                this.state.collaps[index] = c;
+                this.setState(prevState => ({
+                    collaps: {
+                        ...prevState.collaps,
+                        [index]: c,
+                    },
+                }));
             }
-            let content:any;
+            let titleIcon:any, content:any;
             if (this.state.collaps[index]===false) {
+                titleIcon = <FA name='arrow-circle-up' className='text-success' />;
                 content = <div>
                     {
                         text.map((v, i) => {
@@ -337,8 +343,11 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                     }
                 </div>;
             }
+            else {
+                titleIcon = <FA name='arrow-circle-down' className='text-success' />;
+            }
             return <React.Fragment key={index}>
-                <div className="cursor-pointer" onClick={onClick}>{title}</div>
+                <div className="cursor-pointer text-primary" onClick={onClick}>{titleIcon} <u>{title}</u></div>
                 {content}
             </React.Fragment>;
         }
