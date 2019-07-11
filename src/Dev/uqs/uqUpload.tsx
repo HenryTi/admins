@@ -1,8 +1,10 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import {nav, Page} from 'tonva';
 import {List, EasyDate, LMR, Muted} from 'tonva';
 import {DevModel} from '../../model';
 import {store} from '../../store';
+import { TextSections } from './textSections';
 
 interface State {
     files: any[];
@@ -92,10 +94,12 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
         }
     }
     private onUpdate = async () => {
+        nav.ceaseTop();
         let thoroughly = false;
         await this.update(thoroughly);
     }
     private onUpdateThoroughly = async () => {
+        nav.ceaseTop();
         let thoroughly = true;
         await this.update(thoroughly);
     }
@@ -154,18 +158,20 @@ interface CompileResultProps {
     abortController: AbortController;
 }
 interface CompileResultState {
-    texts: string[];
+    texts: (string|string[])[];
     seconds: number;
+    collaps: {[index:number]: boolean};
 }
 class CompileResult extends React.Component<CompileResultProps, CompileResultState> {
-    private texts: string[];
+    private textSections: TextSections;
     private timeHandler:any;
-    constructor(props) {
+    constructor(props:CompileResultProps) {
         super(props);
-        this.texts = [];
+        this.textSections = new TextSections();
         this.state = {
-            texts: this.texts,
+            texts: this.textSections.sections,
             seconds: -1,
+            collaps: {}
         }
     }
     componentWillMount() {
@@ -252,19 +258,20 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             this.bottomIntoView();
         }
     }
+
     async componentDidMount() {
         let that = this;
         let time = new Date();
         function consume(reader: ReadableStreamReader) {
-            var total = 0
+            let total = 0;
             return new Promise((resolve, reject) => {
-                function uintToString(uintArray):string {
-                    var encodedString = String.fromCharCode.apply(null, uintArray),
-                        decodedString = decodeURIComponent(escape(encodedString));
-                    return decodedString;
-                }
                 function pump() {
                     reader.read().then(({done, value}) => {
+                        function uintToString(uintArray:number[]):string {
+                            var encodedString = String.fromCharCode.apply(null, uintArray),
+                                decodedString = decodeURIComponent(escape(encodedString));
+                            return decodedString;
+                        }        
                         if (done) {
                             that.scrollToBottom();
                             that.setState({
@@ -274,9 +281,9 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                             return;
                         }
                         let text = uintToString(value);
-                        that.texts.push(text);
+                        that.textSections.add(text);
                         that.setState({
-                            texts: that.texts,
+                            texts: that.textSections.sections,
                         });
                         total += value.byteLength;
                         that.scrollToBottom();
@@ -293,6 +300,54 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             console.error(err);
         }
     }
+    private renderText = (text:string|string[], index:number):JSX.Element => {
+        if (Array.isArray(text)) {
+            let groupId = 'text-group-' + index;
+            let line = text[0];
+            let title: string;
+            let p0 = line.indexOf('\n'), p:number;
+            if (p0 === 0) {
+                p0 = 1;
+                p = line.indexOf('\n', p0);
+            }
+            else {
+                p = line.indexOf('\n');
+            }
+            if (p < 0) p = undefined;
+            else {
+                let l = line.indexOf('(');
+                if (l < p) p = l;
+            }
+            title = line.substring(p0, p);
+
+            let onClick = () => {
+                let c = this.state.collaps[index];
+                if (c === false) c = true;
+                else c = false;
+                this.state.collaps[index] = c;
+            }
+            let content:any;
+            if (this.state.collaps[index]===false) {
+                content = <div>
+                    {
+                        text.map((v, i) => {
+                            if (v.trim().length === 0) return null;
+                            return <pre style={{whiteSpace: 'pre-wrap'}} key={index + '-' + i}>{v}</pre>
+                        })
+                    }
+                </div>;
+            }
+            return <React.Fragment key={index}>
+                <div className="cursor-pointer" onClick={onClick}>{title}</div>
+                {content}
+            </React.Fragment>;
+        }
+        if (text.trim().length === 0) return null;
+        let parts = text.split('\n');
+        return <React.Fragment key={index}>
+            {parts.map((v, i) => <div key={i}>{v}</div>)}
+        </React.Fragment>;
+    }
     render() {
         let {uq} = this.props;
         let {seconds, texts} = this.state;
@@ -303,7 +358,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 onDoubleClick={this.doubleClick} 
                 className='py-2 px-3' 
                 style={{wordWrap: 'break-word', whiteSpace: 'normal'}}>
-                {texts.map((v, i) => <pre style={{whiteSpace: 'pre-wrap'}} key={i}>{v}</pre>)}
+                {texts.map(this.renderText)}
             </div>
             {seconds>=0? <div className='px-3 pb-3' style={{color: 'red', fontWeight: 'bold'}}>
                 编译完成。共计用时{Math.floor(seconds/1000)}秒
