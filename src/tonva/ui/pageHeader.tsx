@@ -1,6 +1,6 @@
 import * as React from 'react';
 import _ from 'lodash';
-import {nav/*, mobileHeaderStyle*/} from './nav';
+import {nav} from './nav';
 
 export interface PageHeaderProps {
     back?: 'back' | 'close' | 'none';
@@ -12,6 +12,7 @@ export interface PageHeaderProps {
 export interface PageHeaderState {
     hasBack: boolean;
 }
+
 export class PageHeader extends React.Component<PageHeaderProps, PageHeaderState> {
     constructor(props: PageHeaderProps) {
         super(props);
@@ -40,16 +41,6 @@ export class PageHeader extends React.Component<PageHeaderProps, PageHeaderState
     }
     private logoutClick = () => {
         nav.showLogout(this.logout);
-        /*
-        nav.push(<Page header="安全退出" back="close">
-            <div className="m-5 border border-info bg-white rounded p-3 text-center">
-                <div>退出当前账号不会删除任何历史数据，下次登录依然可以使用本账号</div>
-                <div className="mt-3">
-                    <button className="btn btn-danger" onClick={()=>this.logout()}>退出</button>
-                </div>
-            </div>
-        </Page>);
-        */
     }
     private logout = async () => {
         let {logout} = this.props;
@@ -61,7 +52,7 @@ export class PageHeader extends React.Component<PageHeaderProps, PageHeaderState
     render() {
         let b = this.state.hasBack || self != top;
         let {right, center, logout, className} = this.props;
-        let back, pop, debugLogout;
+        let back:any, pop:any, debugLogout:any;
         if (logout !== undefined && self === top) {
             if (typeof logout === 'boolean' && logout === true
                 || typeof logout === 'function')
@@ -92,9 +83,8 @@ export class PageHeader extends React.Component<PageHeaderProps, PageHeaderState
             console.log(document.location.href);
             pop = <header onClick={this.openWindow} />;
         }
-        let rightView;
-        if (right || debugLogout) rightView = <aside>{right} {debugLogout}</aside>;
-        return <header className={className} /*style={mobileHeaderStyle}*/>
+        let rightView = (right || debugLogout) && <aside>{right} {debugLogout}</aside>;
+        return <header className={className}>
             {pop}
             {back}
             <div>{center}</div>

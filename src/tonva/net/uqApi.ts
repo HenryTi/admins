@@ -329,8 +329,8 @@ export class UnitxApi extends UqApi {
         let channelUI = new HttpChannelNavUI();
         let centerAppApi = new CenterAppApi('tv/', undefined);
         let ret = await centerAppApi.unitxUq(this.unitId);
-        let {token, url, urlDebug} = ret;
-        let realUrl = host.getUrlOrDebug(url, urlDebug);
+        let {token, db, url} = ret;
+        let realUrl = host.getUrlOrDebugOrTest(db, url);
         this.token = token;
         return new HttpChannel(false, realUrl, token, channelUI);
     }
@@ -413,7 +413,9 @@ export class UqTokenApi extends CenterApiBase {
                     return _.clone(value);
                 }
             }
-            let ret = await this.get('app-uq', params);
+            let appUqParams:any = _.clone(params);
+            appUqParams.testing = host.testing;
+            let ret = await this.get('app-uq', appUqParams);
             if (ret === undefined) {
                 let {unit, uqOwner, uqName} = params;
                 let err = `center get app-uq(unit=${unit}, '${uqOwner}/${uqName}') - not exists or no unit-service`;
@@ -458,8 +460,8 @@ export interface UqData {
 
 export interface UqServiceData {
     id: number;
+    db: string;
     url: string;
-    urlDebug: string;
     token: string;
 }
 

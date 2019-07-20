@@ -50,9 +50,6 @@ class DevApi extends CenterApi {
     async saveServer(values:any):Promise<number> {
         return await this.post('server-save', values);
     }
-    async saveUqdb(values:any):Promise<number> {
-        return await this.post('uqdb-save', values);
-    }
     async saveService(values:any):Promise<number> {
         return await this.post('service-save', values);
     }

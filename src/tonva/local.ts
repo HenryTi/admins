@@ -28,13 +28,12 @@ export class LocalData {
     user = new Data<User>('user');
     guest = new Data<Guest>('guest');
     unit = new Data<Unit>('unit');
-    homeTabCur = new Data<number>('homeTabCur');
+    testing = new Data<boolean>('testing');
 
     logoutClear() {
         [
             this.user,
             this.unit,
-            this.homeTabCur
         ].map(d => d.clear());
     }
 }

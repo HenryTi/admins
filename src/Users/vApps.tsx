@@ -10,7 +10,7 @@ export class VApps extends VPage<UsersController> {
     }
 
     private renderRow = (appUsers: AppUsers, index:number):JSX.Element => {
-        let {app, users} = appUsers;
+        let {app, more, users} = appUsers;
         let {id, name, discription} = app;
         let right = <small className="text-muted">{discription}</small>;
         return <div className="d-block px-3 py-2">
@@ -20,7 +20,9 @@ export class VApps extends VPage<UsersController> {
             </LMR>
             <div>
                 <small className="text-muted">用户: </small>
-                {users.length===0?'[无]':users.map(u => u.assigned || u.nick || u.name).join(', ')}
+                {users.length===0?
+                    '[无]':
+                    users.map(u => u.assigned || u.nick || u.name).join(', ') + (more===true? ' ...' : '')}
             </div>
         </div>;
     }

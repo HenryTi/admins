@@ -59,11 +59,13 @@ const fetchOptions = {
 };
 
 class Host {
+    testing: boolean;
     url: string;
     ws: string;
     resHost: string;
 
-    async start() {
+    async start(testing:boolean) {
+        this.testing = testing;
         if (isDevelopment === true) {
             await this.tryLocal();
         }
@@ -133,21 +135,17 @@ class Host {
         return resHost;
     }
 
-    getUrlOrDebug(url:string, urlDebug:string):string {
-        if (isDevelopment !== true) return url;
-        if (!urlDebug) return url;
-        for (let i in hosts) {
-            let host = hosts[i];
-            let {value, local} = host;
-            let hostString = `://${i}/`;
-            let pos = urlDebug.indexOf(hostString);
-            if (pos > 0) {
-                if (local === false) return url;
-                urlDebug = urlDebug.replace(hostString, `://${value}/`);
-                return urlDebug;
-            }
-        }
-        return url;
+    getUrlOrDebug(url:string, debugHost:string = 'uqhost'):string {
+        if (isDevelopment === false) return url;
+        let host = hosts[debugHost];
+        if (host === undefined) return url;
+        let {value, local} = host;
+        if (local === false) return url;
+        return `http://${value}/`;
+    }
+    getUrlOrDebugOrTest(db:string, url:string):string {
+        url = this.getUrlOrDebug(url);
+        return url + 'uq' + (this.testing===true?'-test':'') + '/' + db + '/';
     }
 
     async localCheck(urlDebug: string):Promise<boolean> {

@@ -16,6 +16,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import '../css/va-form.css';
 import '../css/va.css';
 import '../css/animation.css';
+import { FA } from './components';
 
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
@@ -308,6 +309,33 @@ export class NavView extends React.Component<Props, NavViewState> {
     clearError = () => {
         this.setState({fetchError: undefined});
     }
+    private clickCount = 0;
+    private firstClick: Date;
+    private onClick = () => {
+        if (this.clickCount >= 5) {
+            if (Date.now() - this.firstClick.getTime() < 5000) {
+                nav.reverseTest();
+            }
+            this.clickCount = 0;
+            return;
+        }
+        if (this.clickCount === 0) {
+            this.firstClick = new Date();
+        }
+        ++this.clickCount;
+    }
+    private onTestClick = () => {
+        nav.testing = false;
+        nav.push(<Page header={false}>
+            <div className="m-5 border border-info bg-white rounded p-4 text-center">
+                <div>当前运行在测试模式</div>
+                <div className="mt-4">
+                    <button className="btn btn-danger" onClick={nav.toNormal}>正常模式</button>
+                    <button className="btn btn-outline-info ml-3" onClick={()=>{nav.testing=true;this.pop()}}>测试模式</button>
+                </div>
+            </div>
+        </Page>);
+    }
     render() {
         const {wait, fetchError} = this.state;
         let stack = this.state.stack;
@@ -328,8 +356,13 @@ export class NavView extends React.Component<Props, NavViewState> {
         }
         if (fetchError)
             elError = <FetchErrorView clearError={this.clearError} {...fetchError} />
+        let test = nav.testing===true && 
+            <span className="cursor-pointer position-absolute" style={{lineHeight:0}}
+                onClick={this.onTestClick}>
+                <FA className="text-warning" name="info-circle" />
+            </span>;
         return (
-        <ul className='va'>
+        <ul className="va" onClick={this.onClick}>
             {
                 stack.map((item, index) => {
                     let {key, view} = item;
@@ -340,6 +373,7 @@ export class NavView extends React.Component<Props, NavViewState> {
             }
             {elWait}
             {elError}
+            {test}
         </ul>
         );
     }
@@ -362,6 +396,7 @@ export class Nav {
     private local: LocalData = new LocalData();
     private navSettings: NavSettings;
     @observable user: User/*InNav*/ = undefined;
+    @observable testing: boolean;
     language: string;
     culture: string;
     resUrl: string;
@@ -370,6 +405,7 @@ export class Nav {
         let {lang, district} = resOptions;
         this.language = lang;
         this.culture = district;
+        this.testing = false;
     }
 
     get guest(): number {
@@ -394,6 +430,46 @@ export class Nav {
         if (this.ws === undefined) return;
         if (handlerId === undefined) return;
         this.ws.endWsReceive(handlerId);
+    }
+
+    private static testMode = '测试';
+    private static normalMode = '正常';
+    private setTesting(testing:boolean) {
+        this.testing = testing;
+        this.local.testing.set(testing);
+    };
+    private resetTest = () => {
+        this.setTesting(!this.testing);
+        //this.pop();
+        this.start();
+    }
+    toNormal = () => {
+        this.setTesting(false);
+        this.start();
+    }
+    reverseTest() {
+        let m1:string, m2:string;
+        if (this.testing === true) {
+            m1 = Nav.testMode;
+            m2 = Nav.normalMode;
+        }
+        else {
+            m1 = Nav.normalMode;
+            m2 = Nav.testMode;
+        }
+
+        this.push(<Page back="close" header={false}>
+            <div className="m-5 border border-info bg-white rounded p-4 text-center">
+                <div>
+                    <p>从{m1}模式切换到{m2}模式吗?</p>
+                    <p className="small text-muted">测试模式下，页面左上角会有一个 <FA className="text-warning" name="info-circle" /></p>
+                </div>
+                <div className="mt-4">
+                    <button className="btn btn-danger" onClick={this.resetTest}>切换</button>
+                    <button className="btn btn-outline-info ml-3" onClick={()=>this.pop()}>取消</button>
+                </div>
+            </div>
+        </Page>);
     }
 
     async onReceive(msg:any) {
@@ -446,6 +522,8 @@ export class Nav {
     private centerHost: string;
     async start() {
         try {
+            this.testing = this.local.testing.get();
+            await host.start(this.testing);
             let hash = document.location.hash;
             if (hash !== undefined && hash.length > 0) {
                 let pos = getExHashPos();
@@ -454,7 +532,6 @@ export class Nav {
             }
             nav.clear();
             this.startWait();
-            await host.start();
             let {url, ws, resHost} = host;
             this.centerHost = url;
             this.resUrl = 'http://' + resHost + '/res/';

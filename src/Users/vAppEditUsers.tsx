@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { VPage, Page } from 'tonva';
 import { List, SearchBox, LMR, Muted, FA } from 'tonva';
-import { UsersController, UserApps, AppUsers, User, EditUser } from './cUsers';
+import { UsersController, EditUser } from './cUsers';
 
 export class VAppEditUsers extends VPage<UsersController> {
     async open() {

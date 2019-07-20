@@ -31,6 +31,7 @@ export interface UserApps {
 export interface AppUsers {
     app: App;
     users: User[];
+    more: boolean;
 }
 export interface EditApp extends App {
     bind: number;   // 0: not bind, 1: bind
@@ -86,7 +87,7 @@ export class UsersController extends Controller {
                 name: a.name,
                 discription: a.discription,
             };
-            list.push(coll[a.id] = {app:app, users:[]});
+            list.push(coll[a.id] = {app:app, more:false, users:[]});
         }
         for (let u of users) {
             let user:User = {
@@ -96,7 +97,14 @@ export class UsersController extends Controller {
                 icon: u.icon,
                 assigned: u.assigned
             }
-            coll[u.app].users.push(user);
+            let item = coll[u.app];
+            let {users} = item;
+            if (users.length >= 5) {
+                item.more = true;
+            }
+            else {
+                users.push(user);
+            }
         }
         this.appUsersList = list;
     }

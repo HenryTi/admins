@@ -26,6 +26,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
             files: undefined,
         }
     }
+
     private onFilesChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
         let upFiles:any[] = [];
         let {files} = evt.target;
@@ -37,7 +38,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
             files: upFiles,
         });
     }
-    fileRender(file, index):JSX.Element {
+    fileRender(file:any, index:number):JSX.Element {
         let {name, size, lastModifiedDate} = file;
         function sz():string {
             let n:number, u:string;
@@ -87,7 +88,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
                 body: data,
                 signal: abortController.signal,
             });
-            nav.push(<CompileResult {...this.props} res={res} abortController={abortController} />);
+            nav.push(<CompileResult {...this.props} actionName="编译" res={res} abortController={abortController} />);
         }
         catch (e) {
             console.error('%s %s', url, e);
@@ -121,7 +122,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
                     type="submit" onClick={this.onUpdateThoroughly}>完全编译</button>
             </div>;
         }
-        return <Page header={"编译 - " + this.props.uq.name}>
+        return <Page header={'编译 - ' + this.props.uq.name}>
             <div className="py-2 px-3">
                 <div>请选择UQ源代码文件</div>
                 <form className="my-1" encType="multipart/form-data" onSubmit={this.onSubmit}>
@@ -140,6 +141,51 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
     }
 }
 
+export class UqDeploy extends React.Component<UqUploadProps> {
+    private onDeploy = async () => {
+        nav.ceaseTop();
+        let thoroughly = false;
+        await this.update(thoroughly);
+    }
+    private onDeployThoroughly = async () => {
+        nav.ceaseTop();
+        let thoroughly = true;
+        await this.update(thoroughly);
+    }
+    private async update(thoroughly:boolean) {
+        let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/deploy';
+        if (thoroughly === true) url += '-thoroughly';
+        try {
+            let abortController = new AbortController();
+            let res = await fetch(url, {
+                method: "POST",
+                signal: abortController.signal,
+            });
+            nav.push(<CompileResult {...this.props} actionName="发布" res={res} abortController={abortController} />);
+        }
+        catch (e) {
+            console.error('%s %s', url, e);
+        }
+    }
+    render() {
+        return <Page header={'发布 - ' + this.props.uq.name}>
+            <div className="m-3 bg-white p-3">
+                <ul className="my-3">
+                    <li>将已经编译测试过的代码，发布到生产服务器</li>
+                    <li>优化发布快速比较代码，仅仅对修改代码的部分发布</li>
+                    <li>彻底发布仅用于底层代码有突破性变化时</li>
+                </ul>
+                <div className="d-flex p-3">
+                    <button className="btn btn-success" type="submit" onClick={this.onDeploy}>优化发布</button>
+                    <div className="py-2 flex-grow-1" />
+                    <button className="btn btn-outline-warning"
+                        type="submit" onClick={this.onDeployThoroughly}>彻底发布</button>
+                </div>
+            </div>
+        </Page>;
+    }
+}
+
 interface UqPgeProps {
     name: string;
     content: string|ArrayBuffer;
@@ -154,6 +200,7 @@ class UqPage extends React.Component<UqPgeProps> {
 
 interface CompileResultProps {
     uq: DevModel.UQ;
+    actionName: string;
     res: Response;
     abortController: AbortController;
 }
@@ -179,7 +226,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             if (this.state.seconds>=0) return true;
             return new Promise<boolean>((resolve, reject) => {
                 try {
-                    if (confirm('正在编译中，真的要中止吗？') === true) {
+                    if (confirm(`正在${this.props.actionName}中，真的要中止吗？`) === true) {
                         try {
                             this.props.abortController.abort();
                         }
@@ -358,9 +405,9 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         </React.Fragment>;
     }
     render() {
-        let {uq} = this.props;
+        let {uq, actionName} = this.props;
         let {seconds, texts} = this.state;
-        let header = uq.name + ' - ' + (seconds>=0? "编译完成" : "编译中...");
+        let header = uq.name + ' - ' + actionName + (seconds>=0? "完成" : "中...");
         return <Page header={header} back="close">
             <div id='topDiv' />
             <div id='scrollDiv'
@@ -370,7 +417,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 {texts.map(this.renderText)}
             </div>
             {seconds>=0? <div className='px-3 pb-3' style={{color: 'red', fontWeight: 'bold'}}>
-                编译完成。共计用时{Math.floor(seconds/1000)}秒
+                {actionName}完成。共计用时{Math.floor(seconds/1000)}秒
             </div> : undefined}
             <div id='bottomDiv' />
         </Page>;

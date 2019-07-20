@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { observable } from 'mobx';
 import { nav, Controller } from 'tonva';
 import { DevModel } from '../../model';
-import { UqUpload, UqUploadProps } from './uqUpload';
+import { UqUpload, UqUploadProps, UqDeploy } from './uqUpload';
 import { devApi } from 'api';
 import { NewServicePage } from './newServicePage';
 import { ServicePage } from './servicePage';
@@ -42,9 +42,13 @@ export class UQController extends Controller {
     }
 
     onUqUpload = async() => {
-        let onDispose = () => {
-        };
+        let onDispose = () => {}
         nav.push(<UqUpload uq={this.uq} services={this.services} />, onDispose);
+    }
+
+    onUqDeploy = async() => {
+        let onDispose = () => {}
+        nav.push(<UqDeploy uq={this.uq} services={this.services} />, onDispose);
     }
 
     saveUq = async (values: DevModel.UQ) => {

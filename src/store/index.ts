@@ -87,8 +87,8 @@ export class Store {
         console.log("loadUnit unit=%s", ret);
         this.memberCount = await mainApi.unitMemberCount(this.unitId);
         let uqServer = await devApi.uqBuilderUrl();
-        let {url, urlDebug} = uqServer;
-        this.uqServer = host.getUrlOrDebug(url, urlDebug);
+        let {url} = uqServer;
+        this.uqServer = host.getUrlOrDebug(url, 'uq-build');
         console.log("uq-build: %s", JSON.stringify(this.uqServer));
     }
 

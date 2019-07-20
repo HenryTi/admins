@@ -58,7 +58,7 @@ export class RegisterController extends Controller {
     password: string;
     verify: string;
 
-    accountPageCaption = '账号密码';
+    accountPageCaption = '注册账号';
     accountLabel = '注册账号';
     accountSubmitCaption = '注册新账号'; 
     passwordPageCaption = '账号密码';
