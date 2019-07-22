@@ -267,21 +267,8 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             })
         });
     }
-    private clearTimeHandler() {
-        if (this.timeHandler !== undefined) {
-            clearTimeout(this.timeHandler);
-            this.timeHandler = undefined;
-        }
-    }
-    private getParent(el:HTMLElement):HTMLElement {
-        if (!el) return;
-        if (el.tagName === 'MAIN') return el;
-        return this.getParent(el.parentElement);
-    }
-    private scrollToBottom(defer:number = 100) {
-        this.clearTimeHandler();
-        let that = this;
-        this.timeHandler = setTimeout(() => {
+    private startAutoScrollToBottom() {
+        this.timeHandler = setInterval(() => {
             var pane = document.getElementById('bottomDiv');
             pane && pane.scrollIntoView();
             /*
@@ -291,9 +278,35 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 (last as HTMLElement).scrollIntoView();
             }
             */
+            //that.clearTimeHandler();
+        }, 200);
+    }
+    private endAutoScrollToBottom() {
+        clearInterval(this.timeHandler);
+    }
+    /*
+    private clearTimeHandler() {
+        if (this.timeHandler !== undefined) {
+            clearTimeout(this.timeHandler);
+            this.timeHandler = undefined;
+        }
+    }*/
+    private getParent(el:HTMLElement):HTMLElement {
+        if (!el) return;
+        if (el.tagName === 'MAIN') return el;
+        return this.getParent(el.parentElement);
+    }
+    /*
+    private scrollToBottom(defer:number = 100) {
+        this.clearTimeHandler();
+        let that = this;
+        this.timeHandler = setTimeout(() => {
+            var pane = document.getElementById('bottomDiv');
+            pane && pane.scrollIntoView();
             that.clearTimeHandler();
         }, defer);
     }
+    */
     private topIntoView() {
         var pane = document.getElementById('topDiv');
         pane && pane.scrollIntoView();
@@ -342,7 +355,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                             return decodedString;
                         }        
                         if (done) {
-                            that.scrollToBottom();
+                            // that.scrollToBottom();
                             that.setState({
                                 seconds: (new Date().getTime() - time.getTime()),
                             })
@@ -355,7 +368,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                             texts: that.textSections.sections,
                         });
                         total += value.byteLength;
-                        that.scrollToBottom();
+                        //that.scrollToBottom();
                         pump();
                     }).catch(reject)
                 }
@@ -363,7 +376,9 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             });
         }
         try {
+            this.startAutoScrollToBottom();
             await consume(this.props.res.body.getReader());
+            this.endAutoScrollToBottom();
         }
         catch (err) {
             console.error(err);
