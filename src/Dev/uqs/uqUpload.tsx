@@ -284,7 +284,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
     private endAutoScrollToBottom() {
         setTimeout(()=>{
             clearInterval(this.timeHandler);
-        }, 5000);
+        }, 3000);
     }
     /*
     private clearTimeHandler() {
@@ -377,13 +377,15 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 pump();
             });
         }
+        this.startAutoScrollToBottom();
         try {
-            this.startAutoScrollToBottom();
             await consume(this.props.res.body.getReader());
-            this.endAutoScrollToBottom();
         }
         catch (err) {
             console.error(err);
+        }
+        finally {
+            this.endAutoScrollToBottom();
         }
     }
     private renderText = (text:string|string[], index:number):JSX.Element => {
