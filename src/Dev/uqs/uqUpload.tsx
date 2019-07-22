@@ -423,7 +423,12 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         if (text.trim().length === 0) return null;
         let parts = text.split('\n');
         return <React.Fragment key={index}>
-            {parts.map((v, i) => <div key={i}>{v.length === 0? '&nbsp;':v}</div>)}
+            {
+                parts.map((v, i) => v.length === 0?
+                    <div key={i}>&nbsp;</div> :
+                    <div key={i}>{v}</div>
+                )
+            }
         </React.Fragment>;
     }
     render() {
