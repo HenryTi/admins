@@ -17,6 +17,8 @@ export interface UqUploadProps {
     services: DevModel.Service[];
 }
 
+const fastUpload = '快速编译';
+const thoroughlyUpload = '完全编译';
 export class UqUpload extends React.Component<UqUploadProps, State> {
     private fileInput: HTMLInputElement;
 
@@ -80,7 +82,14 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
         }
   
         let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/update';
-        if (thoroughly === true) url += '-thoroughly';
+        let actionName:string;
+        if (thoroughly === true) {
+            actionName = thoroughlyUpload;
+            url += '-thoroughly';
+        }
+        else {
+            actionName = fastUpload;
+        }
         try {
             let abortController = new AbortController();
             let res = await fetch(url, {
@@ -88,7 +97,9 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
                 body: data,
                 signal: abortController.signal,
             });
-            nav.push(<CompileResult {...this.props} actionName="编译" res={res} abortController={abortController} />);
+            nav.push(<CompileResult {...this.props} 
+                actionName={actionName} 
+                res={res} abortController={abortController} />);
         }
         catch (e) {
             console.error('%s %s', url, e);
@@ -116,10 +127,10 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
         let button:any;
         if (files !== undefined && files.length > 0) {
             button = <div className="my-2 d-flex">
-                <button className="btn btn-success" type="submit" onClick={this.onUpdate}>优化编译</button>
+                <button className="btn btn-success" type="submit" onClick={this.onUpdate}>{fastUpload}</button>
                 <div className="py-2 flex-grow-1" />
                 <button className="btn btn-outline-warning"
-                    type="submit" onClick={this.onUpdateThoroughly}>完全编译</button>
+                    type="submit" onClick={this.onUpdateThoroughly}>{thoroughlyUpload}</button>
             </div>;
         }
         return <Page header={'编译 - ' + this.props.uq.name}>
@@ -141,6 +152,8 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
     }
 }
 
+const fastDeploy = '快速发布';
+const thoroughlyDeploy = '完全发布';
 export class UqDeploy extends React.Component<UqUploadProps> {
     private onDeploy = async () => {
         nav.ceaseTop();
@@ -154,14 +167,23 @@ export class UqDeploy extends React.Component<UqUploadProps> {
     }
     private async update(thoroughly:boolean) {
         let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/deploy';
-        if (thoroughly === true) url += '-thoroughly';
+        let actionName:string;
+        if (thoroughly === true) {
+            actionName = thoroughlyDeploy;
+            url += '-thoroughly';
+        }
+        else {
+            actionName = fastDeploy;
+        }
         try {
             let abortController = new AbortController();
             let res = await fetch(url, {
                 method: "POST",
                 signal: abortController.signal,
             });
-            nav.push(<CompileResult {...this.props} actionName="发布" res={res} abortController={abortController} />);
+            nav.push(<CompileResult {...this.props} 
+                actionName={actionName}
+                res={res} abortController={abortController} />);
         }
         catch (e) {
             console.error('%s %s', url, e);
@@ -176,10 +198,10 @@ export class UqDeploy extends React.Component<UqUploadProps> {
                     <li>彻底发布仅用于底层代码有突破性变化时</li>
                 </ul>
                 <div className="d-flex p-3">
-                    <button className="btn btn-success" type="submit" onClick={this.onDeploy}>优化发布</button>
+                    <button className="btn btn-success" type="submit" onClick={this.onDeploy}>{fastDeploy}</button>
                     <div className="py-2 flex-grow-1" />
                     <button className="btn btn-outline-warning"
-                        type="submit" onClick={this.onDeployThoroughly}>彻底发布</button>
+                        type="submit" onClick={this.onDeployThoroughly}>{thoroughlyDeploy}</button>
                 </div>
             </div>
         </Page>;
@@ -401,7 +423,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         if (text.trim().length === 0) return null;
         let parts = text.split('\n');
         return <React.Fragment key={index}>
-            {parts.map((v, i) => <div key={i}>{v}</div>)}
+            {parts.map((v, i) => <div key={i}>{v.length === 0? '&nbsp;':v}</div>)}
         </React.Fragment>;
     }
     render() {
