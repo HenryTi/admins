@@ -145,7 +145,7 @@ class Host {
     }
     getUrlOrDebugOrTest(db:string, url:string):string {
         url = this.getUrlOrDebug(url);
-        return url + 'uq' + (this.testing===true?'-test':'') + '/' + db + '/';
+        return url + 'uq/' + (this.testing===true?'test':'prod') + '/' + db + '/';
     }
 
     async localCheck(urlDebug: string):Promise<boolean> {
