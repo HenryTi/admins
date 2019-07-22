@@ -27,6 +27,7 @@ const idPickServerProps: IdPickProps = {
 };
 
 const urlField:Field = {name: 'url', type: 'string', required:true, maxLength:200};
+const urlTestField:Field = {name: 'urlTest', type: 'string', required:false, maxLength:200};
 const serverField:Field = {name: 'server', type: 'id'};
 const dbTypeField:Field = {name: 'db_type', type: 'string', maxLength:20, defaultValue:'mysql'};
 const dbField:Field = {name: 'db', type: 'string', maxLength:50, required: true};
@@ -35,6 +36,12 @@ const connectionField:Field = {name:'connection', type:'string', maxLength:250};
 const urlRow = {
     label: 'URL',
     field: urlField,
+};
+
+const urlRowTest = {
+    label: 'URL-Test',
+    field: urlTestField,
+    face: {placeholder:'如果同URL，请不要输入'}
 };
 
 const serverRow = {
@@ -82,6 +89,7 @@ export class NewServicePage extends VPage<UQController> {
     private tonvaForm:TonvaForm;
     private formRows:FormRow[] = [
         urlRow,
+        urlRowTest,
         serverRow,
         dbTypeRow,
         dbRow,
@@ -91,18 +99,21 @@ export class NewServicePage extends VPage<UQController> {
         this.openPage(this.page);
     }
     private onSubmit = async (values:any):Promise<SubmitResult | undefined> => {
+        /*
         if (values.url.indexOf('/uq/')<0) {
             this.tonvaForm.formView.setError('url', 'service url 必须包含/uq/');
             return;
         }
-
+        */
         values.type = 2; // uq type, to be removed
         values.bindId = this.controller.uq.id;
         let ret = await this.controller.saveService(values);
         if (ret === 0) {
+            /*
             if (this.tonvaForm !== undefined) {
                 this.tonvaForm.formView.setError('url', '已经有Service使用这个url');
             }
+            */
             return;
         }
         nav.pop();

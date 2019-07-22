@@ -79,6 +79,7 @@ export class UQController extends Controller {
     async saveService(service: DevModel.Service):Promise<number> {
         let svc = _.clone(service);
         svc.unit = this.unitId;
+        if (!svc.urlTest) svc.urlTest = '-';
         let ret = await devApi.saveService(svc);
         svc.id = ret;
         this.services.push(svc);

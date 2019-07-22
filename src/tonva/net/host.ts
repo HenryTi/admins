@@ -143,9 +143,17 @@ class Host {
         if (local === false) return url;
         return `http://${value}/`;
     }
-    getUrlOrDebugOrTest(db:string, url:string):string {
+    getUrlOrTest(db:string, url:string, urlTest:string):string {
+        let path:string;
+        if (this.testing === true) {
+            if (urlTest !== '-') url = urlTest;
+            path = 'uq/test/' + db + '/';
+        }
+        else {
+            path = 'uq/prod/' + db + '/';
+        }
         url = this.getUrlOrDebug(url);
-        return url + 'uq/' + (this.testing===true?'test':'prod') + '/' + db + '/';
+        return url + path;
     }
 
     async localCheck(urlDebug: string):Promise<boolean> {

@@ -16,14 +16,30 @@ export class ServicePage extends VPage<UQController> {
         return await this.controller.changeServiceProp(this.service, prop, value);
     }
     private onUrlChanged = async (value:any, orgValue:any):Promise<string|void> => {
+        /*
         if ((value as string).indexOf('/uq/')<0) {
             return 'URL必须包含/uq/';
         }
+        */
         let ret = await this.changeProp('url', value);
         if (ret === 0) {
-            return 'URL已经被使用了';
+            //return 'URL已经被使用了';
+            return;
         }
         this.service.url = value;
+    }
+    private onUrlTestChanged = async (value:any, orgValue:any):Promise<string|void> => {
+        /*
+        if ((value as string).indexOf('/uq/')<0) {
+            return 'URL必须包含/uq/';
+        }
+        */
+        let ret = await this.changeProp('urlTest', value);
+        if (ret === 0) {
+            //return 'URL已经被使用了';
+            return;
+        }
+        this.service.urlTest = value;
     }
     private onDbChanged = async (value:any, orgValue:any):Promise<string|void> => {
         let ret = await this.changeProp('db', value);
@@ -49,17 +65,8 @@ export class ServicePage extends VPage<UQController> {
     }
     private page = () => {
         let {uq} = this.controller;
-        //let {type, name, discription, server, url, db, db_type, connection} = this.service;
         let rows:Prop[] = [
             '',
-            /*
-            {
-                type: 'component',
-                component: <div className="px-3 py-2">
-                    <b>{name}</b><br/><Muted>{discription}</Muted>
-                </div>,
-            },
-            '',*/
             {
                 type: 'string',
                 name: 'url',
@@ -68,6 +75,15 @@ export class ServicePage extends VPage<UQController> {
                     title="修改URL"
                     value={this.service.url}
                     onChanged={this.onUrlChanged} />)
+            },
+            {
+                type: 'string',
+                name: 'urlTest',
+                label: 'URL-Test',
+                onClick: ()=>nav.push(<StringValueEdit 
+                    title="修改URL-Test"
+                    value={this.service.urlTest}
+                    onChanged={this.onUrlTestChanged} />)
             },
             {
                 type: 'component',

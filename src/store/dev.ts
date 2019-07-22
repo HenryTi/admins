@@ -241,6 +241,7 @@ class Services extends ObjItems<DevModel.Service> {
         let ret = await devApi.changeServiceProp(this.store.unit.id, this.cur.id, prop, value);
         switch (prop) {
             case 'url': this.cur.url = value; break;
+            case 'urlTest': this.cur.urlTest = value; break;
             case 'server': this.cur.server = value; break;
             case 'db': this.cur.db = value; break;
             case 'db_type': this.cur.db_type = value; break;
