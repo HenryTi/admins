@@ -279,10 +279,12 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             }
             */
             //that.clearTimeHandler();
-        }, 200);
+        }, 100);
     }
     private endAutoScrollToBottom() {
-        clearInterval(this.timeHandler);
+        setTimeout(()=>{
+            clearInterval(this.timeHandler);
+        }, 5000);
     }
     /*
     private clearTimeHandler() {
