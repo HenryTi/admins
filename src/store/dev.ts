@@ -183,7 +183,7 @@ class Buses extends ObjItems<DevModel.Bus> {
                             alert('不再支持数据类型date，请用number unixtime作为媒介')
                         }
                         else {
-                            alert('不支持数据类型 ' + type + JSON.stringify(types));
+                            alert(`不支持数据类型 ${type}`);
                         }
                         return false;
                     }
