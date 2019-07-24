@@ -39,6 +39,7 @@ export namespace DevModel {
         ip: string;
     }
 
+    /*
     export interface Uqdb extends ObjBase {
         name: string;
         dbtype: string;
@@ -48,7 +49,8 @@ export namespace DevModel {
         cloud: string;
         connection: string;
     }
-
+    */
+   
     export interface Service extends ObjBase {
         url: string;
         urlTest: string;
@@ -58,10 +60,11 @@ export namespace DevModel {
         server: number;
         app: number;
         uq: number;
-
         db: string;
+        compile_time: Date;
+        /*
         db_type: string;
         connection: string;
-        compile_time: Date;
+        */
     }
 }

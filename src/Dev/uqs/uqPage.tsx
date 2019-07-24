@@ -92,7 +92,7 @@ export class UQPage extends VPage<UQController> {
         </Page>;
     }
     private renderService(service:DevModel.Service, index:number):JSX.Element {
-        let {url, server, db, db_type, compile_time} = service;
+        let {url, server, db, compile_time} = service;
         let compile = !compile_time?
             <Muted>未编译</Muted> :
             <><Muted>编译: </Muted><EasyDate date={compile_time}/></>;
@@ -102,7 +102,6 @@ export class UQPage extends VPage<UQController> {
             >
             <div>
                 <div>{url}</div>
-                <div>{db_type} {db}</div>
                 <Muted><ServerSpan id={server} /></Muted>
             </div>
         </LMR>;

@@ -245,8 +245,8 @@ class Services extends ObjItems<DevModel.Service> {
             case 'urlTest': this.cur.urlTest = value; break;
             case 'server': this.cur.server = value; break;
             case 'db': this.cur.db = value; break;
-            case 'db_type': this.cur.db_type = value; break;
-            case 'connection': this.cur.connection = value; break;
+            //case 'db_type': this.cur.db_type = value; break;
+            //case 'connection': this.cur.connection = value; break;
         }
         return ret;
     }
@@ -333,7 +333,7 @@ export class Dev {
     searchApp:SearchItems<DevModel.App> = undefined;
     searchUq:SearchItems<DevModel.UQ> = undefined;
     searchServer:SearchItems<DevModel.Server> = undefined;
-    searchUqdb:SearchItems<DevModel.Uqdb> = undefined;
+    //searchUqdb:SearchItems<DevModel.Uqdb> = undefined;
     
     async loadCounts(): Promise<void> {
         let {unit} = this.store;

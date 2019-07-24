@@ -60,7 +60,7 @@ const serverRow = {
         itemFromId: (id:number)=>store.cacheServers.get(id),
     },
 };
-
+/*
 const dbTypeRow:FormRow = {
     label: '数据库类型',
     field: dbTypeField,
@@ -69,12 +69,12 @@ const dbTypeRow:FormRow = {
         readonly: true,
     } as StringFace
 };
-
+*/
 const dbRow = {
     label: '数据库名字',
     field: dbField,
 };
-
+/*
 const connectionRow = {
     label: '连接字符串',
     field: connectionField,
@@ -84,16 +84,16 @@ const connectionRow = {
         rows: 8,
     } as TextAreaFace,
 };
-
+*/
 export class NewServicePage extends VPage<UQController> {
     private tonvaForm:TonvaForm;
     private formRows:FormRow[] = [
         urlRow,
         urlRowTest,
         serverRow,
-        dbTypeRow,
+        //dbTypeRow,
         dbRow,
-        connectionRow
+        //connectionRow
     ];
     async open() {
         this.openPage(this.page);

@@ -48,6 +48,7 @@ export class ServicePage extends VPage<UQController> {
         }
         this.service.db = value;
     }
+    /*
     private onDbTypeChanged = async (value:string, orgValue:any):Promise<string|void> => {
         if (value === undefined || value === null) return;
         if (value.toLowerCase().trim() !== 'mysql') return '目前只支持mysql';
@@ -58,6 +59,7 @@ export class ServicePage extends VPage<UQController> {
         await this.changeProp('connection', value);
         this.service.connection = value;
     }
+    */
     private onDeleteClick = async () => {
         if (confirm("真的要删除Service吗？删除了不可恢复，需要重新录入。")!==true) return;
         await this.controller.delService(this.service);
@@ -90,6 +92,7 @@ export class ServicePage extends VPage<UQController> {
                 label: '服务器',
                 component: <ServerSpan id={this.service.server} />
             },
+            /*
             {
                 type: 'string',
                 name: 'db_type',
@@ -99,6 +102,7 @@ export class ServicePage extends VPage<UQController> {
                     value={this.service.db_type}
                     onChanged={this.onDbTypeChanged} />)
             },
+            */
             {
                 type: 'string',
                 name: 'db',
@@ -108,6 +112,7 @@ export class ServicePage extends VPage<UQController> {
                     value={this.service.db}
                     onChanged={this.onDbChanged} />)
             },
+            /*
             {
                 type: 'string',
                 name: 'connection',
@@ -117,6 +122,7 @@ export class ServicePage extends VPage<UQController> {
                     value={this.service.connection}
                     onChanged={this.onConnectionChanged} />)
             },
+            */
         ];
         let right = <button onClick={this.onDeleteClick} className="btn btn-success">删除</button>;
         return <Page header={'UQ - ' + uq.name} right={right}>
