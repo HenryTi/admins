@@ -176,8 +176,8 @@ class Buses extends ObjItems<DevModel.Bus> {
             for (let i in json) {
                 let face = json[i];
                 for (let field of face) {
-                    let {name, type} = field;
-                    if (['id', 'number', 'string', 'array'].indexOf(type)<0) {
+                    let {type} = field;
+                    if (['id', 'number', 'string', 'array'].indexOf(type) < 0) {
                         if (type === 'date') {
                             alert('不再支持数据类型date，请用number unixtime作为媒介')
                         }
