@@ -1,5 +1,4 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import {nav, Page, FA} from 'tonva';
 import {List, EasyDate, LMR, Muted} from 'tonva';
 import {DevModel} from '../../model';
@@ -99,6 +98,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
             });
             nav.push(<CompileResult {...this.props} 
                 actionName={actionName} 
+                uploadOrDeploy="upload"
                 res={res} abortController={abortController} />);
         }
         catch (e) {
@@ -183,6 +183,7 @@ export class UqDeploy extends React.Component<UqUploadProps> {
             });
             nav.push(<CompileResult {...this.props} 
                 actionName={actionName}
+                uploadOrDeploy="deploy"
                 res={res} abortController={abortController} />);
         }
         catch (e) {
@@ -220,11 +221,12 @@ class UqPage extends React.Component<UqPgeProps> {
     }
 }
 
-interface CompileResultProps {
+interface CompileResultProps extends UqUploadProps {
     uq: DevModel.UQ;
     actionName: string;
     res: Response;
     abortController: AbortController;
+    uploadOrDeploy: 'upload' | 'deploy';
 }
 interface CompileResultState {
     texts: (string|string[])[];
@@ -360,7 +362,15 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                             // that.scrollToBottom();
                             that.setState({
                                 seconds: (new Date().getTime() - time.getTime()),
-                            })
+                            });
+                            let {uploadOrDeploy, services} = that.props;
+                            let now = Date.now() / 1000;
+                            for (let service of services) {
+                                switch (uploadOrDeploy) {
+                                    case 'upload': service.compile_time = now; break;
+                                    case 'deploy': service.deploy_time = now; break;
+                                }
+                            }
                             resolve();
                             return;
                         }

@@ -310,23 +310,22 @@ export class NavView extends React.Component<Props, NavViewState> {
         this.setState({fetchError: undefined});
     }
     private clickCount = 0;
-    private firstClick: Date;
+    private firstClick: number = 0;
+    private clickRange = 3000;
+    private clickMax = 6;
     private onClick = () => {
-        if (this.clickCount >= 5) {
-            if (Date.now() - this.firstClick.getTime() < 5000) {
-                nav.reverseTest();
-            }
-            this.clickCount = 0;
+        let now = Date.now();
+        if (now - this.firstClick > this.clickRange) {
+            this.clickCount = 1;
+            this.firstClick = now;
             return;
         }
-        if (this.clickCount === 0) {
-            this.firstClick = new Date();
-        }
-        else if (Date.now() - this.firstClick.getTime() >= 5000) {
-            this.clickCount = 0;
-            this.firstClick = new Date();
-        }
         ++this.clickCount;
+        if (this.clickCount >= this.clickMax) {
+            nav.reverseTest();
+            this.firstClick = 0;
+            return;
+        }
     }
     private onTestClick = () => {
         nav.testing = false;

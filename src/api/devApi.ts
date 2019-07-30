@@ -17,9 +17,6 @@ class DevApi extends CenterApi {
     async server(id:number):Promise<any> {
         return await this.get('server', {id:id});
     }
-    async uqdb(id:number):Promise<any> {
-        return await this.get('uqdb', {id:id});
-    }
     async apps(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('apps', {unit:unit, pageSize: pageSize});
     }
@@ -31,9 +28,6 @@ class DevApi extends CenterApi {
     }
     async servers(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('servers', {unit:unit, pageSize: pageSize});
-    }
-    async uqdbs(unit:number, pageSize:number=30):Promise<any[]> {
-        return await this.get('uqdbs', {unit:unit, pageSize: pageSize});
     }
     async services(unit:number, pageSize:number=30):Promise<any[]> {
         return await this.get('services', {unit:unit, pageSize: pageSize});
@@ -96,9 +90,6 @@ class DevApi extends CenterApi {
     async searchUqdb(unit:number,key:string,pageStart:number,pageSize:number):Promise<any[]> {
         return await this.get('uqdb-search', {unit:unit, key:key, pageStart:pageStart, pageSize:pageSize});
     }
-    //async loadAppServices(unit:number, app:number):Promise<any[]> {
-    //    return await this.get('app-services', {unit:unit, app:app});
-    //}
     async loadUqServices(unit:number, uq:number):Promise<any[]> {
         return await this.get('uq-services', {unit:unit, uq:uq});
     }

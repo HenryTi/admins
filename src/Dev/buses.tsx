@@ -39,7 +39,7 @@ class Info extends React.Component<DevModel.Bus> {
         //await store.dev.buses.loadCurApis();
     }
     render() {
-        let {unit, name, discription, schema, date_init, date_update} = this.props;
+        let {unit, name, discription, schema, version, date_init, date_update} = this.props;
         let disp = <div>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
@@ -49,6 +49,10 @@ class Info extends React.Component<DevModel.Bus> {
             {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
+            {
+                type: 'component', 
+                label: '版本号', 
+                component: <LMR className="py-2 w-100" right={<small className="text-muted"><EasyDate date={date_update}/></small>} >{version}</LMR> },
             '',
             {
                 type: 'component', 

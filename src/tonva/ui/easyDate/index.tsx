@@ -1,12 +1,17 @@
 import * as React from 'react';
 
 export interface EasyDateProps {
-    date: Date;
+    date: Date | number;
 }
 
-function renderDate(date:Date, withTime:boolean) {
-    if (!date) return null;
-    if (typeof date === 'string') date = new Date(date);
+function renderDate(vDate:Date|number, withTime:boolean) {
+    if (!vDate) return null;
+    let date: Date;
+    switch (typeof vDate) {
+        default: date = vDate as Date; break;
+        case 'string': date = new Date(vDate); break;
+        case 'number': date = new Date((vDate as number)*1000); break;
+    }
 
     let now = new Date();
     let tick:number, nDate:number, _date:number, month:number, year:number, hm:string, nowYear:number;
@@ -46,6 +51,6 @@ export class EasyDate extends React.Component<EasyDateProps> {
 
 export class EasyTime extends React.Component<EasyDateProps> {
     render() {
-        return renderDate(this.props.date, false);
+        return renderDate(this.props.date, true);
     }
 }

@@ -28,6 +28,7 @@ export namespace DevModel {
 
     export interface Bus extends ObjBase {
         name: string;
+        version: number;
         discription: string;
         schema: string;
         owner?: string;
@@ -61,7 +62,8 @@ export namespace DevModel {
         app: number;
         uq: number;
         db: string;
-        compile_time: Date;
+        compile_time: number;
+        deploy_time: number;
         /*
         db_type: string;
         connection: string;

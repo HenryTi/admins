@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { VPage, Page, nav } from 'tonva';
+import { VPage, Page, nav, EasyTime } from 'tonva';
 import { UQController } from './uqController';
 import { IdDates, UnitSpan, ServerSpan } from 'tools';
 import { Prop, Media, LMR, FA, PropGrid, Muted, List, EasyDate, DropdownActions } from 'tonva';
 import { DevModel } from 'model';
 import { EditPage } from './editPage';
 import { store } from 'store';
+import { observer } from 'mobx-react';
 
 export class UQPage extends VPage<UQController> {
     async open() {
@@ -88,22 +89,31 @@ export class UQPage extends VPage<UQController> {
                 <Muted style={{display:'block', flex:1}}>Service</Muted>
                 {btnAddService}
             </div>
-            <List items={services} item={{render:this.renderService, onClick:onServiceClick}} />
+            <List items={services} item={{
+                render:(service:DevModel.Service, index:number)=><this.renderService service={service} index={index} />, 
+                onClick:onServiceClick
+            }} />
         </Page>;
     }
-    private renderService(service:DevModel.Service, index:number):JSX.Element {
-        let {url, server, db, compile_time} = service;
+    private renderService = observer((props: {service:DevModel.Service; index:number}):JSX.Element => {
+        let {service, index} = props;
+        let {url, server, db, compile_time, deploy_time} = service;
         let compile = !compile_time?
-            <Muted>未编译</Muted> :
-            <><Muted>编译: </Muted><EasyDate date={compile_time}/></>;
+            <Muted>未编译</Muted> 
+            :
+            <><Muted>编译: </Muted><EasyTime date={compile_time}/></>;
+        let deploy = !deploy_time?
+            <Muted>未发布</Muted> 
+            :
+            <><Muted>发布: </Muted><EasyTime date={deploy_time}/></>;
 
         return <LMR className="d-flex w-100 align-items-center cursor-pointer py-2 px-3"
-            right={<small>{compile}</small>}
+            right={<small>{compile}<br/>{deploy}</small>}
             >
             <div>
                 <div>{url}</div>
                 <Muted><ServerSpan id={server} /></Muted>
             </div>
         </LMR>;
-    }
+    })
 }
