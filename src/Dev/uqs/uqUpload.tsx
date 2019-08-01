@@ -3,7 +3,8 @@ import {nav, Page, FA} from 'tonva';
 import {List, EasyDate, LMR, Muted} from 'tonva';
 import {DevModel} from '../../model';
 import {store} from '../../store';
-import { TextSections } from './textSections';
+import { ResultSections, Section } from './resultSections';
+import { observer } from 'mobx-react';
 
 interface State {
     files: any[];
@@ -16,8 +17,8 @@ export interface UqUploadProps {
     services: DevModel.Service[];
 }
 
-const fastUpload = '快速编译';
-const thoroughlyUpload = '完全编译';
+const fastUpload = '快速测试';
+const thoroughlyUpload = '完全测试';
 export class UqUpload extends React.Component<UqUploadProps, State> {
     private fileInput: HTMLInputElement;
 
@@ -133,7 +134,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
                     type="submit" onClick={this.onUpdateThoroughly}>{thoroughlyUpload}</button>
             </div>;
         }
-        return <Page header={'编译 - ' + this.props.uq.name}>
+        return <Page header={'测试 - ' + this.props.uq.name}>
             <div className="py-2 px-3">
                 <div>请选择UQ源代码文件</div>
                 <form className="my-1" encType="multipart/form-data" onSubmit={this.onSubmit}>
@@ -228,26 +229,31 @@ interface CompileResultProps extends UqUploadProps {
     abortController: AbortController;
     uploadOrDeploy: 'upload' | 'deploy';
 }
+/*
 interface CompileResultState {
-    texts: (string|string[])[];
+    sections: Section[];
     seconds: number;
     collaps: {[index:number]: boolean};
 }
-class CompileResult extends React.Component<CompileResultProps, CompileResultState> {
-    private textSections: TextSections;
+*/
+@observer
+class CompileResult extends React.Component<CompileResultProps> {
+    private resultSections: ResultSections;
     private timeHandler:any;
     constructor(props:CompileResultProps) {
         super(props);
-        this.textSections = new TextSections();
+        this.resultSections = new ResultSections();
+        /*
         this.state = {
-            texts: this.textSections.sections,
+            sections: this.resultSections.sections,
             seconds: -1,
             collaps: {}
         }
+        */
     }
     componentWillMount() {
         nav.regConfirmClose(async ():Promise<boolean>=>{
-            if (this.state.seconds>=0) return true;
+            if (this.resultSections.seconds>=0) return true;
             return new Promise<boolean>((resolve, reject) => {
                 try {
                     if (confirm(`正在${this.props.actionName}中，真的要中止吗？`) === true) {
@@ -350,9 +356,12 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
         let time = new Date();
         function consume(reader: ReadableStreamReader) {
             let total = 0;
-            return new Promise((resolve, reject) => {
-                function pump() {
-                    reader.read().then(({done, value}) => {
+            return new Promise(async (resolve, reject) => {
+                async function pump() {
+                    let ret = await reader.read();
+                    let {done, value} = ret;
+                    try {
+                    //.then(({done, value}) => {
                         function uintToString(uintArray:number[]):string {
                             var encodedString = String.fromCharCode.apply(null, uintArray),
                                 decodedString = decodeURIComponent(escape(encodedString));
@@ -360,9 +369,12 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                         }        
                         if (done) {
                             // that.scrollToBottom();
+                            /*
                             that.setState({
                                 seconds: (new Date().getTime() - time.getTime()),
                             });
+                            */
+                            that.resultSections.seconds = (new Date().getTime() - time.getTime());
                             let {uploadOrDeploy, services} = that.props;
                             let now = Date.now() / 1000;
                             for (let service of services) {
@@ -375,16 +387,22 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                             return;
                         }
                         let text = uintToString(value);
-                        that.textSections.add(text);
+                        that.resultSections.add(text);
+                        /*
                         that.setState({
-                            texts: that.textSections.sections,
+                            sections: that.resultSections.sections,
                         });
+                        */
                         total += value.byteLength;
                         //that.scrollToBottom();
-                        pump();
-                    }).catch(reject)
+                        await pump();
+                    }
+                    catch (err) {
+                        reject(err);
+                    }
+                    //}).catch(reject)
                 }
-                pump();
+                await pump();
             });
         }
         this.startAutoScrollToBottom();
@@ -398,10 +416,12 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
             this.endAutoScrollToBottom();
         }
     }
-    private renderText = (text:string|string[], index:number):JSX.Element => {
-        if (Array.isArray(text)) {
+    private renderText = (section:Section, index:number):JSX.Element => {
+        return <section.render key={index} />;
+/*
+        if (Array.isArray(section)) {
             let groupId = 'text-group-' + index;
-            let line = text[0];
+            let line = section[0];
             let title: string;
             let p0 = line.indexOf('\n'), p:number;
             if (p0 === 0) {
@@ -434,7 +454,7 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 titleIcon = <FA name='arrow-circle-up' className='text-success' />;
                 content = <div>
                     {
-                        text.map((v, i) => {
+                        section.map((v, i) => {
                             if (v.trim().length === 0) return null;
                             return <pre style={{whiteSpace: 'pre-wrap'}} key={index + '-' + i}>{v}</pre>
                         })
@@ -449,8 +469,8 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 {content}
             </React.Fragment>;
         }
-        if (text.trim().length === 0) return null;
-        let parts = text.split('\n');
+        if (section.trim().length === 0) return null;
+        let parts = section.split('\n');
         return <React.Fragment key={index}>
             {
                 parts.map((v, i) => v.length === 0?
@@ -459,18 +479,20 @@ class CompileResult extends React.Component<CompileResultProps, CompileResultSta
                 )
             }
         </React.Fragment>;
+*/
     }
     render() {
         let {uq, actionName} = this.props;
-        let {seconds, texts} = this.state;
-        let header = uq.name + ' - ' + actionName + (seconds>=0? "完成" : "中...");
+        let {seconds, sections, hasError} = this.resultSections;
+        let finish = hasError === true? '发生错误' : '完成';
+        let header = uq.name + ' - ' + actionName + (seconds>=0? finish : "中...");
         return <Page header={header} back="close">
             <div id='topDiv' />
             <div id='scrollDiv'
                 onDoubleClick={this.doubleClick} 
                 className='py-2 px-3' 
                 style={{wordWrap: 'break-word', whiteSpace: 'normal'}}>
-                {texts.map(this.renderText)}
+                {sections.map(this.renderText)}
             </div>
             {seconds>=0? <div className='px-3 pb-3' style={{color: 'red', fontWeight: 'bold'}}>
                 {actionName}完成。共计用时{Math.floor(seconds/1000)}秒

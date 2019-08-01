@@ -56,9 +56,9 @@ export class UQPage extends VPage<UQController> {
            '',
            {
                 type: 'component', 
-                label: '编译代码', 
+                label: '测试UQ', 
                 component: <LMR onClick={onUqUpload} className="w-100 py-2 cursor-pointer" 
-                    left="上传编译UQ代码" right={<FA className="align-self-center" name="chevron-right" />} />
+                    left="上传测试UQ代码" right={<FA className="align-self-center" name="chevron-right" />} />
             },
             {
                 type: 'component', 
@@ -99,9 +99,9 @@ export class UQPage extends VPage<UQController> {
         let {service, index} = props;
         let {url, server, db, compile_time, deploy_time} = service;
         let compile = !compile_time?
-            <Muted>未编译</Muted> 
+            <Muted>未测试</Muted> 
             :
-            <><Muted>编译: </Muted><EasyTime date={compile_time}/></>;
+            <><Muted>测试: </Muted><EasyTime date={compile_time}/></>;
         let deploy = !deploy_time?
             <Muted>未发布</Muted> 
             :
