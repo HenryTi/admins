@@ -172,21 +172,29 @@ class Buses extends ObjItems<DevModel.Bus> {
     async check(item:DevModel.Bus):Promise<boolean> {
         let {schema} = item;
         try {
-            let json = JSON.parse(schema);
-            for (let i in json) {
-                let face = json[i];
-                for (let field of face) {
-                    let {type} = field;
-                    let types = ['id', 'number', 'string', 'array'];
-                    if (types.indexOf(type) < 0) {
-                        if (type === 'date') {
-                            alert('不再支持数据类型date，请用number unixtime作为媒介')
-                        }
-                        else {
-                            alert(`不支持数据类型 ${type}`);
-                        }
+            let bus = JSON.parse(schema);
+            for (let i in bus) {
+                let face = bus[i];
+                if (face === null || face === undefined) {
+                    alert(`face ${i} is null，请设置内容`);
+                    return false;
+                }
+                switch (typeof face) {
+                    case 'function':
+                        alert(`face ${i} is function，不接受function`);
                         return false;
-                    }
+                    //case 'bigint':
+                    case 'boolean':
+                    case 'number':
+                    case 'string':
+                        alert(`face ${i} 应该是数组或者对象`);
+                        return false;
+                }
+                if (Array.isArray(face) === true) {
+                    if (checkBusFace(face, bus) === false) return false;
+                }
+                else {
+                    if (checkBusQuery(face, bus) === false) return false;
                 }
             }
             return true;
@@ -196,6 +204,81 @@ class Buses extends ObjItems<DevModel.Bus> {
             return false;
         }
     }
+}
+
+const paramTypes = ['id', 'number', 'string'];
+const busTypes = [...paramTypes, 'array'];
+function refNameOk(faceName:string, bus:any):boolean {
+    let face = bus[faceName];
+    if (face === undefined) {
+        alert(`face ${faceName} not defined`);
+        return false;
+    }
+    if (Array.isArray(face) === false) {
+        alert(`face ${faceName} is referenced, bus is not array`);
+        return false;
+    }
+    return refArrayOk(face as any[], bus);
+}
+
+function refArrayOk(items:any[], bus:any):boolean {
+    for (let item of items) {
+        let {type} = item;
+        if (['id', 'string', 'number', 'array'].indexOf(type) < 0) {
+            alert(`type ${type} out of ['id', 'string', 'number', 'array']`);
+            return false;
+        }
+    }
+    return true;
+}
+
+function checkBusFace(face: any[], bus:any):boolean {
+    for (let field of face) {
+        let {type} = field;
+        if (type === 'array') {
+            let {fields} = field;
+            if (refNameOk(fields, bus) === false) {
+                return false;
+            }
+        }
+        if (busTypes.indexOf(type) < 0) {
+            if (type === 'date') {
+                alert('不再支持数据类型date，请用number unixtime作为媒介')
+            }
+            else {
+                alert(`不支持数据类型 ${type}`);
+            }
+            return false;
+        }
+    }
+    return true;
+}
+
+function checkBusQuery(face: any, bus:any):boolean {
+    for (let i in face) {
+        if (i === 'param') {
+            if (checkBusQueryParam(face[i], bus) === false) return false;
+        }
+        else if (i === 'returns') {
+            if (checkBusFace(bus[face[i]], bus) === false) return false;
+        }
+    }
+    return true;
+}
+
+function checkBusQueryParam(param: any, bus:any):boolean {
+    if (param === null || param === undefined) return;
+    switch (typeof param) {
+        case 'string':
+            return refNameOk(param, bus);
+        default:
+            if (Array.isArray(param)) {
+                return refArrayOk(param, bus);
+            }
+            break;
+    }
+    alert('param of a query can only be string or array');
+    return false;
 }
 
 class Servers extends ObjItems<DevModel.Server> {
