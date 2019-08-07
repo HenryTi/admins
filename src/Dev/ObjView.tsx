@@ -31,8 +31,6 @@ export class ObjView<T extends DevModel.ObjBase> extends React.Component<ObjView
         return <Page header={title} right={right}>
             <List items={items().items}
                 item={{render: this.props.row, onClick: this.itemClick}}
-                // converter={this.props.converter} 
-                //itemClick={this.itemClick} 
                 />
         </Page>;
     }
@@ -93,12 +91,16 @@ class Info<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
         nav.push(<Edit {...this.props} />);
     }
     render() {
+        let item = this.props.items().cur;
         let actions = [];
         let ex = this.props.extraMenuActions;
         if (ex !== undefined) actions.push(...ex);
-        actions.push(...this.menuItems);        
-        let right = <DropdownActions actions={actions} />
-        let item = this.props.items().cur;
+        actions.push(...this.menuItems);
+        let canEdit = this.props.canEdit;
+        let right:any;
+        if (canEdit && canEdit(item) === true) {
+            right = <DropdownActions actions={actions} />;
+        }
         return <Page header={this.props.title + ' - 详细资料'} right={right}>
             <this.props.info {...item} />
         </Page>;
@@ -109,7 +111,7 @@ class Edit<T extends DevModel.ObjBase> extends React.Component<ObjViewProps<T>> 
     private actions = [
         {caption:'删除', action:this.deleteItem.bind(this), icon:'trash-o' }
     ];
-    constructor(props) {
+    constructor(props: ObjViewProps<T>) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
     }

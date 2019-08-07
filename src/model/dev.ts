@@ -32,6 +32,8 @@ export namespace DevModel {
         discription: string;
         schema: string;
         owner?: string;
+        mine: number;
+        isPublic: number;
     }
 
     export interface Server extends ObjBase {

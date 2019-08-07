@@ -2,7 +2,7 @@ import * as React from 'react';
 import {observer} from 'mobx-react';
 import _ from 'lodash';
 import {EasyDate, Media, 
-    Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted} from 'tonva';
+    Prop, ListProp, PropGrid, List, SearchBox, LMR, Badge, Muted, FA} from 'tonva';
 import {UnitSpan, IdDates, ServerSpan} from '../tools';
 import {appIcon, appItemIcon} from '../consts';
 import {DevModel} from '../model';
@@ -10,43 +10,33 @@ import {store} from '../store';
 import {Row} from './row';
 import {ObjViewProps} from './ObjViewProps';
 
+
+const busIcon = 'cogs';
+
 @observer
 class Info extends React.Component<DevModel.Bus> {
-    /*
-    private rows: Prop[];
-    constructor(props:any) {
-        super(props);
-        let {unit, name, discription, schema, date_init, date_update} = this.props;
-        let disp = <div>
-            <div>{discription}</div>
-            <IdDates date_update={date_update} date_init={date_init} />
-        </div>;
-        this.rows = [
-            '',
-            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
-            '',
-            {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
-            '',
-            {
-                type: 'component', 
-                label: 'Schema',
-                vAlign: 'stretch',
-                component: <SchemaView />,
-            },
-        ];
-    }*/
     async componentDidMount() {
         //await store.dev.buses.loadCurApis();
     }
     render() {
-        let {unit, name, discription, schema, version, date_init, date_update} = this.props;
-        let disp = <div>
+        let {unit, owner, name, discription, mine, schema, version, date_init, date_update} = this.props;
+        let disp = <small>
             <div>{discription}</div>
             <IdDates date_update={date_update} date_init={date_init} />
-        </div>;
+        </small>;
+        let caption:any = owner + ' / ' + name;
+        if (mine === 1) {
+            caption = <b>{caption}</b>;
+        }
         let rows:Prop[] = [
             '',
-            {type: 'component', component: <Media icon={appIcon} main={name} discription={disp} />},
+            {type: 'component', component: <LMR className="py-2"
+                left={<FA className="pt-2 pr-1 text-primary" name={busIcon} size="3x" />}>
+                <div className="pl-3">
+                    <div className="mb-2">{caption}</div>
+                    {disp}
+                </div>
+            </LMR>},
             '',
             {type: 'component', label: '所有者', component: <div className="py-2"><UnitSpan id={unit} isLink={true} /></div> },
             {
@@ -101,8 +91,16 @@ const busesProps:ObjViewProps<DevModel.Bus> = {
         },
     ],
     row: (item:DevModel.Bus):JSX.Element => {
-        let {owner, name, discription} = item;
-        return <Row icon={appItemIcon} main={owner + ' / ' + name} vice={discription} />;
+        let {owner, name, discription, mine} = item;
+        let icon = appIcon;
+        let main = owner + ' / ' + name;
+        return <LMR className="py-2 px-3 align-items-stretch"
+            left={<FA className="pt-2 pr-1 text-primary" name='cogs' size="lg" />}>
+            <div className="px-3">
+                <div>{mine===1? <b>{main}</b> : main}</div>
+                <div><Muted>{discription}</Muted></div>
+            </div>
+        </LMR>;
     },
     items: ()=>store.dev.buses,
     repeated: {
@@ -110,6 +108,7 @@ const busesProps:ObjViewProps<DevModel.Bus> = {
         err: '跟已有的名称重复',
     },
     info: Info,
+    canEdit: bus => bus.mine === 1,
 };
 
 export default busesProps;

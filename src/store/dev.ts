@@ -294,21 +294,6 @@ class Servers extends ObjItems<DevModel.Server> {
     protected _inc() { this.dev.counts.server++; }
     protected _dec() { this.dev.counts.server--; }
 }
-/*
-class Uqdbs extends ObjItems<DevModel.Uqdb> {
-    protected async _load() {
-        return await devApi.uqdbs(this.store.unit.id);
-    }
-    protected async _save(item:DevModel.Uqdb):Promise<number> {
-        return await devApi.saveUqdb(item);
-    }
-    protected async _del(item:DevModel.Uqdb):Promise<void> {
-        await devApi.delUqdb(this.store.unit.id, item.id);
-    }
-    protected _inc() { this.dev.counts.uqdb++; }
-    protected _dec() { this.dev.counts.uqdb--; }
-}
-*/
 class Services extends ObjItems<DevModel.Service> {
     protected async _load() {
         return await devApi.services(this.store.unit.id);

@@ -13,4 +13,5 @@ export interface ObjViewProps<T extends DevModel.ObjBase> {
     formRows?: FormRow[];
     steps?: {[step:string]: Step};
     stepHeader?: (step:Step, num:number) => JSX.Element;
+    canEdit?: (t:T) => boolean;
 }
