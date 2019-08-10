@@ -21,5 +21,7 @@ export function Image(props: ImageProps) {
     }
     return <img src={src} className={className} 
         style={style}
-        onError={evt=>evt.currentTarget.src=altImage} />;
+        onError={evt=>{
+            if (altImage) evt.currentTarget.src=altImage
+        }} />;
 }
