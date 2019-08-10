@@ -17,4 +17,8 @@ export class CAction extends CEntity<Action, ActionUI> {
     async submit(values:any) {
         return this.entity.submit(values);
     }
+
+    async submitReturns(values:any) {
+        return this.entity.submitReturns(values);
+    }
 }

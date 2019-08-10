@@ -62,7 +62,7 @@ export class PageHeader extends React.Component<PageHeaderProps, PageHeaderState
                     let {nick, name} = user;
                     debugLogout = <div className="d-flex align-items-center">
                         <small className="text-light">{nick || name}</small>
-                        <a className="dropdown-toggle btn btn-secondary btn-sm ml-2"
+                        <a className="btn ml-2 cursor-pointer"
                             role="button"
                             onClick={this.logoutClick}>
                             <i className="fa fa-sign-out" />

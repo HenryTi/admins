@@ -51,6 +51,7 @@ export interface ArrFields {
     fields: Field[];
     id?: string;
     order?: string;
+    //isBus?: boolean;
 }
 export interface FieldMap {
     [name:string]: Field;

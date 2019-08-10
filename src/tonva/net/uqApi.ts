@@ -269,6 +269,10 @@ export class UqApi extends ApiBase {
         return await this.post('action/' + name, data);
     }
 
+    async actionReturns(name:string, data:object):Promise<any[][]> {
+        return await this.post('action/' + name + '/returns', data);
+    }
+
     async page(name:string, pageStart:any, pageSize:number, params:any):Promise<string> {
         let p:any;
         switch (typeof params) {
