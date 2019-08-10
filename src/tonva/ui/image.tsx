@@ -23,6 +23,6 @@ export function Image(props: ImageProps) {
         style={style}
         onError={evt=>{
             if (altImage) evt.currentTarget.src=altImage;
-            else evt.currentTarget.src = undefined;
+            else evt.currentTarget.src = 'https://tv.jkchemical.com/imgs/0001.png';
         }} />;
 }

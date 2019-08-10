@@ -364,10 +364,13 @@ class CompileResult extends React.Component<CompileResultProps> {
                     //.then(({done, value}) => {
                         function uintToString(uintArray:number[]):string {
                             let encodedString = String.fromCharCode.apply(null, uintArray);
-                            console.log(encodedString);
-                            //let decodedString = decodeURIComponent(escape(encodedString));
-                            //return decodedString;
-                            return encodedString;
+                            try {
+                                let decodedString = decodeURIComponent(escape(encodedString));
+                                return decodedString;
+                            }
+                            catch {
+                                return encodedString;
+                            }
                         }        
                         if (done) {
                             // that.scrollToBottom();
