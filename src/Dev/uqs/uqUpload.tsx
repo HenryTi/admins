@@ -369,7 +369,7 @@ class CompileResult extends React.Component<CompileResultProps> {
                                 return decodedString;
                             }
                             catch (err) {
-                                return encodedString + ' - ' + err.message;
+                                return encodedString; // + ' - ' + err.message;
                             }
                         }        
                         if (done) {
