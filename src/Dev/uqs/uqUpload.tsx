@@ -368,8 +368,8 @@ class CompileResult extends React.Component<CompileResultProps> {
                                 let decodedString = decodeURIComponent(escape(encodedString));
                                 return decodedString;
                             }
-                            catch {
-                                return encodedString;
+                            catch (err) {
+                                return encodedString + ' - ' + err.message;
                             }
                         }        
                         if (done) {
