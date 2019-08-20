@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {EasyDate} from 'tonva';
+import {EasyDate, EasyTime} from 'tonva';
 
 export interface IdDatesProps {
     date_init: Date;
@@ -10,7 +10,7 @@ export class IdDates extends React.Component<IdDatesProps> {
     render() {
         let {date_init, date_update} = this.props;
         return <small className="text-muted">
-            上次修改: <EasyDate date={date_update}/>
+            最新: <EasyTime date={date_update}/>
             <i className="fa fa-fw" />
             创建: <EasyDate date={date_init}/>
         </small>

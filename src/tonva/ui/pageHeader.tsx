@@ -65,7 +65,7 @@ export class PageHeader extends React.Component<PageHeaderProps, PageHeaderState
                         <a className="btn ml-2 cursor-pointer"
                             role="button"
                             onClick={this.logoutClick}>
-                            <i className="fa fa-sign-out" />
+                            <i className="fa fa-sign-out fa-lg" />
                         </a>
                     </div>;
                 }

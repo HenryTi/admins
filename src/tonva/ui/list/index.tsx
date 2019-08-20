@@ -33,12 +33,13 @@ export interface ListProps {
 @observer
 export class List extends React.Component<ListProps> {
     private listBase: ListBase;
+    private selectable: Selectable;
     constructor(props:ListProps) {
         super(props);
         let {item} = this.props;
         let {onClick, onSelect} = item;
         if (onSelect !== undefined)
-            this.listBase = new Selectable(this);
+            this.selectable = this.listBase = new Selectable(this);
         else if (onClick !== undefined)
             this.listBase = new Clickable(this);
         else
@@ -49,6 +50,12 @@ export class List extends React.Component<ListProps> {
     }
     componentWillUpdate(nextProps:ListProps, nextState, nextContext) {
         this.listBase.updateProps(nextProps);
+    }
+    selectAll() {
+        if (this.selectable) this.selectable.selectAll();
+    }
+    unselectAll() {
+        if (this.selectable) this.selectable.unselectAll();
     }
     get selectedItems():any[] {
         return this.listBase.selectedItems;

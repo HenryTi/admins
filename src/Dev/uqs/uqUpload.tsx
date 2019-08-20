@@ -12,17 +12,18 @@ interface State {
     text?: string;
 }
 
-export interface UqUploadProps {
+export interface UqActionProps {
     uq: DevModel.UQ;
+    action?: 'upload' | 'test' | 'deploy';
     services: DevModel.Service[];
 }
 
-const fastUpload = '快速测试';
-const thoroughlyUpload = '完全测试';
-export class UqUpload extends React.Component<UqUploadProps, State> {
+//const fastUpload = '快速测试';
+//const thoroughlyUpload = '完全测试';
+export class UqUpload extends React.Component<UqActionProps, State> {
     private fileInput: HTMLInputElement;
 
-    constructor(props:UqUploadProps) {
+    constructor(props:UqActionProps) {
         super(props);
         this.state = {
             files: undefined,
@@ -72,7 +73,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
         evt.preventDefault();
     }
 
-    private async update(thoroughly:boolean) {
+    private async upload() {
         var files:FileList = this.fileInput.files;
         var data = new FormData();
         let len = files.length;
@@ -81,7 +82,8 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
             data.append('files[]', file, file.name);
         }
   
-        let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/update';
+        let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/upload';
+        /*
         let actionName:string;
         if (thoroughly === true) {
             actionName = thoroughlyUpload;
@@ -90,6 +92,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
         else {
             actionName = fastUpload;
         }
+        */
         try {
             let abortController = new AbortController();
             let res = await fetch(url, {
@@ -98,23 +101,17 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
                 signal: abortController.signal,
             });
             nav.push(<CompileResult {...this.props} 
-                actionName={actionName} 
-                uploadOrDeploy="upload"
+                actionName="上传" 
+                action="upload"
                 res={res} abortController={abortController} />);
         }
         catch (e) {
             console.error('%s %s', url, e);
         }
     }
-    private onUpdate = async () => {
+    private onUpload = async () => {
         nav.ceaseTop();
-        let thoroughly = false;
-        await this.update(thoroughly);
-    }
-    private onUpdateThoroughly = async () => {
-        nav.ceaseTop();
-        let thoroughly = true;
-        await this.update(thoroughly);
+        await this.upload();
     }
     render() {
         let {files} = this.state;
@@ -128,10 +125,7 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
         let button:any;
         if (files !== undefined && files.length > 0) {
             button = <div className="my-2 d-flex">
-                <button className="btn btn-success" type="submit" onClick={this.onUpdate}>{fastUpload}</button>
-                <div className="py-2 flex-grow-1" />
-                <button className="btn btn-outline-warning"
-                    type="submit" onClick={this.onUpdateThoroughly}>{thoroughlyUpload}</button>
+                <button className="btn btn-success" type="submit" onClick={this.onUpload}>提交</button>
             </div>;
         }
         return <Page header={'测试 - ' + this.props.uq.name}>
@@ -153,28 +147,71 @@ export class UqUpload extends React.Component<UqUploadProps, State> {
     }
 }
 
-const fastDeploy = '快速发布';
-const thoroughlyDeploy = '完全发布';
-export class UqDeploy extends React.Component<UqUploadProps> {
-    private onDeploy = async () => {
+interface Options {
+    action: 'test' | 'deploy';
+    caption: string;
+    fast: string;
+    thoroughly: string;
+    description: any;
+}
+const test:Options = {
+    action: 'test',
+    caption: '测试',
+    fast: '快速测试',
+    thoroughly: '完全测试',
+    description: <>
+        <li>用上传的UQ代码，生成测试数据库</li>
+        <li>优化测试快速比较代码，仅仅根据修改代码的部分修改数据库</li>
+        <li>彻底测试仅用于底层代码有突破性变化时</li>
+    </>
+}
+
+const deploy:Options = {
+    action: 'deploy',
+    caption: '发布',
+    fast: '快速发布',
+    thoroughly: '完全发布',
+    description: <>
+        <li>将已经编译测试过的代码，发布到生产服务器</li>
+        <li>优化发布快速比较代码，仅仅对修改代码的部分发布</li>
+        <li>彻底发布仅用于底层代码有突破性变化时</li>
+    </>
+}
+
+export class UqDeploy extends React.Component<UqActionProps> {
+    readonly options: Options;
+    constructor(props: UqActionProps) {
+        super(props);
+        switch (props.action) {
+            case 'test':
+                this.options = test;
+                break;
+            case 'deploy':
+                this.options = deploy;
+                break;
+        }
+    }
+
+    private onCompile = async () => {
         nav.ceaseTop();
         let thoroughly = false;
-        await this.update(thoroughly);
+        await this.compile(thoroughly);
     }
-    private onDeployThoroughly = async () => {
+    private onCompileThoroughly = async () => {
         nav.ceaseTop();
         let thoroughly = true;
-        await this.update(thoroughly);
+        await this.compile(thoroughly);
     }
-    private async update(thoroughly:boolean) {
-        let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/deploy';
+    private async compile(isThoroughly:boolean) {
+        let {action, thoroughly, fast} = this.options;
+        let url = store.uqServer + 'uq-compile/' + this.props.uq.id + '/' + action;
         let actionName:string;
-        if (thoroughly === true) {
-            actionName = thoroughlyDeploy;
+        if (isThoroughly === true) {
+            actionName = thoroughly;
             url += '-thoroughly';
         }
         else {
-            actionName = fastDeploy;
+            actionName = fast;
         }
         try {
             let abortController = new AbortController();
@@ -183,8 +220,8 @@ export class UqDeploy extends React.Component<UqUploadProps> {
                 signal: abortController.signal,
             });
             nav.push(<CompileResult {...this.props} 
+                action={action}
                 actionName={actionName}
-                uploadOrDeploy="deploy"
                 res={res} abortController={abortController} />);
         }
         catch (e) {
@@ -192,18 +229,15 @@ export class UqDeploy extends React.Component<UqUploadProps> {
         }
     }
     render() {
-        return <Page header={'发布 - ' + this.props.uq.name}>
+        let {caption, fast, thoroughly, description} = this.options;
+        return <Page header={caption + ' - ' + this.props.uq.name}>
             <div className="m-3 bg-white p-3">
-                <ul className="my-3">
-                    <li>将已经编译测试过的代码，发布到生产服务器</li>
-                    <li>优化发布快速比较代码，仅仅对修改代码的部分发布</li>
-                    <li>彻底发布仅用于底层代码有突破性变化时</li>
-                </ul>
+                <ul className="my-3">{description}</ul>
                 <div className="d-flex p-3">
-                    <button className="btn btn-success" type="submit" onClick={this.onDeploy}>{fastDeploy}</button>
+                    <button className="btn btn-success" type="submit" onClick={this.onCompile}>{fast}</button>
                     <div className="py-2 flex-grow-1" />
                     <button className="btn btn-outline-warning"
-                        type="submit" onClick={this.onDeployThoroughly}>{thoroughlyDeploy}</button>
+                        type="submit" onClick={this.onCompileThoroughly}>{thoroughly}</button>
                 </div>
             </div>
         </Page>;
@@ -222,20 +256,14 @@ class UqPage extends React.Component<UqPgeProps> {
     }
 }
 
-interface CompileResultProps extends UqUploadProps {
+interface CompileResultProps extends UqActionProps {
     uq: DevModel.UQ;
+    action: 'upload' | 'test' | 'deploy';
     actionName: string;
     res: Response;
     abortController: AbortController;
-    uploadOrDeploy: 'upload' | 'deploy';
 }
-/*
-interface CompileResultState {
-    sections: Section[];
-    seconds: number;
-    collaps: {[index:number]: boolean};
-}
-*/
+
 @observer
 class CompileResult extends React.Component<CompileResultProps> {
     private resultSections: ResultSections;
@@ -243,13 +271,6 @@ class CompileResult extends React.Component<CompileResultProps> {
     constructor(props:CompileResultProps) {
         super(props);
         this.resultSections = new ResultSections();
-        /*
-        this.state = {
-            sections: this.resultSections.sections,
-            seconds: -1,
-            collaps: {}
-        }
-        */
     }
     componentWillMount() {
         nav.regConfirmClose(async ():Promise<boolean>=>{
@@ -279,14 +300,6 @@ class CompileResult extends React.Component<CompileResultProps> {
         this.timeHandler = setInterval(() => {
             var pane = document.getElementById('bottomDiv');
             pane && pane.scrollIntoView();
-            /*
-            if (pane !== undefined) {
-                let childNodes = pane.childNodes;
-                let last = childNodes.item(childNodes.length-1);
-                (last as HTMLElement).scrollIntoView();
-            }
-            */
-            //that.clearTimeHandler();
         }, 100);
     }
     private endAutoScrollToBottom() {
@@ -294,50 +307,18 @@ class CompileResult extends React.Component<CompileResultProps> {
             clearInterval(this.timeHandler);
         }, 300);
     }
-    /*
-    private clearTimeHandler() {
-        if (this.timeHandler !== undefined) {
-            clearTimeout(this.timeHandler);
-            this.timeHandler = undefined;
-        }
-    }*/
     private getParent(el:HTMLElement):HTMLElement {
         if (!el) return;
         if (el.tagName === 'MAIN') return el;
         return this.getParent(el.parentElement);
     }
-    /*
-    private scrollToBottom(defer:number = 100) {
-        this.clearTimeHandler();
-        let that = this;
-        this.timeHandler = setTimeout(() => {
-            var pane = document.getElementById('bottomDiv');
-            pane && pane.scrollIntoView();
-            that.clearTimeHandler();
-        }, defer);
-    }
-    */
     private topIntoView() {
         var pane = document.getElementById('topDiv');
         pane && pane.scrollIntoView();
-        /*
-        let childNodes = pane.childNodes;
-        let len = childNodes.length;
-        if (len === 0) return;
-        let first = childNodes.item(0);
-        (first as HTMLElement).scrollIntoView();
-        */
     }
     private bottomIntoView() {
         var pane = document.getElementById('bottomDiv');
         pane && pane.scrollIntoView();
-        /*
-        let childNodes = pane.childNodes;
-        let len = childNodes.length;
-        if (len === 0) return;
-        let last = childNodes.item(len-1);
-        (last as HTMLElement).scrollIntoView();
-        */
     }
     private doubleClick = () => {
         var pane = document.getElementById('scrollDiv');
@@ -361,7 +342,6 @@ class CompileResult extends React.Component<CompileResultProps> {
                     let ret = await reader.read();
                     let {done, value} = ret;
                     try {
-                    //.then(({done, value}) => {
                         function uintToString(uintArray:number[]):string {
                             let encodedString = String.fromCharCode.apply(null, uintArray);
                             try {
@@ -372,18 +352,12 @@ class CompileResult extends React.Component<CompileResultProps> {
                             }
                         }        
                         if (done) {
-                            // that.scrollToBottom();
-                            /*
-                            that.setState({
-                                seconds: (new Date().getTime() - time.getTime()),
-                            });
-                            */
                             that.resultSections.seconds = (new Date().getTime() - time.getTime());
-                            let {uploadOrDeploy, services} = that.props;
+                            let {action, services} = that.props;
                             let now = Date.now() / 1000;
                             for (let service of services) {
-                                switch (uploadOrDeploy) {
-                                    case 'upload': service.compile_time = now; break;
+                                switch (action) {
+                                    case 'test': service.compile_time = now; break;
                                     case 'deploy': service.deploy_time = now; break;
                                 }
                             }
@@ -392,19 +366,12 @@ class CompileResult extends React.Component<CompileResultProps> {
                         }
                         let text = uintToString(value);
                         that.resultSections.add(text);
-                        /*
-                        that.setState({
-                            sections: that.resultSections.sections,
-                        });
-                        */
                         total += value.byteLength;
-                        //that.scrollToBottom();
                         await pump();
                     }
                     catch (err) {
                         reject(err);
                     }
-                    //}).catch(reject)
                 }
                 await pump();
             });
@@ -422,68 +389,6 @@ class CompileResult extends React.Component<CompileResultProps> {
     }
     private renderText = (section:Section, index:number):JSX.Element => {
         return <section.render key={index} />;
-/*
-        if (Array.isArray(section)) {
-            let groupId = 'text-group-' + index;
-            let line = section[0];
-            let title: string;
-            let p0 = line.indexOf('\n'), p:number;
-            if (p0 === 0) {
-                p0 = 1;
-                p = line.indexOf('\n', p0);
-            }
-            else {
-                p = line.indexOf('\n');
-            }
-            if (p < 0) p = undefined;
-            else {
-                let l = line.indexOf('(');
-                if (l < p) p = l;
-            }
-            title = line.substring(p0, p);
-
-            let onClick = () => {
-                let c = this.state.collaps[index];
-                if (c === false) c = true;
-                else c = false;
-                this.setState(prevState => ({
-                    collaps: {
-                        ...prevState.collaps,
-                        [index]: c,
-                    },
-                }));
-            }
-            let titleIcon:any, content:any;
-            if (this.state.collaps[index]===false) {
-                titleIcon = <FA name='arrow-circle-up' className='text-success' />;
-                content = <div>
-                    {
-                        section.map((v, i) => {
-                            if (v.trim().length === 0) return null;
-                            return <pre style={{whiteSpace: 'pre-wrap'}} key={index + '-' + i}>{v}</pre>
-                        })
-                    }
-                </div>;
-            }
-            else {
-                titleIcon = <FA name='arrow-circle-down' className='text-success' />;
-            }
-            return <React.Fragment key={index}>
-                <div className="cursor-pointer text-primary" onClick={onClick}>{titleIcon} <u>{title}</u></div>
-                {content}
-            </React.Fragment>;
-        }
-        if (section.trim().length === 0) return null;
-        let parts = section.split('\n');
-        return <React.Fragment key={index}>
-            {
-                parts.map((v, i) => v.length === 0?
-                    <div key={i}>&nbsp;</div> :
-                    <div key={i}>{v}</div>
-                )
-            }
-        </React.Fragment>;
-*/
     }
     render() {
         let {uq, actionName} = this.props;

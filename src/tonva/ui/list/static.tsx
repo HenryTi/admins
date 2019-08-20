@@ -4,7 +4,7 @@ import {ListBase} from './base';
 import { uid } from '../../uid';
 
 export class Static extends ListBase {
-    render(item:any, index:number):JSX.Element {
+    render = (item:any, index:number):JSX.Element => {
         let {className, key, render} = this.list.props.item;
         if (typeof item === 'string') {
             let cn = classNames('va-list-gap', 'px-3', 'pt-1');

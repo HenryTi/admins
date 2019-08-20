@@ -12,7 +12,7 @@ export interface SelectableItem {
 }
 
 export class Selectable extends ListBase {
-    private _items: SelectableItem[];
+    @observable private _items: SelectableItem[];
     private _selectedItems: any[];
     private input: HTMLInputElement;
     private buildItems() {
@@ -64,6 +64,12 @@ export class Selectable extends ListBase {
         this.buildItems();
         return this._items;
     }
+    selectAll() {
+        if (this._items) this._items.forEach(v => v.selected = true);
+    }
+    unselectAll() {
+        if (this._items) this._items.forEach(v => v.selected = false);
+    }
     updateProps(nextProps:any) {
         if (nextProps.selectedItems === this._selectedItems) return;
         this.buildItems();
@@ -101,7 +107,7 @@ export class Selectable extends ListBase {
     */
     //w-100 mb-0 pl-3
     //m-0 w-100
-    render(item:SelectableItem, index:number):JSX.Element {
+    render = (item:SelectableItem, index:number):JSX.Element => {
         let {className, key, render, onSelect} = this.list.props.item;
         let {labelId, selected} = item;
         return <li key={key===undefined?index:key(item)} className={classNames(className)}>
