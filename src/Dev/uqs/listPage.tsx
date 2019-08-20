@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { VPage, Page, EasyDate, EasyTime, DropdownActions, DropdownAction } from 'tonva';
+import { VPage, Page, EasyDate, EasyTime, DropdownActions, DropdownAction, nav } from 'tonva';
 import { UQController } from './uqController';
 import { List, LMR, Badge, Muted, FA } from 'tonva';
 import { DevModel } from 'model';
 import { NewPage } from './editPage';
 import { store } from 'store';
+import { CompileResult } from './uqUpload';
 
 export class ListPage extends VPage<UQController> {
     async open(param:any) {
@@ -73,20 +74,52 @@ export class ListPage extends VPage<UQController> {
         this.list.unselectAll();
     }
     private test = () => {
-        this.compile(true, false);
+        this.compile('test', false);
     }
     private testThoroughly = () => {
-        this.compile(true, true);
+        this.compile('test', true);
     }
     private deploy = () => {
-        this.compile(false, false);
+        this.compile('deploy', false);
     }
     private deployThoroughly = () => {
-        this.compile(false, true);
+        this.compile('deploy', true);
     }
-    private compile(isTest:boolean, thoroughly: boolean) {
+    private async compile(action:'test'|'deploy', thoroughly: boolean) {
         let selectItems = this.list.selectedItems;
-        alert('代码没有完成，先挨个操作吧 :-(\n' + JSON.stringify(selectItems));
+        //let {action, thoroughly, fast} = this.options;
+        let url = store.uqServer + 'uq-compile/batch';
+        let actionName:string;
+        switch (action) {
+            case 'test': actionName = '测试'; break;
+            case 'deploy': actionName = '发布'; break;
+        }
+        try {
+            let abortController = new AbortController();
+            let body = {
+                test: action === 'test',
+                thoroughly: thoroughly,
+                uqs: selectItems.map(v => v.id)
+            };
+            //let data = new FormData();
+            //data.append( "json", JSON.stringify(body) );
+            let res = await fetch(url, {
+                method: "POST",
+                signal: abortController.signal,
+                headers: {
+                    //'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            nav.push(<CompileResult uq={undefined} services={undefined}
+                action={action}
+                actionName={actionName}
+                res={res} abortController={abortController} />);
+        }
+        catch (e) {
+            console.error('%s %s', url, e);
+        }
     }
 
     private batchCompilePage = ():JSX.Element => {

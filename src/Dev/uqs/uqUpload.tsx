@@ -265,7 +265,7 @@ interface CompileResultProps extends UqActionProps {
 }
 
 @observer
-class CompileResult extends React.Component<CompileResultProps> {
+export class CompileResult extends React.Component<CompileResultProps> {
     private resultSections: ResultSections;
     private timeHandler:any;
     constructor(props:CompileResultProps) {
@@ -394,7 +394,8 @@ class CompileResult extends React.Component<CompileResultProps> {
         let {uq, actionName} = this.props;
         let {seconds, sections, hasError} = this.resultSections;
         let finish = hasError === true? '发生错误' : '完成';
-        let header = uq.name + ' - ' + actionName + (seconds>=0? finish : "中...");
+        let header = actionName + (seconds>=0? finish : "中...");
+        if (uq !== undefined) header = uq.name + ' - ' + header;
         return <Page header={header} back="close">
             <div id='topDiv' />
             <div id='scrollDiv'
