@@ -123,19 +123,23 @@ export class ListPage extends VPage<UQController> {
     }
 
     private batchCompilePage = ():JSX.Element => {
-        let {uqList: list, listRowClick} = this.controller;
+        let {uqList: list} = this.controller;
         let right = <span>
             <button className="btn btn-sm btn-link" onClick={this.selectAll}>全选</button> 
             <button className="btn btn-sm btn-link" onClick={this.unselectAll}>全清</button>
         </span>;
         let cnBtn = 'btn btn-sm btn-outline-primary mr-3';
-        return <Page header="批量编译">
-            <LMR className="px-3 py-1" right={right}>
+        let bar = <span className="px-3 py-1 d-flex w-100">
+            <span className="flex-grow-1">
                 <button className={cnBtn} onClick={this.test}>测试</button>
                 <button className={cnBtn} onClick={this.deploy}>发布</button>
                 <button className={cnBtn} onClick={this.testThoroughly}>彻底测试</button>
                 <button className={cnBtn} onClick={this.deployThoroughly}>彻底发布</button>
-            </LMR>
+            </span>
+            {right}
+        </span>;
+
+        return <Page header="批量编译" footer={bar}>
             <List ref={list=>this.list = list} items={list} item={{render: this.listCompileRow, onSelect: this.onSelect}} />
         </Page>
     }

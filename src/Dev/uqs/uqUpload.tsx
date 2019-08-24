@@ -302,10 +302,13 @@ export class CompileResult extends React.Component<CompileResultProps> {
             pane && pane.scrollIntoView();
         }, 100);
     }
+    private clearAutoScrollToBottom = () => {
+        if (this.timeHandler === undefined) return;
+        clearInterval(this.timeHandler);
+        this.timeHandler = undefined;
+}
     private endAutoScrollToBottom() {
-        setTimeout(()=>{
-            clearInterval(this.timeHandler);
-        }, 300);
+        setTimeout(this.clearAutoScrollToBottom, 300);
     }
     private getParent(el:HTMLElement):HTMLElement {
         if (!el) return;
@@ -331,7 +334,22 @@ export class CompileResult extends React.Component<CompileResultProps> {
             this.bottomIntoView();
         }
     }
+    private lastScrollTop = 0;
+    private onScroll = (e:any) => {
+        let el = e.target as HTMLBaseElement;
+        
+        let {scrollTop, scrollHeight, offsetHeight} = el;
+        if (scrollTop < this.lastScrollTop) {
+            this.clearAutoScrollToBottom();
+        }
+        else if (scrollTop + offsetHeight > scrollHeight - 30) {
+            if (this.timeHandler === undefined) {
+                this.startAutoScrollToBottom();
+            }
+        }
 
+        this.lastScrollTop = scrollTop;
+    }
     async componentDidMount() {
         let that = this;
         let time = new Date();
@@ -396,7 +414,7 @@ export class CompileResult extends React.Component<CompileResultProps> {
         let finish = hasError === true? '发生错误' : '完成';
         let header = actionName + (seconds>=0? finish : "中...");
         if (uq !== undefined) header = uq.name + ' - ' + header;
-        return <Page header={header} back="close">
+        return <Page header={header} back="close" onScroll={this.onScroll}>
             <div id='topDiv' />
             <div id='scrollDiv'
                 onDoubleClick={this.doubleClick} 
