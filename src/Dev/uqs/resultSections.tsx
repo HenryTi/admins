@@ -84,7 +84,7 @@ class ErrorSection extends Section {
     render = ():JSX.Element => {
         return <div className="text-danger">
             <FA name="exclamation-circle" />&nbsp;
-            {this.error.join().split('\n').map(v=><>{v}<br/></>)}
+            {this.error.join().split('\n').map((v, index)=><React.Fragment key={index}>{v}<br/></React.Fragment>)}
         </div>;
     }
 }
