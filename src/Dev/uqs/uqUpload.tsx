@@ -296,7 +296,9 @@ export class CompileResult extends React.Component<CompileResultProps> {
             })
         });
     }
+    private autoScrollEnd:boolean = false;
     private startAutoScrollToBottom() {
+        if (this.autoScrollEnd === true) return;
         this.timeHandler = setInterval(() => {
             var pane = document.getElementById('bottomDiv');
             pane && pane.scrollIntoView();
@@ -308,6 +310,7 @@ export class CompileResult extends React.Component<CompileResultProps> {
         this.timeHandler = undefined;
 }
     private endAutoScrollToBottom() {
+        this.autoScrollEnd = true;
         setTimeout(this.clearAutoScrollToBottom, 300);
     }
     private getParent(el:HTMLElement):HTMLElement {
