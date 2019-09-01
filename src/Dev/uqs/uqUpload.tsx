@@ -353,7 +353,45 @@ export class CompileResult extends React.Component<CompileResultProps> {
 
         this.lastScrollTop = scrollTop;
     }
+
+    private uintToString(uintArray:number[]):string {
+        let encodedString = String.fromCharCode.apply(null, uintArray);
+        try {
+            return decodeURIComponent(escape(encodedString));
+        }
+        catch (err) {
+            return encodedString;
+        }
+    }
+
+    private startTime: Date;
+    private reader: ReadableStreamReader;
+    private total: number;
+    private async pump():Promise<boolean> {
+        let ret = await this.reader.read();
+        let {done, value} = ret;
+        if (done) {
+            this.resultSections.seconds = (new Date().getTime() - this.startTime.getTime());
+            let {action, services} = this.props;
+            let now = Date.now() / 1000;
+            for (let service of services) {
+                switch (action) {
+                    case 'test': service.compile_time = now; break;
+                    case 'deploy': service.deploy_time = now; break;
+                }
+            }
+            //resolve();
+            return true;
+        }
+        let text = this.uintToString(value);
+        this.resultSections.add(text);
+        this.total += value.byteLength;
+        //await pump();
+        return false;
+    }
+
     async componentDidMount() {
+        /*
         let that = this;
         let time = new Date();
         function consume(reader: ReadableStreamReader) {
@@ -371,7 +409,7 @@ export class CompileResult extends React.Component<CompileResultProps> {
                             catch (err) {
                                 return encodedString;
                             }
-                        }        
+                        }
                         if (done) {
                             that.resultSections.seconds = (new Date().getTime() - time.getTime());
                             let {action, services} = that.props;
@@ -397,9 +435,16 @@ export class CompileResult extends React.Component<CompileResultProps> {
                 await pump();
             });
         }
+        */
         this.startAutoScrollToBottom();
         try {
-            await consume(this.props.res.body.getReader());
+            //await consume(this.props.res.body.getReader());
+            this.reader = this.props.res.body.getReader();
+            this.startTime = new Date;
+            this.total = 0;
+            while (true) {
+                if (await this.pump() === true) break;
+            }
         }
         catch (err) {
             console.error(err);
