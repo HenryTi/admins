@@ -7,12 +7,16 @@ const groupStart = '///++++++';
 const groupEnd = '------///';
 
 export abstract class Section {
+    rowId: number;
     render: () => JSX.Element;
 }
 
 class StringSection extends Section {
     text: string;
-    constructor(text:string) {super(); this.text = text}
+    constructor(text:string) {
+        super(); 
+        this.text = text;
+    }
     render = (): JSX.Element => {
         if (this.text.trim().length === 0) return null;
         let parts = this.text.split('\n');
@@ -27,7 +31,7 @@ class GroupSection extends Section {
     group: string[];
     @observable collaps: boolean;
     constructor(group:string[]) {
-        super(); 
+        super();
         this.group = group;
         this.collaps = true;
     }
@@ -97,6 +101,7 @@ export class ResultSections {
     @observable hasError: boolean = false;
     @observable seconds: number;
     //readonly sections: (string | string[])[] = [];
+    private sectionId: number = 1;
     @observable readonly sections: Section[] = [];
 
     add(text:string):void {
@@ -112,6 +117,16 @@ export class ResultSections {
         while (this.stop === false) {
             this.addToGroup();
             this.addText();
+        }
+    }
+
+    private addSection(section:Section) {
+        section.rowId = this.sectionId;
+        this.sectionId++;
+        this.sections.push(section);
+        let len = this.sections.length;
+        if (len > 500) {
+            this.sections.splice(0, len - 500);
         }
     }
 
@@ -161,7 +176,7 @@ export class ResultSections {
             return;
         }
         this.group.push(this.text.substring(this.p, p));
-        this.sections.push(this.parse());
+        this.addSection(this.parse());
         this.group = undefined;
         this.p = p + 9;
     }
@@ -171,13 +186,13 @@ export class ResultSections {
         let p = this.text.indexOf(groupStart, this.p);
         if (p < 0) {
             if (this.mayStart(groupStart) === true) return;
-            this.sections.push(new StringSection(this.p === 0? this.text : this.text.substr(this.p)));
+            this.addSection(new StringSection(this.p === 0? this.text : this.text.substr(this.p)));
             this.p = 0;
             this.text = undefined;
             this.stop = true;
             return;
         }
-        this.sections.push(new StringSection(this.text.substring(this.p, p)));
+        this.addSection(new StringSection(this.text.substring(this.p, p)));
         this.p = p + 9;
         this.group = [];
     }

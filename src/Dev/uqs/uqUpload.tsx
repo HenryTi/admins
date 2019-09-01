@@ -343,7 +343,7 @@ export class CompileResult extends React.Component<CompileResultProps> {
         
         let {scrollTop, scrollHeight, offsetHeight} = el;
         if (scrollTop < this.lastScrollTop) {
-            this.clearAutoScrollToBottom();
+            //this.clearAutoScrollToBottom();
         }
         else if (scrollTop + offsetHeight > scrollHeight - 30) {
             if (this.timeHandler === undefined) {
@@ -355,7 +355,7 @@ export class CompileResult extends React.Component<CompileResultProps> {
     }
 
     private uintToString(uintArray:number[]):string {
-        let encodedString = String.fromCharCode.apply(null, uintArray);
+        let encodedString = String.fromCharCode(...uintArray);
         try {
             return decodeURIComponent(escape(encodedString));
         }
@@ -373,14 +373,15 @@ export class CompileResult extends React.Component<CompileResultProps> {
         if (done) {
             this.resultSections.seconds = (new Date().getTime() - this.startTime.getTime());
             let {action, services} = this.props;
-            let now = Date.now() / 1000;
-            for (let service of services) {
-                switch (action) {
-                    case 'test': service.compile_time = now; break;
-                    case 'deploy': service.deploy_time = now; break;
+            if (services !== undefined) {
+                let now = Date.now() / 1000;
+                for (let service of services) {
+                    switch (action) {
+                        case 'test': service.compile_time = now; break;
+                        case 'deploy': service.deploy_time = now; break;
+                    }
                 }
             }
-            //resolve();
             return true;
         }
         let text = this.uintToString(value);
@@ -454,7 +455,7 @@ export class CompileResult extends React.Component<CompileResultProps> {
         }
     }
     private renderText = (section:Section, index:number):JSX.Element => {
-        return <section.render key={index} />;
+        return <section.render key={section.rowId} />;
     }
     render() {
         let {uq, actionName} = this.props;
