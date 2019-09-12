@@ -259,7 +259,7 @@ function checkBusQuery(face: any, bus:any):boolean {
         let item = face[i];
         switch (i) {
             default:
-                alert(i + ': not allowed in bus query');
+                alert(i + ': not allowed in bus query.');
                 return false;
             case 'param':
                 if (checkBusQueryParam(item, bus) === false) return false;
