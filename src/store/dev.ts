@@ -256,11 +256,17 @@ function checkBusFace(face: any[], bus:any):boolean {
 
 function checkBusQuery(face: any, bus:any):boolean {
     for (let i in face) {
-        if (i === 'param') {
-            if (checkBusQueryParam(face[i], bus) === false) return false;
-        }
-        else if (i === 'returns') {
-            if (checkBusFace(bus[face[i]], bus) === false) return false;
+        let item = face[i];
+        switch (i) {
+            default:
+                alert(i + ': unknown key word');
+                return false;
+            case 'param':
+                if (checkBusQueryParam(item, bus) === false) return false;
+                break;
+            case 'returns':
+                if (checkBusFace(item, bus) === false) return false;
+                break;
         }
     }
     return true;
