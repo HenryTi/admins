@@ -233,9 +233,17 @@ function refArrayOk(items:any[], bus:any):boolean {
 }
 
 function checkBusFace(face: any[], bus:any):boolean {
+    if (!face || typeof face !== 'object') {
+        alert('only object');
+        return false;
+    }
     for (let field of face) {
         let {type} = field;
-        if (type === 'array') {
+        if (type === undefined) {
+            alert('type not defined');
+            return false;
+        }
+        else if (type === 'array') {
             let {fields} = field;
             if (refNameOk(fields, bus) === false) {
                 return false;
@@ -265,7 +273,15 @@ function checkBusQuery(face: any, bus:any):boolean {
                 if (checkBusQueryParam(item, bus) === false) return false;
                 break;
             case 'returns':
-                if (checkBusFace(item, bus) === false) return false;
+                let returns = item;
+                if (typeof item === 'string') {
+                    returns = bus[item];
+                    if (returns === undefined) {
+                        alert(item + ' is not defined');
+                        return false;
+                    }
+                }
+                if (checkBusFace(returns, bus) === false) return false;
                 break;
         }
     }
