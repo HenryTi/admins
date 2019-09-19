@@ -2,11 +2,12 @@ import React from 'react';
 import { Page, Controller, appInFrame, VPage } from 'tonva';
 import { List, Muted, LMR, FA } from 'tonva';
 import { VOpBinding } from './vOpBinding';
-import { CAction, CQuery, centerApi, entityIcons, ControllerUq } from 'tonva';
+import { CAction, CQuery, entityIcons, ControllerUq } from 'tonva';
 import { Organization, Team, Section, Post, Sheet, App, Uq, To, Entity, EntityBlock } from './model';
 import { VAllPosts } from './vAllPosts';
 import { VFullFunction } from './vFullFunction';
 import { VSearchUser } from './vSearchUser';
+import { mainApi } from 'api';
 
 // 单据跟操作的绑定设置
 export class COpBinding extends ControllerUq {
@@ -38,7 +39,7 @@ export class COpBinding extends ControllerUq {
 
     private async buildAppsUqs() {
         let unit = appInFrame.unit;
-        let ret:any[][] = await centerApi.get('/unit/apps-uqs', {unit: unit});
+        let ret:any[][] = await mainApi.get('/unit/apps-uqs', {unit: unit});
         this.apps = ret[0];
         let uqs: Uq[] = ret[1];
 

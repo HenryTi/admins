@@ -1,7 +1,9 @@
-//import {isDevelopment} from '../local';
 import {HttpChannel} from './httpChannel';
+import { Caller } from './caller';
 
-export async function refetchApi(channel:HttpChannel, url, options, resolve, reject) {
+export async function refetchApi(channel:HttpChannel, url:string, options:any, 
+    resolve:(values:any)=>any, reject:(reason:any)=>void)
+{
     await channel.fetch(url, options, resolve, reject);
 }
 
@@ -16,6 +18,11 @@ export abstract class ApiBase {
     }
 
     protected abstract async getHttpChannel(): Promise<HttpChannel>;
+
+    async xcall(caller:Caller<any>):Promise<any> {
+        let channel = await this.getHttpChannel();
+        return await channel.xcall(this.path, caller);
+    }
 
     public async call(url:string, method:string, body:any):Promise<any> {
         let channel = await this.getHttpChannel();

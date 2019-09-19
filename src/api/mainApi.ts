@@ -1,7 +1,10 @@
-import {CenterApi, User, appInFrame} from 'tonva';
+import {User, appInFrame, CenterApiBase} from 'tonva';
 import { string } from 'prop-types';
 
-class MainApi extends CenterApi {
+class MainApi extends CenterApiBase {
+    async userAppUnits(app:number):Promise<any[]> {
+        return await this.get('tie/user-app-units', {app:app});
+    }
     async stickies():Promise<any[]> {
         return await this.get('sticky/list', {start:0, pageSize:30});
     }

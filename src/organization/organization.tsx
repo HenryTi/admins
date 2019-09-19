@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { Page, VPage } from 'tonva';
+import { Page, VPage, UqData } from 'tonva';
 import { List, FA } from 'tonva';
 import { CUq, Link, CLink, CApp } from 'tonva';
 import { COpBinding } from './op';
 
-const uqData = {
+const uqData:UqData = {
     id: 0,
     uqOwner: '$$$',
     uqName: '$unitx',
+    newVersion: false,
     access: undefined
-
 };
 
 export class COrganization extends CUq {

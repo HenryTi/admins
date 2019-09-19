@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observable } from 'mobx';
-import { VPage, Page, Form, ItemSchema, UiSchema, StringSchema, UiTextItem, UiPasswordItem, ButtonSchema, Edit, ImageSchema, nav, UiImageItem } from '../ui';
+import { Page, ItemSchema, UiSchema, StringSchema, UiTextItem, Edit, ImageSchema, nav, UiImageItem } from '../components';
 import { userApi } from './userApi';
 
 export class EditMeInfo extends React.Component {

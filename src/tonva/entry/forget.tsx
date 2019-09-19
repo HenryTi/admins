@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Page} from '../ui';
+import {Page} from '../components';
 
 export default class Forget extends React.Component<{}, null> {
     render() {

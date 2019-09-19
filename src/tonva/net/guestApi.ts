@@ -1,4 +1,4 @@
-import { decodeGuestToken } from '../user';
+import { decodeGuestToken } from '../tool/user';
 import { CenterApiBase } from './uqApi';
 
 export class GuestApi extends CenterApiBase {

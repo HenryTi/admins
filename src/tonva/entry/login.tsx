@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton, resLang, StringSchema} from '../ui';
+import {nav, Page, Form, Schema, UiSchema, UiTextItem, UiPasswordItem, Context, UiButton, resLang, StringSchema} from '../components';
 import { RegisterController, ForgetController } from './register';
 import { userApi } from './userApi';
 import { LoginRes, loginRes } from './res';
 import { tonvaTop, getSender } from './tools';
-import { User } from '../user';
+import { User } from '../tool/user';
 
 const schema: Schema = [
     {name: 'username', type: 'string', required: true, maxLength: 100} as StringSchema,

@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import {nav} from '../ui';
-import {uid} from '../uid';
-import {uqTokenApi as uqTokenApi, callCenterapi, CenterAppApi, UqData, centerToken, UqAppData, setCenterToken} from './uqApi';
+import {nav} from '../components';
+import {uid} from '../tool/uid';
+import {uqTokenApi, callCenterapi, centerToken, setCenterToken} from './uqApi';
 import {setSubAppWindow} from './wsChannel';
 import { host } from './host';
 
@@ -13,7 +13,9 @@ export interface UqToken {
 }
 const uqTokens:{[uqName:string]: UqToken}  = {};
 export function logoutUqTokens() {
-    for (let i in uqTokens) uqTokens[i] = undefined;
+    for (let i in uqTokens) {
+        uqTokens[i] = undefined;
+    }
 }
 
 export interface AppInFrame {
@@ -43,7 +45,7 @@ export let appInFrame:AppInFrame = new AppInFrameClass();
 }*/
 
 export function isBridged():boolean {
-    return self !== window.parent;
+    return window.self !== window.parent;
 }
 
 window.addEventListener('message', async function(evt) {
@@ -128,7 +130,7 @@ async function onAppApiReturn(message:any) {
     let {apiName, db, url, urlTest, token} = message;
     let action = uqTokenActions[apiName];
     if (action === undefined) {
-        throw 'error app api return';
+        throw new Error('error app api return');
         //return;
     }
     let realUrl = host.getUrlOrTest(db, url, urlTest);
@@ -200,7 +202,7 @@ function getUnit():number {
     let {unit, predefinedUnit} = appInFrame;
     let realUnit = unit || predefinedUnit;
     if (realUnit === undefined) {
-        throw 'no unit defined in unit.json or not logined in';
+        throw new Error('no unit defined in unit.json or not logined in');
     }
     return realUnit;
 }

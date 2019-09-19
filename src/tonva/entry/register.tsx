@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {nav, Page, Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context, resLang, StringSchema, Controller, VPage, UiCustom, UiInputItem, NumSchema, View} from '../ui';
+import {nav, Page, Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context, resLang, StringSchema, Controller, 
+    VPage, NumSchema} from '../components';
 import { userApi, RegisterParameter } from './userApi';
 import '../css/va-form.css';
 import { RegisterRes, registerRes } from './res';
@@ -82,22 +83,22 @@ export class RegisterController extends Controller {
         this.openVPage(RegSuccess);
     }
 
-    login() {
-        userApi
-            .login({user: this.account, pwd: this.password, guest: nav.guest})
-            .then(async retUser => {
-                if (retUser === undefined) {
-                    alert('something wrong!');
-                    return;
-                }
-                await nav.logined(retUser);
-            });
+    login = async () => {
+        let retUser = await userApi.login({user: this.account, pwd: this.password, guest: nav.guest});
+        if (retUser === undefined) {
+            alert('something wrong!');
+            return;
+        }
+        await nav.logined(retUser);
     }
 
-    regReturn(registerReturn:number):string {
+    private regReturn(registerReturn:number):string {
         let msg:any;
         switch (registerReturn) {
-            default: throw 'unknown return';
+            default: 
+                return '服务器发生错误';
+            case 4:
+                return '验证码错误';
             case 0:
                 return;
             case 1:
@@ -152,7 +153,8 @@ export class RegisterController extends Controller {
             this.toSuccess();
             return;
         }
-        return this.regReturn(ret);
+        let error = this.regReturn(ret)
+        return error;
     }
 }
 
@@ -165,7 +167,7 @@ export class ForgetController extends RegisterController {
     successText = '成功修改密码';
 
     async execute() {
-        let ret = await userApi.resetPassword(this.account, this.password, this.verify, this.type);
+        await userApi.resetPassword(this.account, this.password, this.verify, this.type);
         nav.clear();
         this.toSuccess();
         return undefined;
@@ -249,7 +251,7 @@ class VerifyPage extends VPage<RegisterController> {
     ]
 
     private onVerifyChanged = (context:Context, value:any, prev:any) => {
-        context.setDisabled('submit', !value || (value.length != 6));
+        context.setDisabled('submit', !value || (value.length !== 6));
     }
     private uiSchema: UiSchema = {
         items: {
@@ -330,13 +332,21 @@ class PasswordPage extends VPage<RegisterController> {
     private onSubmit = async (name:string, context:Context):Promise<string> => {
         let values = context.form.data;
         let {pwd, rePwd} = values;
+        let error:string;
         if (!pwd || pwd !== rePwd) {
             context.setValue('pwd', '');
             context.setValue('rePwd', '');
-            return '密码错误，请重新输入密码！';
+            error = '密码错误，请重新输入密码！';
+            context.setError('pwd', error);
         }
-        this.controller.password = pwd;
-        return await this.controller.execute();
+        else {
+            this.controller.password = pwd;
+            error = await this.controller.execute();
+            if (error !== undefined) {
+                nav.push(<Page header="注册不成功"><div className="p-5 text-danger">{error}</div></Page>);
+            }
+        }
+        return error;
     }
     private onEnter = async (name:string, context:Context):Promise<string> => {
         if (name === 'rePwd') {

@@ -1,0 +1,67 @@
+/* tab css */
+.tab {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: 860px;
+    align-self: center;
+    height: 100%;
+  }
+  .tab>div.tab-content {
+    display: flex;
+    flex: 1 1 auto;
+    height: 3rem; /* 2019-7-2：不知道为什么，只有加了这个，不管是xrem，tab的滚动才成立 */
+  }
+  .tab>div.tab-tabs {
+    display: flex;
+    align-items: center;
+  }
+  .tab-sm>div.tab-tabs {
+    height: 2.5rem;
+  }
+  .tab-md>div.tab-tabs {
+    height: 3.2rem;
+  }
+  .tab-lg>div.tab-tabs {
+    height: 4rem;
+  }
+  .tab>div.tab-tabs, .tab>div.tab-tabs>div {
+    display: flex;
+    align-items: center;
+  }
+  .tab>div.tab-tabs>div {
+    flex-direction: column;
+    cursor: pointer;
+  }
+  .tab>div>div {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+  }
+  .tab>div>div>div {
+    position: relative;
+  }
+  .tab>div>div>div>u {
+    position: absolute;
+    right: -0.8rem;
+    top: 0rem;
+    font-size: 0.7rem;
+    background-color: red;
+    display: flex;
+    align-items: center;
+    color: white;
+    min-width: 1rem;
+    padding: 0 3px;
+    height: 1.0rem;
+    text-decoration: none;
+    justify-content: center;
+    border-radius: 0.6rem;
+  }
+  .tab>div>div>div>u.dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    min-width: 0.5rem;
+    right: -0.8rem;
+  }
+  
+  

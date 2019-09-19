@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, Form, ItemSchema, UiSchema, StringSchema, UiTextItem, UiPasswordItem, Context, ButtonSchema, UiButton, nav } from '../ui';
+import { Page, Form, ItemSchema, UiSchema, StringSchema, UiPasswordItem, Context, ButtonSchema, UiButton, nav } from '../components';
 import { CenterAppApi } from '../net';
 
 export class ChangePasswordPage extends React.Component {
@@ -7,19 +7,22 @@ export class ChangePasswordPage extends React.Component {
         {name:'orgPassword', type: 'string', maxLength: 60, required: true} as StringSchema,
         {name:'newPassword', type: 'string', maxLength: 60, required: true} as StringSchema,
         {name:'newPassword1', type: 'string', maxLength: 60, required: true} as StringSchema,
-        {name:'submit', type: 'button'} as ButtonSchema
+        {name:'submit', type: 'submit'} as ButtonSchema
     ];
     private uiSchema: UiSchema = {
         items: {
             orgPassword: {
+                widget: 'password',
                 label: '原密码',
                 placeholder: '输入原来的密码'
             } as UiPasswordItem,
             newPassword: {
+                widget: 'password',
                 label: '新密码',
                 placeholder: '输入新设的密码'
             } as UiPasswordItem,
             newPassword1: {
+                widget: 'password',
                 label: '确认密码', 
                 placeholder: '再次输入新设密码'
             } as UiPasswordItem,

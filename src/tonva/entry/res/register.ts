@@ -1,4 +1,4 @@
-import { Res } from '../../ui';
+import { Res } from '../../components';
 
 export interface RegisterRes {
     a: string;

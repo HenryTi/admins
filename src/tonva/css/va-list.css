@@ -46,9 +46,9 @@ li.va-list-before {
     padding: 8px 16px;
 }
 li.va-list-loading {
-    color: green;
+    color: black;
     font-size: 80%;
-    padding: 8px 16px;
+    padding: 1.5rem 1rem;
 }
 li.va-list-none {
     color: #e0e0e0;

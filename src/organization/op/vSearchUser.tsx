@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { VPage, Page, PageItems } from 'tonva';
 import { SearchBox, List } from 'tonva';
-import { centerApi } from 'tonva';
 import { COpBinding } from './cOpBinding';
+import { mainApi } from 'api';
 
 export class VSearchUser extends VPage<COpBinding> {
     private unit:number;
@@ -33,7 +33,7 @@ export class VSearchUser extends VPage<COpBinding> {
 class PageUsers extends PageItems<any> {
     protected async load(param:{key:string, unit:number, role:number}, pageStart: any, pageSize: number): Promise<any[]> {
         let {unit, role, key} = param;
-        let ret = await centerApi.get('unit/members', {key: key, unit:unit, role:role, pageStart:pageStart, pageSize:pageSize});
+        let ret = await mainApi.get('unit/members', {key: key, unit:unit, role:role, pageStart:pageStart, pageSize:pageSize});
         return ret;
     }
     protected setPageStart(item: any): any {

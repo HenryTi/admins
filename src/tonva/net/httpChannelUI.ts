@@ -1,10 +1,11 @@
-import {nav} from '../ui/nav';
-import {FetchError} from '../fetchError';
+import {nav} from '../components/nav';
+import {FetchError} from './fetchError';
 
 export interface HttpChannelUI {
     startWait():void;
     endWait():void;
     showError(error:FetchError):Promise<void>;
+    showUpgradeUq(uq:string, version:number):Promise<void>;
 }
 
 export class HttpChannelNavUI implements HttpChannelUI {
@@ -24,6 +25,9 @@ export class HttpChannelNavUI implements HttpChannelUI {
             }
         }*/
         await nav.onError(error);
+    }
+    async showUpgradeUq(uq:string, version:number):Promise<void> {
+        await nav.showUpgradeUq(uq, version);
     }
 }
 

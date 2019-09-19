@@ -1,6 +1,9 @@
-import {CenterApi} from 'tonva';
+import {CenterApiBase} from 'tonva';
 
-class DevApi extends CenterApi {
+class DevApi extends CenterApiBase {
+    async userAppUnits(app:number):Promise<any[]> {
+        return await this.get('tie/user-app-units', {app:app});
+    }
     async uqBuilderUrl():Promise<any> {
         let ret = await this.get('uq-builder-url', undefined);
         return ret;
