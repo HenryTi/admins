@@ -77,6 +77,7 @@ export class DropdownActions extends React.Component<DropdownActionsProps, Dropd
                         }
                         if (action === undefined) 
                             return <h6 className="dropdown-header">{i} {caption}</h6>;
+                        // eslint-disable-next-line
                         return <a className="dropdown-item" key={index} href="#/" onClick={(evt:React.MouseEvent<HTMLAnchorElement>)=>{ evt.preventDefault();action()}}>{i} {caption}</a>
                     })
                 }

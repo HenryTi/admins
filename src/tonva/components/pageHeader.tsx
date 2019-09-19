@@ -67,11 +67,14 @@ export class PageHeader extends React.Component<PageHeaderProps, PageHeaderState
                     let {nick, name} = user;
                     debugLogout = <div className="d-flex align-items-center">
                         <small className="text-light">{nick || name}</small>
-                        <a className="btn ml-2 cursor-pointer" href="#/"
-                            role="button"
-                            onClick={this.logoutClick}>
-                            <i className="fa fa-sign-out fa-lg" />
-                        </a>
+                        {
+                            // eslint-disable-next-line
+                            <a className="btn ml-2 cursor-pointer" href="#"
+                                role="button"
+                                onClick={this.logoutClick}>
+                                <i className="fa fa-sign-out fa-lg" />
+                            </a>
+                        }
                     </div>;
                 }
             }
