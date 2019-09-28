@@ -96,7 +96,7 @@ export class UQsMan {
     }
 
     buildUQs(): any {
-        let uqs = {};
+        let uqs:any = {};
         for (let i in this.collection) {
             let uqMan = this.collection[i];
             //let n = uqMan.name;

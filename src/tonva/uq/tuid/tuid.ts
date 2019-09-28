@@ -224,7 +224,7 @@ export class TuidInner extends Tuid {
     async searchArr(owner:number, key:string, pageStart:string|number, pageSize:number):Promise<any> {
         //let api = this.uqApi;
         //let ret = await api.tuidSearch(this.name, undefined, owner, key, pageStart, pageSize);
-        let params = {arr:undefined, owner:owner, key:key, pageStart:pageStart, pageSize:pageSize};
+        let params:any = {arr:undefined, owner:owner, key:key, pageStart:pageStart, pageSize:pageSize};
         let ret = await new SearchCaller(this, params).request();
         let {fields} = this.schema;
         for (let row of ret) {

@@ -7,8 +7,8 @@ import { VMapMain } from './vMain';
 import { VInputValues } from './inputValues';
 
 export interface MapKey {
-    content: (values, x?:any) => JSX.Element;
-    valuesContent?: (values, x?:any) => JSX.Element;
+    content: (values:any, x?:any) => JSX.Element;
+    valuesContent?: (values:any, x?:any) => JSX.Element;
     none?: (x:any)=>string;
 }
 
@@ -116,7 +116,7 @@ export class CMap extends CEntity<Map, MapUI> {
         return ret;
     }
 
-    async searchOnKey(keyField:Field, param):Promise<number> {
+    async searchOnKey(keyField:Field, param:any):Promise<number> {
         let {_tuid} = keyField;
         let {tuid, ownerField} = _tuid;
         let cTuidSelect = this.cUq.cTuidSelect(tuid);
@@ -220,7 +220,7 @@ export class CMap extends CEntity<Map, MapUI> {
         if (window.confirm(confirmDelete({label:label})) === false) return;
         let map:Map = this.entity;
         let data = {} as any;
-        let arr1 = data['arr1'] = [];
+        let arr1:any[] = data['arr1'] = [];
         let v0 = {} as any;
         arr1.push(v0);
         for (let p=item; p!==undefined;p=p.parent) {

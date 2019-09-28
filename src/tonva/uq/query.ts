@@ -7,7 +7,7 @@ import { QueryQueryCaller, QueryPageCaller } from './caller';
 
 export type QueryPageApi = (name:string, pageStart:any, pageSize:number, params:any) => Promise<string>;
 
-export class QueryPager<T> extends PageItems<T> {
+export class QueryPager<T extends any> extends PageItems<T> {
     private query: Query;
     constructor(query: Query, pageSize?: number, firstSize?: number) {
         super();

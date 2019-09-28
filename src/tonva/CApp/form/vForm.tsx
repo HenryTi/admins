@@ -136,7 +136,7 @@ export class VForm {
         if (this.arrs !== undefined) {
             for (let arr of this.arrs) {
                 let {name, fields, id, order} = arr;
-                let list = ret[name] = [];
+                let list:any[] = ret[name] = [];
                 let rows = this.vArrs[name].list;
                 for (let row of rows) {
                     let item = {} as any;

@@ -117,6 +117,8 @@ export abstract class CEntity<T extends Entity, UI extends EntityUI> extends Con
             let {_tuid } = field;
             let {ownerField} = _tuid;
             let cTuidSelect = undefined; // await tuid.cSelectFrom();
+            return;
+            // eslint-disable-next-line
             let param:any = undefined;
             if (ownerField !== undefined) param = form.getValue(ownerField.name);
             if (fieldUI && fieldUI.autoList === true) {

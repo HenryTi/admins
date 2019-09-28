@@ -63,9 +63,9 @@ export class ReactBoxId implements BoxId {
         }
         switch (typeof val) {
             case 'undefined':
-                return <del className="text-black-50">{boxName} undefined</del>;
+                return <span className="text-black-50">{boxName} undefined</span>;
             case 'number':
-                return <del className="text-black-50">{boxName} {this.id}</del>;
+                return <span className="text-light">{boxName} {this.id}</span>;
         }
         if (ui === undefined) {
             ui = this.ui;

@@ -130,7 +130,7 @@ export abstract class Context {
                 this.errors.push(ret as string);
             }
             else {
-                for (let i in ret as object) this.setError(i, ret[i]);
+                for (let i in ret as object) this.setError(i, (ret as any)[i]);
             }
         }
         if (this.subContexts === undefined) return;

@@ -18,7 +18,7 @@ class ScrollView extends React.Component<ScrollViewProps, null> {
     private bottomTime:number = 0;
     private topTime:number = 0;
 
-    private onScroll = async (e) => {
+    private onScroll = async (e:any) => {
         let {onScroll, onScrollTop, onScrollBottom} = this.props;
         if (onScroll) this.props.onScroll(e);
         let el = e.target as HTMLBaseElement;

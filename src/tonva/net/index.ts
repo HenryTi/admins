@@ -5,3 +5,4 @@ export * from './caller';
 export * from './uqApi';
 export {appInFrame, isBridged, getExHash} from './appBridge';
 export * from './host';
+//export {userApi} from './userApi';

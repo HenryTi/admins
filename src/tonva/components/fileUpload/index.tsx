@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export class FileUpload extends React.Component {
-    constructor(props) {
+    constructor(props:any) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
     }

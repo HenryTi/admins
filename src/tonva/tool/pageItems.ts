@@ -28,12 +28,12 @@ export abstract class PageItems<T> {
 
     protected param: any;
     protected firstSize = 100;
-    protected pageStart = undefined;
+    protected pageStart:any = undefined;
     protected pageSize = 30;
     protected appendPosition:'head'|'tail' = 'tail';
 
     protected abstract async load(param:any, pageStart:any, pageSize:number):Promise<T[]>;
-    protected abstract setPageStart(item:T);
+    protected abstract setPageStart(item:T):void;
 
     reset() {
         this.isFirst = true;

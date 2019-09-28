@@ -155,6 +155,11 @@ export class Sheet extends Entity {
         return await new StateSheetCountCaller(this, undefined).request();
     }
 
+    async userSheets(state:string, user:number, pageStart:number, pageSize:number):Promise<any[]> {
+        let params = {state:state, user:user, pageStart:pageStart, pageSize:pageSize};
+        return await new UserSheetsCaller(this, params).request();
+    }
+
     async mySheets(state:string, pageStart:number, pageSize:number):Promise<any[]> {
         /*
         await this.loadSchema();
@@ -230,20 +235,17 @@ class StateSheetCountCaller extends SheetCaller<undefined> {
     }
 }
 
+class UserSheetsCaller extends SheetCaller<{state:string, user:number, pageStart:number, pageSize:number}> {
+    protected readonly suffix = 'user-sheets';
+    xresult(res:any):any {
+        return res;
+    }
+}
+
 class MySheetsCaller extends SheetCaller<{state:string, pageStart:number, pageSize:number}> {
     protected readonly suffix = 'my-sheets';
     xresult(res:any):any {
         return res;
-        /*
-        let {returns} = this.entity;
-        let len = returns.length;
-        let ret:{[r:string]:any[]} = {};
-        for (let i=0; i<len; i++) {
-            let retSchema = returns[i];
-            ret[retSchema.name] = res[i];
-        }
-        return ret;
-        */
     }
 }
 

@@ -20,6 +20,7 @@ export interface AppConfig {
     tvs: TVs;
     uqNameMap?: {[uqName:string]: string};      // uqName='owner/uq' 映射到内存简单名字：uq, 可以注明映射，也可以自动。有可能重
     loginTop?: JSX.Element;
+    oem?: string;               // 用户注册发送验证码的oem厂家，默认同花
 }
 
 export abstract class CAppBase extends Controller {

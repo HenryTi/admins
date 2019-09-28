@@ -5,7 +5,7 @@ import { Sheet } from '../../uq';
 import { CSheet, SheetUI } from './cSheet';
 
 export class VSheetList extends VEntity<Sheet, SheetUI, CSheet> {
-    protected row: (values) => JSX.Element;
+    protected row: (values:any) => JSX.Element;
     stateName: string;
     stateLabel: string;
 

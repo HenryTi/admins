@@ -29,7 +29,7 @@ export class IdWidget extends Widget {
             placeholder = this.ui.placeholder;
             Templet = this.ui.Templet;
         }
-        let cn = {
+        let cn:any = {
             'form-control': true,
             'required-item': this.itemSchema.required === true,
             'cursor-pointer': true,

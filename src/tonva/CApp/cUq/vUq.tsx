@@ -39,7 +39,7 @@ export class VUq extends View<CUq> {
         let {res, uq, error} = this.controller;
         let linkItem = {
             render: (cLink:CLink, index:number):JSX.Element => cLink.render(), 
-            onClick: undefined, 
+            onClick: undefined as any, 
         };
         let lists = [
             {

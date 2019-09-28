@@ -330,7 +330,7 @@ export async function bridgeCenterApi(url:string, method:string, body:any):Promi
     });
 }
 
-async function callCenterApiFromMessage(from:Window, message):Promise<void> {
+async function callCenterApiFromMessage(from:Window, message:any):Promise<void> {
     let {callId, url, method, body} = message;
     let result = await callCenterapi.directCall(url, method, body);
     from.postMessage({

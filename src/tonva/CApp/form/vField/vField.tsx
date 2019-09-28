@@ -41,7 +41,7 @@ export abstract class VField extends ViewModel {
     }
 
     @computed get checkRules(): string[] {
-        let defy = [];
+        let defy:string[] = [];
         for (let r of this.rules) r.check(defy, this.value);
         return defy;
     }

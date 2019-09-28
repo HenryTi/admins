@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {nav, Page, Schema, UiSchema, UiTextItem, UiPasswordItem, UiButton, Form, Context, resLang, StringSchema, Controller, 
     VPage, NumSchema} from '../components';
-import { userApi, RegisterParameter } from './userApi';
+import { userApi, RegisterParameter } from '../net';
 import '../css/va-form.css';
 import { RegisterRes, registerRes } from './res';
 import { tonvaTop, getSender } from './tools';
@@ -118,7 +118,7 @@ export class RegisterController extends Controller {
         let ret = await userApi.isExists(this.account);
         let error = this.accountError(ret);
         if (error !== undefined) return error;
-        ret = await userApi.setVerify(this.account, this.type);
+        ret = await userApi.setVerify(this.account, this.type, nav.oem);
         this.toVerify(this.account);
         return;
     }
@@ -166,7 +166,7 @@ export class ForgetController extends RegisterController {
     passwordSubmitCaption = '提交'; 
     successText = '成功修改密码';
 
-    async execute() {
+    async execute():Promise<any> {
         await userApi.resetPassword(this.account, this.password, this.verify, this.type);
         nav.clear();
         this.toSuccess();

@@ -1,7 +1,7 @@
 
 export function serializeJson(obj:any):string {
-    let source = [];
-    let result = [];
+    let source:any[] = [];
+    let result:any[] = [];
 
     function serialize(obj:any):any {
         let p = source.findIndex(v => v === obj);
@@ -9,7 +9,7 @@ export function serializeJson(obj:any):string {
             p = result.length;
             source.push(obj);
             if (Array.isArray(obj) === true) {
-                let retObj = [];
+                let retObj:any[] = [];
                 result.push(retObj);
                 serializeArr(obj, retObj);
             }

@@ -1,6 +1,6 @@
 
 export abstract class Rule {
-    abstract check(defy:string[], value:any);
+    abstract check(defy:string[], value:any):void;
 }
 
 export class RuleRequired extends Rule {

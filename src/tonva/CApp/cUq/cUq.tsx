@@ -282,7 +282,7 @@ export class CUq extends Controller /* implements Uq*/ {
                 let ownerTuid = tuidDiv.owner;
                 let tUIs = this.ui[ownerTuid.typeName] as TuidUI;
                 if (tUIs) {
-                    let tUI = tUIs[ownerTuid.name];
+                    let tUI = (tUIs as any)[ownerTuid.name];
                     if (tUI) {
                         let divs = tUI.divs;
                         if (divs) {

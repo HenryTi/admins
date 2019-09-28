@@ -100,6 +100,20 @@ export class Form extends React.Component<FormProps> {
 
     private initData(formData: any) {
         if (formData === undefined) formData = {};
+        if (this.uiSchema !== undefined) {
+            let {items} = this.uiSchema;
+            if (items !== undefined) {
+                for (let i in items) {
+                    let ui = items[i];
+                    let dv = ui.defaultValue;
+                    if (dv !== undefined) {
+                        if (formData[i] === undefined) {
+                            formData[i] = dv;
+                        }
+                    }
+                }
+            }
+        }
         for (let itemSchema of this.schema) {
             this.initDataItem(itemSchema, this.data, formData);
         }
@@ -116,7 +130,7 @@ export class Form extends React.Component<FormProps> {
         let arrItem:ArrSchema = itemSchema as ArrSchema;
         let {arr:arrItems} = arrItem;
         if (arrItems === undefined) return;
-        let arrDict = arrItem.itemSchemas = {};
+        let arrDict:any = arrItem.itemSchemas = {};
         for (let item of arrItems) {
             arrDict[item.name] = item;
         }

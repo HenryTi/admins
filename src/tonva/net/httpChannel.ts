@@ -205,8 +205,8 @@ export abstract class HttpChannel {
         let headers = this.buildHeaders();
         let options = {
             headers: headers,
-            method: undefined,
-            body: undefined,
+            method: undefined as any,
+            body: undefined as any,
             // cache: 'no-cache',
         };
         return options;

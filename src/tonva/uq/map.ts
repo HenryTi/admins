@@ -33,7 +33,7 @@ export class Map extends Entity {
             let action = this.uq.newAction(name, undefined);
             action.setSchema(actionSchema);
             action.buildFieldsTuid();
-            this.actions[i] = action;
+            (this.actions as any)[i] = action;
         }
         for (let i in queries) {
             let querySchema = queries[i];
@@ -41,7 +41,7 @@ export class Map extends Entity {
             let query = this.uq.newQuery(name, undefined);
             query.setSchema(querySchema);
             query.buildFieldsTuid();
-            this.queries[i] = query;
+            (this.queries as any)[i] = query;
         }
     }
 

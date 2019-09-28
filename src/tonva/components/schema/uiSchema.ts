@@ -28,6 +28,7 @@ export interface UiItem {
     Templet?: TempletType;
     discription?: (string | JSX.Element | (()=>JSX.Element));
     discriptionClassName?: string;
+    defaultValue?: any;
 }
 
 export interface UiCustom extends UiItem {
@@ -85,7 +86,6 @@ export interface UiSelectListItem {
 }
 export interface UiSelectBase extends UiItem {
     rules?: FieldRule | FieldRule[];
-    defaultValue: any;
     list: UiSelectListItem[];
 }
 

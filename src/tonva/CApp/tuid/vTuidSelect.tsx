@@ -17,7 +17,7 @@ export class VTuidSelect extends VEntity<Tuid, TuidUI, CTuid<Tuid>> {
             await this.showDiv(param);
     }
 
-    private async showMain(param) {
+    private async showMain(param:any) {
         this.mainRowContent = this.ui.rowContent || RowContent;
         await this.controller.searchMain(param);
         this.openPage(this.mainView);

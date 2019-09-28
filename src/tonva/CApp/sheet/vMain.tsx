@@ -13,7 +13,7 @@ export class VSheetMain extends VEntity<Sheet, SheetUI, CSheet> {
     newClick = () => this.event('new');
     schemaClick = () => this.event('schema'); 
     archivesClick = () => this.event('archives');
-    sheetStateClick = (state) => this.event('state', state);
+    sheetStateClick = (state:any) => this.event('state', state);
 
     renderState = (item:any, index:number) => {
         let {state, count} = item;

@@ -33,8 +33,16 @@ const hosts:{[name:string]:HostValue} = {
     }
 }
 
+const httpArr = ['https://', 'http://'];
+function isAbsoluteUrl(url:string):boolean {
+    for (let str of httpArr) {
+        if (url.startsWith(str) === true) return true;
+    }
+    return false;
+}
+
 function urlFromHost(host:string):string {
-    if (host.startsWith('https://') === true) {
+    if (isAbsoluteUrl(host) === true) {
         if (host.endsWith('/')) return host;
         return host + '/';
     }

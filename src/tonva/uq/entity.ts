@@ -119,7 +119,7 @@ export abstract class Entity {
     }
 
     buildParams(params:any):any {
-        let result = {};
+        let result:any = {};
         let fields = this.fields;
         if (fields !== undefined) this.buildFieldsParams(result, fields, params);
         let arrs = this.arrFields;
@@ -128,7 +128,7 @@ export abstract class Entity {
                 let {name, fields} = arr;
                 let paramsArr:any[] = params[name];
                 if (paramsArr === undefined) continue;
-                let arrResult = [];
+                let arrResult:any[] = [];
                 result[name] = arrResult;
                 for (let pa of params) {
                     let rowResult = {};
