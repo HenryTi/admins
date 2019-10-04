@@ -158,7 +158,7 @@ export class VOpBinding extends VPage<COpBinding> {
         let {name, caption, tos, tosText, configable} = stateTo;
         let content;
         if (configable === true) {
-            let right = <FA className="text-muted align-self-center" name="chevron-right" />;
+            let right = <FA className="text-muted align-self-center" name="angle-right" />;
             let onClick = () => this.stateClick(stateTo);
             let tosView = <this.stateTosView tosText={tosText} />;
             content = <>

@@ -140,7 +140,7 @@ interface DevItem<T extends DevModel.ObjBase> {
 
 type Item = ActionItem|DevItem<DevModel.ObjBase>|string;
 
-const rArrow = <FA name="chevron-right" />;
+const rArrow = <FA name="angle-right" />;
 const typeCaptions = {
     1: '开发号',
     2: '小号',

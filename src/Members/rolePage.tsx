@@ -38,7 +38,7 @@ export class RolePage extends React.Component {
         }
         else {
             membersLeft = `共有 ${count} 用户`;
-            membersRight = <div><FA name="chevron-right" /></div>;
+            membersRight = <div><FA name="angle-right" /></div>;
             onMembersClick = this.members;
         }
         let rows:Prop[] = [

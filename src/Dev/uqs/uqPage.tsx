@@ -58,19 +58,19 @@ export class UQPage extends VPage<UQController> {
                 type: 'component',
                 label: '上传UQ', 
                 component: <LMR onClick={onUqUpload} className="w-100 py-2 cursor-pointer" 
-                    left="上传提交UQ代码" right={<FA className="align-self-center" name="chevron-right" />} />
+                    left="上传提交UQ代码" right={<FA className="align-self-center" name="angle-right" />} />
             },
             {
                 type: 'component', 
                 label: '测试UQ', 
                 component: <LMR onClick={onUqTest} className="w-100 py-2 cursor-pointer" 
-                    left="升级UQ测试数据库" right={<FA className="align-self-center" name="chevron-right" />} />
+                    left="升级UQ测试数据库" right={<FA className="align-self-center" name="angle-right" />} />
             },
             {
                 type: 'component', 
                 label: '发布UQ', 
                 component: <LMR onClick={onUqDeploy} className="w-100 py-2 cursor-pointer" 
-                    left="升级UQ生产数据库" right={<FA className="align-self-center" name="chevron-right" />} />
+                    left="升级UQ生产数据库" right={<FA className="align-self-center" name="angle-right" />} />
             },
         ];
         let btnAddService = isOwner>0 && <button

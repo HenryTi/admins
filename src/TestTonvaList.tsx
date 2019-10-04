@@ -25,7 +25,7 @@ export default class  TestTonvaMultiForm extends React.Component {
                         <FA name="square-o" className="fa-stack-2x text-primary" />
                         <FA name="twitter" className="fa-stack-1x text-success"  />
                     </StackedFA></Badge>}
-                right={<small><FA name="chevron-right" /></small>}
+                right={<small><FA name="angle-right" /></small>}
             >
                 {item.text}
             </LMR>),
