@@ -9,12 +9,15 @@ import { NewServicePage } from './newServicePage';
 import { ServicePage } from './servicePage';
 import { UQPage } from './uqPage';
 import { ListPage } from './listPage';
+import { UqDevsAdmin } from './UqDevsAdmin';
+import { store } from '../../store';
 
 export class UQController extends Controller {
     private unitId: number;
     uq: DevModel.UQ;
     access: string;
     entities: string;
+    @observable uqDevs: any[];
     @observable uqList: DevModel.UQ[];
     @observable services: DevModel.Service[];
     protected async internalStart(unitId:any) {
@@ -35,6 +38,39 @@ export class UQController extends Controller {
         this.access = r0.access;
         this.entities = r0.entities;
         this.services = ret[1];
+        this.uqDevs = ret[4];
+    }
+
+    async loadAdmins() {
+        await store.admins.load();
+    }
+
+    async devChanged(admin:any, isSelected:boolean) {
+        let param = {
+            unit: this.unitId,
+            type: 'uq',
+            dev: this.uq.id,
+            devUser: admin.id
+        };
+        if (isSelected === true) {
+            await devApi.adminDevAdd(param);
+            this.uqDevs.push({
+                userId: admin.id,
+                icon: admin.icon,
+                name: admin.name,
+                nick: admin.nick,
+                isOwner: 0,
+            });
+        }
+        else {
+            await devApi.adminDevDel(param);
+            let index = this.uqDevs.findIndex(v => v.userId === admin.id);
+            this.uqDevs.splice(index, 1);
+        }
+    }
+
+    uqDevsAdmin = () => {
+        this.openVPage(UqDevsAdmin);
     }
 
     serviceClick = (service: DevModel.Service) => {

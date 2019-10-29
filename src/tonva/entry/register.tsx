@@ -79,12 +79,12 @@ export class RegisterController extends Controller {
         this.openVPage(PasswordPage);
     }
 
-    toSuccess() {
-        this.openVPage(RegSuccess);
+    toSuccess(accounts?:any[]) {
+        this.openVPage(RegSuccess, accounts);
     }
 
-    login = async () => {
-        let retUser = await userApi.login({user: this.account, pwd: this.password, guest: nav.guest});
+    login = async (account?:string) => {
+        let retUser = await userApi.login({user: account || this.account, pwd: this.password, guest: nav.guest});
         if (retUser === undefined) {
             alert('something wrong!');
             return;
@@ -118,7 +118,7 @@ export class RegisterController extends Controller {
         let ret = await userApi.isExists(this.account);
         let error = this.accountError(ret);
         if (error !== undefined) return error;
-        ret = await userApi.setVerify(this.account, this.type, nav.oem);
+        ret = await userApi.sendVerify(this.account, this.type, nav.oem);
         this.toVerify(this.account);
         return;
     }
@@ -167,9 +167,9 @@ export class ForgetController extends RegisterController {
     successText = '成功修改密码';
 
     async execute():Promise<any> {
-        await userApi.resetPassword(this.account, this.password, this.verify, this.type);
+        let ret = await userApi.resetPassword(this.account, this.password, this.verify, this.type);
         nav.clear();
-        this.toSuccess();
+        this.toSuccess(ret);
         return undefined;
     }
 
@@ -370,25 +370,40 @@ class PasswordPage extends VPage<RegisterController> {
 }
 
 class RegSuccess extends VPage<RegisterController> {
-    async open() {
-        this.openPage(this.page);
+    async open(users: any[]) {
+        this.openPage(this.page, {users:users});
     }
 
-    private page = () => {
+    private page = ({users}) => {
         const {account, successText, login} = this.controller;
-        return (
-        <Page header={false}>
-            <div className="container w-max-30c">
-                <form className="my-5">
-                    <div className="py-5">
-                        账号 <strong className="text-primary">{account} </strong> {successText}！
+        if (users === undefined) {
+            return <Page header={false}>
+                <div className="container w-max-30c">
+                    <div className="my-5">
+                        <div className="py-5">
+                            账号 <strong className="text-primary">{account} </strong> {successText}！
+                        </div>
+                        <button className="btn btn-success btn-block" type="button" onClick={()=>login(undefined)}>
+                            直接登录
+                        </button>
                     </div>
-                    <button className="btn btn-success btn-block" type="button" onClick={login}>
-                        直接登录
-                    </button>
-                </form>
-            </div>
-        </Page>
-        );
+                </div>
+            </Page>;
+        }
+        else {
+            return <Page header={false}>
+                <div className="container w-max-30c">
+                    <div className="my-5">
+                        <div className="py-5 text-success">{successText}</div>
+                        {users.map((v:any) => {
+                            let {name} = v;
+                            return <div className="py-2 cursor-pointer" onClick={()=>login(name)}>
+                                登录账号 <strong className="text-primary">{name} </strong>
+                            </div>
+                        })}
+                    </div>
+                </div>
+            </Page>;
+        }
     }
 }

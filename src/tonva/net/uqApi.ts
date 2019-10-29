@@ -152,7 +152,7 @@ export class UqApi extends ApiBase {
         if (channel !== undefined) return channel;
         let uqToken = appUq(this.uq); //, this.uqOwner, this.uqName);
         if (!uqToken) {
-            debugger;
+            //debugger;
             await this.init();
             uqToken = appUq(this.uq);
         }
@@ -496,9 +496,12 @@ export interface UqServiceData {
 const appUqsName = 'appUqs';
 
 export class CenterAppApi extends CenterApiBase {
-    private local: LocalCache = env.localDb.item(appUqsName);
+    //private local: LocalCache = env.localDb.item(appUqsName);
     //private cachedUqs: UqAppData;
     async uqs(appOwner:string, appName:string):Promise<UqAppData> {
+        let ret:UqAppData = await this.get('tie/app-uqs', {appOwner:appOwner, appName:appName});
+        return ret;
+        /*
         let ret:UqAppData;
         let appUqs = this.local.get();
         if (appUqs) {
@@ -514,10 +517,12 @@ export class CenterAppApi extends CenterApiBase {
         }
         //return this.cachedUqs = _.cloneDeep(ret);
         return ret;
+        */
     }
     private async uqsPure(appOwner:string, appName:string):Promise<UqAppData> {
         return await this.get('tie/app-uqs', {appOwner:appOwner, appName:appName});
     }
+    /*
     private async isOkCheckUqs(appOwner:string, appName:string):Promise<boolean> {
         let ret = await this.uqsPure(appOwner, appName);
         let {id:cachedId, uqs:cachedUqs} = this.local.get(); //.cachedUqs;
@@ -538,6 +543,7 @@ export class CenterAppApi extends CenterApiBase {
         }
         return ret;
     }
+    */
     async unitxUq(unit:number):Promise<UqServiceData> {
         return await this.get('tie/unitx-uq', {unit:unit});
     }
@@ -550,7 +556,7 @@ export async function loadAppUqs(appOwner:string, appName:string): Promise<UqApp
     let centerAppApi = new CenterAppApi('tv/', undefined);
     //let unit = meInFrame.unit;
     let ret = await centerAppApi.uqs(appOwner, appName);
-    await centerAppApi.checkUqs(appOwner, appName);
+    //await centerAppApi.checkUqs(appOwner, appName);
     /*
     .then(v => {
         if (v === false) {
@@ -597,8 +603,8 @@ export class UserApi extends CenterApiBase {
         return await this.post('user/register', params);
     }
 
-    async setVerify(account:string, type:'mobile'|'email', oem:string) {
-        return await this.post('user/set-verify', {account:account, type:type});
+    async sendVerify(account:string, type:'mobile'|'email', oem:string) {
+        return await this.post('user/set-verify', {account:account, type:type, oem:oem});
     }
 
     async checkVerify(account:string, verify:string) {
@@ -609,7 +615,7 @@ export class UserApi extends CenterApiBase {
         return await this.get('user/is-exists', {account:account});
     }
 
-    async resetPassword(account:string, password:string, verify:string, type:'mobile'|'email') {
+    async resetPassword(account:string, password:string, verify:string, type:'mobile'|'email'):Promise<any[]> {
         return await this.post('user/reset-password', {account:account, password, verify, type});
     }
     

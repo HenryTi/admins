@@ -25,7 +25,7 @@ export class UQPage extends VPage<UQController> {
         }
     }
 
-    private page = ():JSX.Element => {
+    private page = observer(():JSX.Element => {
         let {onUqUpload, onUqTest, onUqDeploy, serviceClick, uq, services} = this.controller;
         let {isOwner} = store.unit;
         let {id, name, discription, access, unit, date_init, date_update} = uq;
@@ -73,17 +73,43 @@ export class UQPage extends VPage<UQController> {
                     left="升级UQ生产数据库" right={<FA className="align-self-center" name="angle-right" />} />
             },
         ];
-        let btnAddService = isOwner>0 && <button
-            className="btn btn-outline-primary btn-sm"
-            onClick={()=>this.controller.showNewServicePage()}>
-            增加
-        </button>;
-        
+
+        let adminDev:any;
+        let btnAddService:any;
+        if (isOwner > 0) {
+            btnAddService = <button
+                className="btn btn-outline-primary btn-sm"
+                onClick={()=>this.controller.showNewServicePage()}>
+                增加
+            </button>;
+            let devList = this.controller.uqDevs.filter(v => v.isOwner===0);
+            adminDev = <>
+                <div className="d-flex mx-3 mt-3 mb-1 align-items-end">
+                    <Muted style={{display:'block', flex:1}}>开发者</Muted>
+                    <button
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={()=>this.controller.uqDevsAdmin()}>
+                        管理
+                    </button>
+                </div>
+                <div className="p-2 d-flex flex-wrap bg-white">
+                    {
+                        devList.length === 0?
+                        <span className="text-muted">无</span>
+                        :
+                        devList.map((v:any) => {
+                            return <div key={v.id} className="m-2 ">{v.nick || v.name}</div>
+                        })}
+                </div>
+            </>;
+        }
+
         let onServiceClick:any;
         if (isOwner>0) onServiceClick = serviceClick;
 
         return <Page header={'UQ - ' + name} right={right}>
             <PropGrid rows={rows} values={uq} />
+            {adminDev}
             <div className="d-flex mx-3 mt-3 mb-1 align-items-end">
                 <Muted style={{display:'block', flex:1}}>Service</Muted>
                 {btnAddService}
@@ -93,7 +119,7 @@ export class UQPage extends VPage<UQController> {
                 onClick:onServiceClick
             }} />
         </Page>;
-    }
+    });
     private renderService = observer((props: {service:DevModel.Service; index:number}):JSX.Element => {
         let {service, index} = props;
         let {url, server, db, compile_time, deploy_time} = service;

@@ -7,6 +7,7 @@ import { Image } from '../image';
 import { nav } from '../nav';
 import { Page } from '../page';
 import { ItemEdit } from './itemEdit';
+import { env } from '../../tool';
 
 export class ImageItemEdit extends ItemEdit {
     protected uiItem: UiTextItem;
@@ -26,7 +27,7 @@ export class ImageItemEdit extends ItemEdit {
         let ret = await this.resUploader.upload();
         if (ret === null) {
             this.overSize = true;
-            setTimeout(() => this.overSize = false, 3000);
+            env.setTimeout('imageItemEdit upload', () => this.overSize = false, 3000);
             return;
         }
         this.resId = ret;
@@ -36,7 +37,7 @@ export class ImageItemEdit extends ItemEdit {
     private page = observer((props:{resolve:(value:any)=>void, reject: (resean?:any)=>void}):JSX.Element => {
         let {resolve} = props;
         let right = <button
-            className="btn btn-sm btn-success"
+            className="btn btn-sm btn-success align-self-center"
             disabled={!this.isChanged}
             onClick={()=>resolve(this.resId)}>保存</button>;
         let overSize:any;

@@ -17,12 +17,11 @@ export default class FetchErrorView extends React.Component<FetchErrorProps, nul
     }
     render() {
         let {error, url} = this.props;
-            //let errMsg = fetchError.errorMsg;
-        let errContent;
+        let errContent:any;
         if (typeof error === 'object') {
             let err = [];
             for (let i in error) {
-                err.push(<li key={i}><label>{i}</label><div>{error[i]}</div></li>);
+                err.push(<li key={i}><label>{i}</label><div style={{wordWrap:"break-word"}}>{error[i]}</div></li>);
             }
             errContent = <ul>{err}</ul>;
         }
@@ -35,7 +34,7 @@ export default class FetchErrorView extends React.Component<FetchErrorProps, nul
                     <div  className="va-error">
                         <div>网络出现问题</div>
                         <div>点击重新访问</div>
-                        <div>url: {url}</div>
+                        <div style={{wordWrap:"break-word"}}>url: {url}</div>
                         {errContent}
                         <div className="p-3">
                             <button type='button' onClick={this.reApi}>重新API</button>

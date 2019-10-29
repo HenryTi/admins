@@ -4,7 +4,7 @@ import { Caller } from './caller';
 export async function refetchApi(channel:HttpChannel, url:string, options:any, 
     resolve:(values:any)=>any, reject:(reason:any)=>void)
 {
-    await channel.fetch(url, options, resolve, reject);
+    await channel.fetch(url, options, false, resolve, reject);
 }
 
 export abstract class ApiBase {

@@ -131,46 +131,46 @@ export class Query extends Entity {
         //this.loaded = true;
     }
 
-    protected pageCaller(params: any): QueryPageCaller {
-        return new QueryPageCaller(this, params);
+    protected pageCaller(params: any, showWaiting: boolean = true): QueryPageCaller {
+        return new QueryPageCaller(this, params, showWaiting);
     }
 
-    async page(params:any, pageStart:any, pageSize:number):Promise<any[]> {
+    async page(params:any, pageStart:any, pageSize:number, showWaiting: boolean = true):Promise<any[]> {
         /*
         await this.loadSchema();
         let res = await this.uqApi.page(this.name, pageStart, pageSize+1, this.buildParams(params));
         */
         let p = {pageStart:pageStart, pageSize:pageSize+1, params:params};
-        let res = await this.pageCaller(p).request();
+        let res = await this.pageCaller(p, showWaiting).request();
         //let data = this.unpackReturns(res);
         //return data.$page;// as any[];
         return res;
     }
-    protected queryCaller(params: any): QueryQueryCaller {
-        return new QueryQueryCaller(this, params);
+    protected queryCaller(params: any, showWaiting: boolean = true): QueryQueryCaller {
+        return new QueryQueryCaller(this, params, showWaiting);
     }
-    async query(params:any):Promise<any> {
+    async query(params:any, showWaiting:boolean = true):Promise<any> {
         /*
         await this.loadSchema();
         let res = await this.uqApi.query(this.name, this.buildParams(params));
         */
-        let res = await this.queryCaller(params).request();
+        let res = await this.queryCaller(params, showWaiting).request();
         //let data = this.unpackReturns(res);
         //return data;
         return res;
     }
-    async table(params:any): Promise<any[]> {
-        let ret = await this.query(params);
+    async table(params:any, showWaiting:boolean = true): Promise<any[]> {
+        let ret = await this.query(params, showWaiting);
         for (let i in ret) {
             return ret[i];
         }
     }
-    async obj(params:any):Promise<any> {
-        let ret = await this.table(params);
+    async obj(params:any, showWaiting:boolean = true):Promise<any> {
+        let ret = await this.table(params, showWaiting);
         if (ret.length > 0) return ret[0];
     }
-    async scalar(params:any):Promise<any> {
-        let ret = await this.obj(params);
+    async scalar(params:any, showWaiting:boolean = true):Promise<any> {
+        let ret = await this.obj(params, showWaiting);
         for (let i in ret) return ret[i];
     }
 }

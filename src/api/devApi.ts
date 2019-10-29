@@ -102,6 +102,12 @@ class DevApi extends CenterApiBase {
     async uqGetEntities(unit:number, uq:number):Promise<any[][]> {
         return await this.get('uq-get-entities', {unit:unit, uq:uq});
     }
+    async adminDevAdd(param: {unit:number, type:string, dev:number, devUser:number}):Promise<void> {
+        await this.post('admin-dev-add', param);
+    }
+    async adminDevDel(param: {unit:number, type:string, dev:number, devUser:number}):Promise<void> {
+        await this.post('admin-dev-del', param);
+    }
 }
 
 export const devApi = new DevApi('tv/dev/', undefined);

@@ -41,14 +41,15 @@ const valueAlignCenter = 'justify-content-center';
 const valueAlignEnd = 'justify-content-end';
 export abstract class LabeledPropRow extends PropRow {
     protected gridProps: PropGridProps;
-    protected prop: LabeledProp;
+    protected _prop: LabeledProp;
+    protected get prop():LabeledProp {return this._prop}
     protected content: any;
     protected col: string;
     //protected values: any;
     constructor(gridProps:PropGridProps, prop: LabeledProp) {
         super();
         this.gridProps = gridProps;
-        this.prop = prop;
+        this._prop = prop;
         this.col = gridProps.labelFixLeft === true? 'col' : 'col-sm';
         //this.values = values;
     }
@@ -103,7 +104,7 @@ export abstract class LabeledPropRow extends PropRow {
 }
 
 export class StringPropRow extends LabeledPropRow {
-    protected prop: StringProp;
+    protected get prop(): StringProp {return this._prop as StringProp;}
     setValues(values:any) {
         if (values === undefined) this.content = undefined;
         else this.content = values[this.prop.name];
@@ -111,7 +112,7 @@ export class StringPropRow extends LabeledPropRow {
 }
 
 export class NumberPropRow extends LabeledPropRow {
-    protected prop: NumberProp;
+    protected get prop(): NumberProp {return this._prop as NumberProp;}
     setValues(values:any) {
         if (values === undefined) this.content = undefined;
         else this.content = values[this.prop.name];
@@ -119,7 +120,7 @@ export class NumberPropRow extends LabeledPropRow {
 }
 
 export class ListPropRow extends LabeledPropRow {
-    protected prop: ListProp;
+    protected get prop(): ListProp {return this._prop as ListProp;}
     setValues(values:any) {
         if (values === undefined) this.content = undefined;
         else {
@@ -145,7 +146,7 @@ export class ListPropRow extends LabeledPropRow {
 }
 
 export class ComponentPropRow extends LabeledPropRow {
-    protected prop: ComponentProp;
+    protected get prop(): ComponentProp {return this._prop as ComponentProp;}
     protected renderPropBody() {
         let {component} = this.prop;
         return component;

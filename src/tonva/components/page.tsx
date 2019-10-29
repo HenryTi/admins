@@ -5,10 +5,25 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import {PageHeader} from './pageHeader';
 
+const scrollAfter = 20; // 20ms之后，scroll执行
+export class Scroller {
+    private el: HTMLBaseElement;
+    constructor(el: HTMLBaseElement) {
+        this.el = el;
+    }
+
+    scrollToTop():void {
+        setTimeout(() => this.el.scrollTo(0, 0), scrollAfter);
+    }
+    scrollToBottom():void {
+        setTimeout(() => this.el.scrollTo(0, this.el.scrollTop + this.el.offsetHeight), scrollAfter);
+    }
+}
+
 export interface ScrollProps {
     onScroll?: (e:any) => void;
-    onScrollTop?: () => void;
-    onScrollBottom?: () => void;
+    onScrollTop?: (scroller: Scroller) => void;
+    onScrollBottom?: (scroller: Scroller) => void;
 }
 interface ScrollViewProps extends ScrollProps {
     className?: string;
@@ -22,13 +37,14 @@ class ScrollView extends React.Component<ScrollViewProps, null> {
         let {onScroll, onScrollTop, onScrollBottom} = this.props;
         if (onScroll) this.props.onScroll(e);
         let el = e.target as HTMLBaseElement;
+        let scroller = new Scroller(el);
         if (el.scrollTop < 30) {
             //this.eachChild(this, 'top');
             if (onScrollTop !== undefined) {
                 let topTime = new Date().getTime();
                 if (topTime-this.topTime > scrollTimeGap) {
                     this.topTime = topTime;
-                    onScrollTop();
+                    onScrollTop(scroller);
                 }
             }
         }
@@ -38,7 +54,7 @@ class ScrollView extends React.Component<ScrollViewProps, null> {
                 let bottomTime = new Date().getTime();
                 if (bottomTime - this.bottomTime > scrollTimeGap) {
                     this.bottomTime = bottomTime;
-                    onScrollBottom();
+                    onScrollBottom(scroller);
                 }
             }
         }

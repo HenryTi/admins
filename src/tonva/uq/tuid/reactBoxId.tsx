@@ -77,7 +77,7 @@ export class ReactBoxId implements BoxId {
             if (ui !== undefined) {
                 let ret = ui(val/*, this.tuidUR.res*/);
                 if (ret !== undefined) return ret;
-                return <del className="text-danger">{boxName} {this.id}</del>;
+                return <span className="text-danger">{boxName} {this.id}</span>;
             }
         }
 

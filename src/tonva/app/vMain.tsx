@@ -112,14 +112,14 @@ export class VUnitSelect extends VPage<CAppBase> {
 
 export class VErrorsPage extends VPage<CAppBase> {
     async open(errors:string[]) {
-        this.openPage(this.page, errors);
+        this.openPage(this.page, {errors:errors});
     }
 
-    private page = (errors:string[]) => {
+    private page = (errors:{errors:string[]}) => {
         return <Page header="ERROR">
             <div className="m-3">
                 <div>Load Uqs 发生错误：</div>
-                {errors.map((r, i) => <div key={i}>{r}</div>)}
+                {errors.errors.map((r, i) => <div key={i}>{r}</div>)}
             </div>
         </Page>;
     }

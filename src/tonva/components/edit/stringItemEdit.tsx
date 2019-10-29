@@ -31,13 +31,13 @@ export class StringItemEdit extends ItemEdit {
     private page = observer((props:{resolve:(value:any)=>void, reject: (resean?:any)=>void}):JSX.Element => {
         let {resolve} = props;
         let right = <button
-            className="btn btn-sm btn-success"
+            className="btn btn-sm btn-success align-self-center"
             disabled={!this.isChanged}
             onClick={()=>{
                 this.verifyValue();
                 if (this.error === undefined) resolve(this.newValue);
             }}>保存</button>;
-        return <Page header={'更改' + this.label} right={right}>
+        return <Page header={this.label} right={right}>
             <div className="m-3">
                 <input type="text" 
                     onChange={this.onChange}

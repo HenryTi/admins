@@ -57,7 +57,6 @@ export namespace DevModel {
     export interface Service extends ObjBase {
         url: string;
         urlTest: string;
-        type: number;
         name: string;
         discription: string;
         server: number;
@@ -66,6 +65,7 @@ export namespace DevModel {
         db: string;
         compile_time: number;
         deploy_time: number;
+        //type: number;
         /*
         db_type: string;
         connection: string;

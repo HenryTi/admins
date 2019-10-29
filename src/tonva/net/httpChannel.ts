@@ -31,11 +31,13 @@ export abstract class HttpChannel {
         this.hostUrl = hostUrl;
         this.apiToken = apiToken;
         this.ui = ui;
-        this.timeout = env.isDevelopment === true? 500000:5000;
+        this.timeout = env.isDevelopment === true? 500000:50000;
     }
 
-    private startWait = () => {
-        if (this.ui !== undefined) this.ui.startWait();
+    private startWait = (waiting: boolean) => {
+        if (waiting === true) {
+            if (this.ui !== undefined) this.ui.startWait();
+        }
     }
 
     private endWait = (url?:string, reject?:(reason?:any)=>void) => {
@@ -65,15 +67,15 @@ export abstract class HttpChannel {
         if (methodsWithBody.indexOf(method) >= 0 && p !== undefined) {
             options.body = JSON.stringify(p)
         }
-        return await this.innerFetch(urlPrefix + path, options);
+        return await this.innerFetch(urlPrefix + path, options, caller.waiting);
     }
 
-    private async innerFetchResult(url: string, options: any): Promise<any> {
-        let ret = await this.innerFetch(url, options);
+    private async innerFetchResult(url: string, options: any, waiting: boolean): Promise<any> {
+        let ret = await this.innerFetch(url, options, waiting);
         return ret.res;
     }
 
-    async get(url: string, params: any = undefined): Promise<any> {
+    async get(url: string, params: any = undefined, waiting?: boolean): Promise<any> {
         if (params) {
             let keys = Object.keys(params);
             if (keys.length > 0) {
@@ -88,34 +90,46 @@ export abstract class HttpChannel {
         }
         let options = this.buildOptions();
         options.method = 'GET';
-        return await this.innerFetchResult(url, options);
+        return await this.innerFetchResult(url, options, waiting);
     }
 
-    async post(url: string, params: any): Promise<any> {
+    async post(url: string, params: any, waiting?: boolean): Promise<any> {
         let options = this.buildOptions();
         options.method = 'POST';
         options.body = JSON.stringify(params);
-        return await this.innerFetchResult(url, options);
+        return await this.innerFetchResult(url, options, waiting);
     }
 
-    async put(url: string, params: any): Promise<any> {
+    async put(url: string, params: any, waiting?: boolean): Promise<any> {
         let options = this.buildOptions();
         options.method = 'PUT';
         options.body = JSON.stringify(params);
-        return await this.innerFetchResult(url, options);
+        return await this.innerFetchResult(url, options, waiting);
     }
 
-    async delete(url: string, params: any): Promise<any> {
+    async delete(url: string, params: any, waiting?: boolean): Promise<any> {
         let options = this.buildOptions();
         options.method = 'DELETE';
         options.body = JSON.stringify(params);
-        return await this.innerFetchResult(url, options);
+        return await this.innerFetchResult(url, options, waiting);
     }
-    async fetch(url: string, options: any, resolve:(value?:any)=>any, reject:(reason?:any)=>void):Promise<void> {
+    async fetch(url: string, options: any, waiting: boolean, resolve:(value?:any)=>any, reject:(reason?:any)=>void):Promise<void> {
         let that = this;
-        this.startWait();
+        this.startWait(waiting);
         let path = url;
-        function buildError(err: any) {
+        function buildError(err: any, ex?: string) {
+            switch (typeof err) {
+                case 'string':
+                    if (ex !== undefined) err += ' ' + ex;
+                    break;
+                case 'object':
+                    let retErr = {
+                        ex: ex,
+                        message: err.message,
+                    };
+                    err = retErr;
+                    break;
+            }
             return {
                 channel: that,
                 url: path,
@@ -126,11 +140,18 @@ export abstract class HttpChannel {
             }
         }
         try {
-            console.log('%s %s', options.method, path);
-            let timeOutHandler = setTimeout(() => that.endWait(url, reject), this.timeout);
+            console.log('%s-%s %s', options.method, path, options.body);
+            let now = Date.now();
+            let timeOutHandler = env.setTimeout(
+                'httpChannel.fetch',
+                () => {
+                    that.endWait(url + ' timeout endWait: ' + (Date.now() - now) + 'ms', reject);
+                },
+                this.timeout);
             let res = await fetch(encodeURI(path), options);
             if (res.ok === false) {
-                clearTimeout(timeOutHandler);
+                env.clearTimeout(timeOutHandler);
+                console.log('ok false endWait');       
                 that.endWait();
                 console.log('call error %s', res.statusText);
                 throw res.statusText;
@@ -138,7 +159,7 @@ export abstract class HttpChannel {
             let ct = res.headers.get('content-type');
             if (ct && ct.indexOf('json')>=0) {
                 return res.json().then(async retJson => {
-                    clearTimeout(timeOutHandler);
+                    env.clearTimeout(timeOutHandler);
                     that.endWait();
                     if (retJson.ok === true) {
                         if (typeof retJson !== 'object') {
@@ -147,16 +168,6 @@ export abstract class HttpChannel {
                         else if (Array.isArray(retJson) === true) {
                             debugger;
                         }
-                        /*
-                        let json = retJson.res;
-                        if (json === undefined) {
-                            json = {
-                                $uq: retJson.$uq
-                            }
-                        }
-                        */
-                        //json.$modify = retJson.$modify;
-                        //return resolve(json);
                         return resolve(retJson);
                     }
                     let retError = retJson.error;
@@ -164,21 +175,23 @@ export abstract class HttpChannel {
                         await that.showError(buildError('not valid tonva json'));
                     }
                     else {
-                        await that.showError(buildError(retError));
+                        await that.showError(buildError(retError, 'retJson.error'));
                         reject(retError);
                     }
                 }).catch(async error => {
-                    await that.showError(buildError(error));
+                    await that.showError(buildError(error, 'catch res.json()'));
                 });
             }
             else {
                 let text = await res.text();
-                clearTimeout(timeOutHandler);
+                env.clearTimeout(timeOutHandler);
+                console.log('text endWait');
                 that.endWait();
                 resolve(text);
             }
         }
         catch(error) {
+            this.endWait(url, reject);
             if (typeof error === 'string') {
                 let err = error.toLowerCase();
                 if (err.startsWith('unauthorized') === true) {
@@ -186,18 +199,19 @@ export abstract class HttpChannel {
                     return;
                 }
             }
-            await this.showError(buildError(error.message));
+            console.error('fecth error (no nav.showError): ' + url);
+            // await this.showError(buildError(error, 'catch outmost'));
         };
     }
 
-    protected abstract async innerFetch(url: string, options: any): Promise<any>;
+    protected abstract async innerFetch(url: string, options: any, waiting: boolean): Promise<any>;
 
     async callFetch(url:string, method:string, body:any):Promise<any> {
         let options = this.buildOptions();
         options.method = method;
         options.body = body;
         return await new Promise<any>(async (resolve, reject) => {
-            await this.fetch(url, options, resolve, reject);
+            await this.fetch(url, options, true, resolve, reject);
         });
     }
 
@@ -228,12 +242,12 @@ export abstract class HttpChannel {
 }
 
 export class CenterHttpChannel extends HttpChannel {
-    protected async innerFetch(url: string, options: any): Promise<any> {
+    protected async innerFetch(url: string, options: any, waiting: boolean): Promise<any> {
         let u = this.hostUrl + url;
         if (this.apiToken === undefined && isBridged())
             return await bridgeCenterApi(u, options.method, options.body);
         return await new Promise<any>(async (resolve, reject) => {
-            await this.fetch(u, options, resolve, reject);
+            await this.fetch(u, options, waiting, resolve, reject);
         });
     }
 }
@@ -246,10 +260,10 @@ export class UqHttpChannel extends HttpChannel {
         this.uqForChannel = uqForChannel;
     }
     */
-    protected async innerFetch(url: string, options: any): Promise<any> {
+    protected async innerFetch(url: string, options: any, waiting: boolean): Promise<any> {
         let u = this.hostUrl + url;
         return await new Promise<any>(async (resolve, reject) => {
-            await this.fetch(u, options, resolve, reject);
+            await this.fetch(u, options, waiting, resolve, reject);
         });
     }
 

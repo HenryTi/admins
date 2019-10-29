@@ -17,5 +17,18 @@ export const env = (function () {
         testing: testing,
         isDevelopment: process.env.NODE_ENV === 'development',
         localDb: localDb,
+        setTimeout: (tag:string, callback: (...args: any[]) => void, ms: number, ...args: any[]):NodeJS.Timer => {
+            if (tag !== undefined) console.log('setTimeout ' + tag);
+            return global.setTimeout(callback, ms, ...args);
+        },
+        clearTimeout: (handle:NodeJS.Timer):void => {
+            global.clearTimeout(handle);
+        },
+        setInterval: (callback: (...args: any[]) => void, ms: number, ...args: any[]): NodeJS.Timer => {
+            return global.setInterval(callback, ms, ...args);
+        },
+        clearInterval: (handle:NodeJS.Timer):void => {
+            global.clearInterval(handle);
+        }
     }
 }());

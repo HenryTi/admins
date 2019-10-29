@@ -33,7 +33,7 @@ export class RadioItemEdit extends ItemEdit {
         let {name} = this.itemSchema;
         let {list} = this.uiItem;
         let right = <button
-            className="btn btn-sm btn-success"
+            className="btn btn-sm btn-success align-self-center"
             disabled={!this.isChanged}
             onClick={()=>{
                 this.verifyValue();

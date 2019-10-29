@@ -4,7 +4,8 @@ import { loadAppUqs, appInFrame, getExHash, UqData} from '../../net';
 import { CUq, UqUI } from '../cUq';
 import { centerApi } from '../centerApi';
 import { UQsMan } from '../../uq';
-import { VUnsupportedUnit, VAppMain, VUnitSelect, VErrorsPage, VAppStartError } from './vApp';
+import { VUnsupportedUnit, VAppMain, VUnitSelect } from './vApp';
+import { VErrorsPage, VStartError } from '../../app/vMain';
 
 export interface RoleAppUI {
     CApp?: typeof CApp;
@@ -110,13 +111,13 @@ export class CApp extends Controller {
                 }
             }
             if (retErrors !== undefined) {
-                this.openVPage(VErrorsPage);
+                this.openVPage(VErrorsPage, retErrors);
                 return false;
             }
             return true;
         }
         catch (err) {
-            this.openVPage(VAppStartError);
+            this.openVPage(VStartError, err);
             return false;
         }
     }

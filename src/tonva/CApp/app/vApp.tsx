@@ -108,7 +108,7 @@ export class VUnitSelect extends VPage<CApp> {
         </Page>
     }
 }
-
+/*
 export class VErrorsPage extends VPage<CApp> {
     async open(errors:string[]) {
         this.openPage(this.page, errors);
@@ -137,3 +137,4 @@ export class VAppStartError extends VPage<CApp> {
         </Page>;
     }
 }
+*/

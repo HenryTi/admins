@@ -19,13 +19,12 @@ import '../css/animation.css';
 import { FA } from './simple';
 import { userApi } from '../net';
 
-/*
 const regEx = new RegExp('Android|webOS|iPhone|iPad|' +
     'BlackBerry|Windows Phone|'  +
     'Opera Mini|IEMobile|Mobile' , 
     'i');
 const isMobile = regEx.test(navigator.userAgent);
-*/
+
 /*
 export const mobileHeaderStyle = isMobile? {
     minHeight:  '3em'
@@ -64,8 +63,8 @@ export class NavView extends React.Component<Props, NavViewState> {
 
     constructor(props:Props) {
         super(props);
-        this.back = this.back.bind(this);
-        this.navBack = this.navBack.bind(this);
+        //this.back = this.back.bind(this);
+        //this.navBack = this.navBack.bind(this);
         this.stack = [];
         this.state = {
             stack: this.stack,
@@ -73,24 +72,11 @@ export class NavView extends React.Component<Props, NavViewState> {
             fetchError: undefined
         };
     }
-    /*
-    async componentWillMount() {
-        window.addEventListener('popstate', this.navBack);
-    }
-    */
     async componentDidMount()
     {
         window.addEventListener('popstate', this.navBack);
         nav.set(this);
-        /*
-        let start = this.props.start;
-        if (start !== undefined) {
-            await start();
-        }
-        else {
-        */
-            await nav.start();
-        //}
+        await nav.start();
     }
 
     get level(): number {
@@ -100,7 +86,8 @@ export class NavView extends React.Component<Props, NavViewState> {
     startWait() {
         if (this.waitCount === 0) {
             this.setState({wait: 1});
-            this.waitTimeHandler = global.setTimeout(
+            this.waitTimeHandler = env.setTimeout(
+                'NavView.startWait',
                 () => {
                     this.waitTimeHandler = undefined;
                     this.setState({wait: 2});
@@ -114,7 +101,9 @@ export class NavView extends React.Component<Props, NavViewState> {
     }
 
     endWait() {
-        setTimeout(() => {
+        env.setTimeout(
+            'NavView.endWait',
+            () => {
             /*
             this.setState({
                 fetchError: undefined,
@@ -122,7 +111,7 @@ export class NavView extends React.Component<Props, NavViewState> {
             --this.waitCount;
             if (this.waitCount === 0) {
                 if (this.waitTimeHandler !== undefined) {
-                    clearTimeout(this.waitTimeHandler);
+                    env.clearTimeout(this.waitTimeHandler);
                     this.waitTimeHandler = undefined;
                 }
                 this.setState({wait: 0});
@@ -296,14 +285,16 @@ export class NavView extends React.Component<Props, NavViewState> {
     }
 
     private isHistoryBack:boolean = false;
-    navBack() {
-        nav.log('backbutton pressed - nav level: ' + this.stack.length);
+    navBack = () => {
+        //nav.log('backbutton pressed - nav level: ' + this.stack.length);
+        let tick = Date.now();
         this.isHistoryBack = true;
         this.back(true);
         this.isHistoryBack = false;
+        console.log(`///\\\\ ${Date.now()-tick}ms backbutton pressed - nav level: ${this.stack.length}`);
     }
 
-    async back(confirm:boolean = true) {
+    back = async (confirm:boolean = true) => {
         let stack = this.stack;
         let len = stack.length;
         if (len === 0) return;
@@ -566,8 +557,39 @@ export class Nav {
         }
         return href + '/unit.json';
     }
+    private windowOnError = (event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) => {
+        console.error('windowOnError');
+        console.error(error);
+    }
+    /*
+    private windowOnUnhandledRejection = (ev: PromiseRejectionEvent) => {
+        console.error('windowOnUnhandledRejection');
+        console.error(ev.reason);
+    }
+    private windowOnClick = (ev: MouseEvent) => {
+        console.error('windowOnClick');
+    }
+    */
+    private windowOnMouseMove = (ev: MouseEvent) => {
+        console.log('navigator.userAgent: ' + navigator.userAgent);
+        console.log('mouse move (%s, %s)', ev.x, ev.y);
+    }
+    private windowOnScroll = (ev: Event) => {
+        console.log('scroll event');
+    }
     async start() {
         try {
+            window.onerror = this.windowOnError;
+            //window.onunhandledrejection = this.windowOnUnhandledRejection;
+            //window.addEventListener('click', this.windowOnClick);
+            //window.addEventListener('mousemove', this.windowOnMouseMove);
+            //window.addEventListener('touchmove', this.windowOnMouseMove);
+            //window.addEventListener('scroll', this.windowOnScroll);
+            if (isMobile === true) {
+                document.onselectstart = function() {return false;}
+                document.oncontextmenu = function() {return false;}
+            }
+            //window.setInterval(()=>console.error('tick every 5 seconds'), 5000);
             this.testing = env.testing;
             await host.start(this.testing);
             let hash = document.location.hash;
